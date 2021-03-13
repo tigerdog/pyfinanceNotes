@@ -1,0 +1,1267 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>general &mdash; finance 1.3 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> finance
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../01_returns.html">returns模块</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../02_general.html">general模块</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../03_datasets.html">datasets模块</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../04_ols.html">ols模块</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../05_options.html">options模块</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../06_utils.html">utils模块</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">finance</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="index.html">Module code</a> &raquo;</li>
+        
+      <li>general</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for general</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Generalized tools for financial analysis &amp; quantitative finance.</span>
+
+<span class="sd">Descriptions</span>
+<span class="sd">------------</span>
+<span class="sd">activeshare</span>
+<span class="sd">    Compute the active ahare of a fund versus an index.</span>
+<span class="sd">amortize</span>
+<span class="sd">    Construct an amortization schedule for a fixed-rate loan.</span>
+<span class="sd">BestFitDist</span>
+<span class="sd">    Which continuous distribution best models `x`?</span>
+<span class="sd">corr_heatmap</span>
+<span class="sd">    Wrapper around seaborn.heatmap for visualizing correlation matrix.</span>
+<span class="sd">ewm_params</span>
+<span class="sd">    Return corresponding param. values for exponential weighted functions.</span>
+<span class="sd">ewm_weights</span>
+<span class="sd">    Exponential weights as a function of position `i`.</span>
+<span class="sd">ewm_bootstrap</span>
+<span class="sd">    Bootstrap a new distribution through exponential weighting.</span>
+<span class="sd">factor_loadings</span>
+<span class="sd">    Security factor exposures generated through OLS regression.</span>
+<span class="sd">PCA</span>
+<span class="sd">    Performs principal component analysis (PCA) on a set of returns.</span>
+<span class="sd">PortSim</span>
+<span class="sd">    Basic portfolio simulation.</span>
+<span class="sd">TEOpt</span>
+<span class="sd">    Tracking error optimization/security replication.</span>
+<span class="sd">variance_inflation_factor</span>
+<span class="sd">    Calculate variance inflation factor (VIF) for each all `regressors`.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="n">__author__</span> <span class="o">=</span> <span class="s2">&quot;Brad Solomon &lt;brad.solomon.1124@gmail.com&gt;&quot;</span>
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">&quot;activeshare&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;amortize&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;BestFitDist&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;corr_heatmap&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;ewm_params&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;ewm_weights&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;ewm_bootstrap&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;factor_loadings&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;PCA&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;PortSim&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;TEOpt&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;variance_inflation_factor&quot;</span><span class="p">,</span>
+<span class="p">]</span>
+
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">OrderedDict</span>
+<span class="kn">import</span> <span class="nn">itertools</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
+
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">scipy.optimize</span> <span class="k">as</span> <span class="nn">sco</span>
+<span class="kn">import</span> <span class="nn">scipy.stats</span> <span class="k">as</span> <span class="nn">scs</span>
+<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
+<span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <span class="n">scale</span>
+<span class="kn">from</span> <span class="nn">sklearn.utils.extmath</span> <span class="kn">import</span> <span class="n">svd_flip</span>
+<span class="kn">from</span> <span class="nn">statsmodels.regression</span> <span class="kn">import</span> <span class="n">linear_model</span>
+<span class="kn">from</span> <span class="nn">statsmodels.tools</span> <span class="kn">import</span> <span class="n">add_constant</span>
+
+<span class="kn">from</span> <span class="nn">pyfinance</span> <span class="kn">import</span> <span class="n">datasets</span><span class="p">,</span> <span class="n">ols</span><span class="p">,</span> <span class="n">returns</span><span class="p">,</span> <span class="n">utils</span>
+
+<span class="n">NUMTODEC</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;num&quot;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span> <span class="s2">&quot;dec&quot;</span><span class="p">:</span> <span class="mf">0.01</span><span class="p">}</span>
+
+
+<div class="viewcode-block" id="activeshare"><a class="viewcode-back" href="../02_general.html#general.activeshare">[docs]</a><span class="k">def</span> <span class="nf">activeshare</span><span class="p">(</span><span class="n">fund</span><span class="p">,</span> <span class="n">idx</span><span class="p">,</span> <span class="n">in_format</span><span class="o">=</span><span class="s2">&quot;num&quot;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Compute the active ahare of a fund versus an index.</span>
+
+<span class="sd">    Formula is 0.5 * sum(abs(w_fund - w_idx)).</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    fund: {pd.Series, pd.DataFrame}</span>
+<span class="sd">        The fund&#39;s holdings, with tickers as the Index and weights as</span>
+<span class="sd">        values.  If a DataFrame, each column is a ticker/portfolio.</span>
+<span class="sd">    idx: pd.Series</span>
+<span class="sd">        The benchmark portfolio, with tickers as the Index and weights</span>
+<span class="sd">        as values.</span>
+<span class="sd">    in_format: {&#39;num&#39;, &#39;dec&#39;}</span>
+<span class="sd">        Decimal notation of the inputs.  &quot;num&quot; means 0.5% is denoted 0.5;</span>
+<span class="sd">        &quot;dec&quot; means 0.5% is denoted 0.005.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    act_sh : pd.Series or pd.DataFrame</span>
+<span class="sd">        The dimension will be one-lower than that of `fund`.</span>
+<span class="sd">        If `fund` is a Series, the result is a scalar value.</span>
+<span class="sd">        If `fund` is a DataFrame, the result is a Series, with</span>
+<span class="sd">        the columns of `fund` as the resulting Index.</span>
+
+<span class="sd">    .. _Cremers &amp; Petajisto, &#39;How Active Is Your Fund Manager?&#39;, 2009</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">fund</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">is_unique</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">idx</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">is_unique</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Inputs must have unique indices.&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">fund</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
+        <span class="n">cols</span> <span class="o">=</span> <span class="n">fund</span><span class="o">.</span><span class="n">columns</span>
+    <span class="n">fund</span> <span class="o">=</span> <span class="n">fund</span> <span class="o">*</span> <span class="n">NUMTODEC</span><span class="p">[</span><span class="n">in_format</span><span class="p">]</span>
+    <span class="n">idx</span> <span class="o">=</span> <span class="n">idx</span> <span class="o">*</span> <span class="n">NUMTODEC</span><span class="p">[</span><span class="n">in_format</span><span class="p">]</span>
+
+    <span class="n">union</span> <span class="o">=</span> <span class="n">fund</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">union</span><span class="p">(</span><span class="n">idx</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
+    <span class="n">fund</span> <span class="o">=</span> <span class="n">fund</span><span class="o">.</span><span class="n">reindex</span><span class="p">(</span><span class="n">union</span><span class="p">,</span> <span class="n">fill_value</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span><span class="o">.</span><span class="n">values</span>
+    <span class="n">idx</span> <span class="o">=</span> <span class="n">idx</span><span class="o">.</span><span class="n">reindex</span><span class="p">(</span><span class="n">union</span><span class="p">,</span> <span class="n">fill_value</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span><span class="o">.</span><span class="n">values</span>
+
+    <span class="k">if</span> <span class="n">fund</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="c1"># Resulting active share will be a scalar</span>
+        <span class="n">diff</span> <span class="o">=</span> <span class="n">fund</span> <span class="o">-</span> <span class="n">idx</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">diff</span> <span class="o">=</span> <span class="n">fund</span> <span class="o">-</span> <span class="n">idx</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">]</span>
+    <span class="n">act_sh</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">diff</span><span class="p">)</span> <span class="o">*</span> <span class="mf">0.5</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">act_sh</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
+        <span class="n">act_sh</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">act_sh</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">cols</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">act_sh</span></div>
+
+
+<div class="viewcode-block" id="amortize"><a class="viewcode-back" href="../02_general.html#general.amortize">[docs]</a><span class="k">def</span> <span class="nf">amortize</span><span class="p">(</span><span class="n">rate</span><span class="p">,</span> <span class="n">nper</span><span class="p">,</span> <span class="n">pv</span><span class="p">,</span> <span class="n">freq</span><span class="o">=</span><span class="s2">&quot;M&quot;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Construct an amortization schedule for a fixed-rate loan.</span>
+
+<span class="sd">    Rate -&gt; annualized input</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    # a 6.75% $200,000 loan, 30-year tenor, payments due monthly</span>
+<span class="sd">    # view the 5 final months</span>
+<span class="sd">    print(amortize(rate=.0675, nper=30, pv=200000).round(2).tail())</span>
+<span class="sd">         beg_bal     prin  interest  end_bal</span>
+<span class="sd">    356  6377.95 -1261.32    -35.88  5116.63</span>
+<span class="sd">    357  5116.63 -1268.42    -28.78  3848.22</span>
+<span class="sd">    358  3848.22 -1275.55    -21.65  2572.67</span>
+<span class="sd">    359  2572.67 -1282.72    -14.47  1289.94</span>
+<span class="sd">    360  1289.94 -1289.94     -7.26    -0.00</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">freq</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">get_anlz_factor</span><span class="p">(</span><span class="n">freq</span><span class="p">)</span>
+    <span class="n">rate</span> <span class="o">=</span> <span class="n">rate</span> <span class="o">/</span> <span class="n">freq</span>
+    <span class="n">nper</span> <span class="o">=</span> <span class="n">nper</span> <span class="o">*</span> <span class="n">freq</span>
+
+    <span class="n">periods</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">nper</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
+
+    <span class="n">principal</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ppmt</span><span class="p">(</span><span class="n">rate</span><span class="p">,</span> <span class="n">periods</span><span class="p">,</span> <span class="n">nper</span><span class="p">,</span> <span class="n">pv</span><span class="p">)</span>
+    <span class="n">interest</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ipmt</span><span class="p">(</span><span class="n">rate</span><span class="p">,</span> <span class="n">periods</span><span class="p">,</span> <span class="n">nper</span><span class="p">,</span> <span class="n">pv</span><span class="p">)</span>
+    <span class="n">pmt</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">pmt</span><span class="p">(</span><span class="n">rate</span><span class="p">,</span> <span class="n">nper</span><span class="p">,</span> <span class="n">pv</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">balance</span><span class="p">(</span><span class="n">pv</span><span class="p">,</span> <span class="n">rate</span><span class="p">,</span> <span class="n">nper</span><span class="p">,</span> <span class="n">pmt</span><span class="p">):</span>
+        <span class="n">dfac</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">rate</span><span class="p">)</span> <span class="o">**</span> <span class="n">nper</span>
+        <span class="k">return</span> <span class="n">pv</span> <span class="o">*</span> <span class="n">dfac</span> <span class="o">-</span> <span class="n">pmt</span> <span class="o">*</span> <span class="p">(</span><span class="n">dfac</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="n">rate</span>
+
+    <span class="n">res</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;beg_bal&quot;</span><span class="p">:</span> <span class="n">balance</span><span class="p">(</span><span class="n">pv</span><span class="p">,</span> <span class="n">rate</span><span class="p">,</span> <span class="n">periods</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="n">pmt</span><span class="p">),</span>
+            <span class="s2">&quot;prin&quot;</span><span class="p">:</span> <span class="n">principal</span><span class="p">,</span>
+            <span class="s2">&quot;interest&quot;</span><span class="p">:</span> <span class="n">interest</span><span class="p">,</span>
+            <span class="s2">&quot;end_bal&quot;</span><span class="p">:</span> <span class="n">balance</span><span class="p">(</span><span class="n">pv</span><span class="p">,</span> <span class="n">rate</span><span class="p">,</span> <span class="n">periods</span><span class="p">,</span> <span class="o">-</span><span class="n">pmt</span><span class="p">),</span>
+        <span class="p">},</span>
+        <span class="n">index</span><span class="o">=</span><span class="n">periods</span><span class="p">,</span>
+    <span class="p">)[</span><span class="s2">&quot;beg_bal&quot;</span><span class="p">,</span> <span class="s2">&quot;prin&quot;</span><span class="p">,</span> <span class="s2">&quot;interest&quot;</span><span class="p">,</span> <span class="s2">&quot;end_bal&quot;</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">res</span></div>
+
+
+<div class="viewcode-block" id="BestFitDist"><a class="viewcode-back" href="../02_general.html#general.BestFitDist">[docs]</a><span class="k">class</span> <span class="nc">BestFitDist</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Which continuous distribution best models `x`?</span>
+
+<span class="sd">    Core process within `.fit` is adopted from @tmthydvnprt (Stack Overflow).</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    x : 1-d array-like or Series</span>
+<span class="sd">        Empirical input data to model/fit</span>
+<span class="sd">    bins : int or sequence of scalars or str, optional, default &#39;auto&#39;</span>
+<span class="sd">        Passed to np.histogram; see docs</span>
+<span class="sd">    distributions : sequence or None, default None</span>
+<span class="sd">        If specified, limit the tests to these distribution names only.</span>
+<span class="sd">        Example: [&#39;normal&#39;, &#39;cauchy&#39;, &#39;laplace&#39;]</span>
+<span class="sd">        If None, defaults to the full set; see:</span>
+<span class="sd">        docs.scipy.org/doc/scipy/reference/stats.html#continuous-distributions</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    from pyfinance import BestFitDist</span>
+<span class="sd">    # 1000 random samples from a N~(5,3) distribution</span>
+<span class="sd">    r = np.random.normal(loc=5, scale=3, size=1000)</span>
+<span class="sd">    dist = [&#39;normal&#39;, &#39;cauchy&#39;, &#39;laplace&#39;, &#39;lognormal&#39;, &#39;johnsonsu&#39;]</span>
+<span class="sd">    fitted = BestFitDist(r, distributions=dist).fit()</span>
+
+<span class="sd">    print(fitted.best())</span>
+<span class="sd">    name                     norm</span>
+<span class="sd">    params    (4.88130759176, ...</span>
+<span class="sd">    sse                 0.0015757</span>
+<span class="sd">    dtype: object</span>
+
+<span class="sd">    print(fitted.all())</span>
+<span class="sd">            name      sse               params</span>
+<span class="sd">    3      alpha  0.22361  (3.8149848058e-0...</span>
+<span class="sd">    4     anglit  0.02263  (5.49753868994, ...</span>
+<span class="sd">    5    arcsine  0.10216  (-4.69316502376,...</span>
+<span class="sd">    6       beta  0.00161  (150.926126014, ...</span>
+<span class="sd">    7  betaprime  0.00226  (30.4979678995, ...</span>
+<span class="sd">    8   bradford  0.06195  (1.02226022038, ...</span>
+<span class="sd">    9       burr  0.23714  (0.662101587716,...</span>
+<span class="sd">    0      ksone      NaN  (1.30534444533, ...</span>
+<span class="sd">    1  kstwobign  0.01196  (-6.31494451637,...</span>
+<span class="sd">    2       norm  0.00158  (4.88130759176, ...</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="s2">&quot;auto&quot;</span><span class="p">,</span> <span class="n">distributions</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">x</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bins</span> <span class="o">=</span> <span class="n">bins</span>
+        <span class="k">if</span> <span class="n">distributions</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">distributions</span> <span class="o">=</span> <span class="n">scs</span><span class="o">.</span><span class="n">_continuous_distns</span><span class="o">.</span><span class="n">_distn_names</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">distributions</span> <span class="o">=</span> <span class="n">distributions</span>
+
+<div class="viewcode-block" id="BestFitDist.fit"><a class="viewcode-back" href="../02_general.html#general.BestFitDist.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Fit each distribution to `data` and calculate an SSE.</span>
+
+<span class="sd">        WARNING: significant runtime. (~1min)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Defaults/anchors</span>
+        <span class="n">best_sse</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span>
+        <span class="n">best_param</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+        <span class="n">best_dist</span> <span class="o">=</span> <span class="n">scs</span><span class="o">.</span><span class="n">norm</span>
+
+        <span class="c1"># Compute the histogram of `x`.  density=True gives a probability</span>
+        <span class="c1"># density function at each bin, normalized such that the integral over</span>
+        <span class="c1"># the range is 1.0</span>
+        <span class="n">hist</span><span class="p">,</span> <span class="n">bin_edges</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">histogram</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">bins</span><span class="p">,</span> <span class="n">density</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="c1"># The results of np.histogram will have len(bin_edges) = len(hist) + 1</span>
+        <span class="c1"># Find the midpoint at each bin to reduce the size of bin_edges by 1</span>
+        <span class="n">bin_edges</span> <span class="o">=</span> <span class="p">(</span><span class="n">bin_edges</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">roll</span><span class="p">(</span><span class="n">bin_edges</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">))[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="mf">2.0</span>
+
+        <span class="k">with</span> <span class="n">warnings</span><span class="o">.</span><span class="n">catch_warnings</span><span class="p">():</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">)</span>
+
+            <span class="n">sses</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">params</span> <span class="o">=</span> <span class="p">[]</span>
+
+            <span class="k">for</span> <span class="n">dist</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">distributions</span><span class="p">:</span>
+
+                <span class="n">dist</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">scs</span><span class="p">,</span> <span class="n">dist</span><span class="p">)</span>
+
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="c1"># The generic rv_continuous.fit() returns `mle_tuple`:</span>
+                    <span class="c1">#    &#39;MLEs for any shape parameters (if applicable),</span>
+                    <span class="c1">#    followed by those for location and scale.&#39;</span>
+                    <span class="n">param</span> <span class="o">=</span> <span class="o">*</span><span class="n">shape</span><span class="p">,</span> <span class="n">loc</span><span class="p">,</span> <span class="n">scale</span> <span class="o">=</span> <span class="n">dist</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">)</span>
+
+                    <span class="n">pdf</span> <span class="o">=</span> <span class="n">dist</span><span class="o">.</span><span class="n">pdf</span><span class="p">(</span><span class="n">bin_edges</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="n">loc</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="n">scale</span><span class="p">,</span> <span class="o">*</span><span class="n">shape</span><span class="p">)</span>
+                    <span class="n">sse</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="n">hist</span> <span class="o">-</span> <span class="n">pdf</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">))</span>
+
+                    <span class="n">sses</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sse</span><span class="p">)</span>
+                    <span class="n">params</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">param</span><span class="p">)</span>
+
+                    <span class="k">if</span> <span class="n">best_sse</span> <span class="o">&gt;</span> <span class="n">sse</span> <span class="o">&gt;</span> <span class="mf">0.0</span><span class="p">:</span>
+                        <span class="n">best_dist</span> <span class="o">=</span> <span class="n">dist</span>
+                        <span class="n">best_param</span> <span class="o">=</span> <span class="n">param</span>
+                        <span class="n">best_sse</span> <span class="o">=</span> <span class="n">sse</span>
+                        <span class="n">best_pdf</span> <span class="o">=</span> <span class="n">pdf</span>
+
+                <span class="k">except</span> <span class="p">(</span><span class="ne">NotImplementedError</span><span class="p">,</span> <span class="ne">AttributeError</span><span class="p">):</span>
+                    <span class="n">sses</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
+                    <span class="n">params</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">best_dist</span> <span class="o">=</span> <span class="n">best_dist</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">best_param</span> <span class="o">=</span> <span class="n">best_param</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">best_sse</span> <span class="o">=</span> <span class="n">best_sse</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">best_pdf</span> <span class="o">=</span> <span class="n">best_pdf</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">sses</span> <span class="o">=</span> <span class="n">sses</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">params</span> <span class="o">=</span> <span class="n">params</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">hist</span> <span class="o">=</span> <span class="n">hist</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bin_edges</span> <span class="o">=</span> <span class="n">bin_edges</span>
+
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="BestFitDist.best"><a class="viewcode-back" href="../02_general.html#general.BestFitDist.best">[docs]</a>    <span class="k">def</span> <span class="nf">best</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;The resulting best-fit distribution, its parameters, and SSE.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">best_dist</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                <span class="s2">&quot;params&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">best_param</span><span class="p">,</span>
+                <span class="s2">&quot;sse&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">best_sse</span><span class="p">,</span>
+            <span class="p">}</span>
+        <span class="p">)</span></div>
+
+<div class="viewcode-block" id="BestFitDist.all"><a class="viewcode-back" href="../02_general.html#general.BestFitDist.all">[docs]</a>    <span class="k">def</span> <span class="nf">all</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">by</span><span class="o">=</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;All tested distributions, their parameters, and SSEs.&quot;&quot;&quot;</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">distributions</span><span class="p">,</span>
+                <span class="s2">&quot;params&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">,</span>
+                <span class="s2">&quot;sse&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">sses</span><span class="p">,</span>
+            <span class="p">}</span>
+        <span class="p">)[[</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="s2">&quot;sse&quot;</span><span class="p">,</span> <span class="s2">&quot;params&quot;</span><span class="p">]]</span>
+        <span class="n">res</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="n">by</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="n">ascending</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">res</span></div>
+
+<div class="viewcode-block" id="BestFitDist.plot"><a class="viewcode-back" href="../02_general.html#general.BestFitDist.plot">[docs]</a>    <span class="k">def</span> <span class="nf">plot</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Plot the empirical histogram versus best-fit distribution&#39;s PDF.&quot;&quot;&quot;</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bin_edges</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">hist</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">bin_edges</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">best_pdf</span><span class="p">)</span></div></div>
+        <span class="c1"># TODO: labels</span>
+
+
+<div class="viewcode-block" id="corr_heatmap"><a class="viewcode-back" href="../02_general.html#general.corr_heatmap">[docs]</a><span class="k">def</span> <span class="nf">corr_heatmap</span><span class="p">(</span>
+    <span class="n">x</span><span class="p">,</span>
+    <span class="n">mask_half</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;RdYlGn_r&quot;</span><span class="p">,</span>
+    <span class="n">vmin</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span>
+    <span class="n">vmax</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+    <span class="n">linewidths</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+    <span class="n">square</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
+    <span class="o">**</span><span class="n">kwargs</span>
+<span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Wrapper around seaborn.heatmap for visualizing correlation matrix.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    x : DataFrame</span>
+<span class="sd">        Underlying data (not a correlation matrix)</span>
+<span class="sd">    mask_half : bool, default True</span>
+<span class="sd">        If True, mask (whiteout) the upper right triangle of the matrix</span>
+<span class="sd">    All other parameters passed to seaborn.heatmap:</span>
+<span class="sd">    https://seaborn.pydata.org/generated/seaborn.heatmap.html</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    # Generate some correlated data</span>
+<span class="sd">    &gt;&gt;&gt; import numpy as np</span>
+<span class="sd">    &gt;&gt;&gt; import pandas as pd</span>
+<span class="sd">    &gt;&gt;&gt; k = 10</span>
+<span class="sd">    &gt;&gt;&gt; size = 400</span>
+<span class="sd">    &gt;&gt;&gt; mu = np.random.randint(0, 10, k).astype(float)</span>
+<span class="sd">    &gt;&gt;&gt; r = np.random.ranf(k ** 2).reshape((k, k)) * 5</span>
+<span class="sd">    &gt;&gt;&gt; df = pd.DataFrame(np.random.multivariate_normal(mu, r, size=size))</span>
+<span class="sd">    &gt;&gt;&gt; corr_heatmap(df, figsize=(6, 6))</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="n">mask_half</span><span class="p">:</span>
+        <span class="n">mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">corr</span><span class="p">()</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+        <span class="n">mask</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">triu_indices_from</span><span class="p">(</span><span class="n">mask</span><span class="p">)]</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">mask</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">with</span> <span class="n">sns</span><span class="o">.</span><span class="n">axes_style</span><span class="p">(</span><span class="s2">&quot;white&quot;</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">sns</span><span class="o">.</span><span class="n">heatmap</span><span class="p">(</span>
+            <span class="n">x</span><span class="o">.</span><span class="n">corr</span><span class="p">(),</span>
+            <span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">,</span>
+            <span class="n">vmin</span><span class="o">=</span><span class="n">vmin</span><span class="p">,</span>
+            <span class="n">vmax</span><span class="o">=</span><span class="n">vmax</span><span class="p">,</span>
+            <span class="n">linewidths</span><span class="o">=</span><span class="n">linewidths</span><span class="p">,</span>
+            <span class="n">square</span><span class="o">=</span><span class="n">square</span><span class="p">,</span>
+            <span class="n">mask</span><span class="o">=</span><span class="n">mask</span><span class="p">,</span>
+            <span class="o">**</span><span class="n">kwargs</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="ewm_params"><a class="viewcode-back" href="../02_general.html#general.ewm_params">[docs]</a><span class="k">def</span> <span class="nf">ewm_params</span><span class="p">(</span><span class="n">param</span><span class="p">,</span> <span class="n">param_value</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Corresponding parameter values for exponentially weighted functions.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    param : {&#39;alpha&#39;, &#39;com&#39;, &#39;span&#39;, &#39;halflife&#39;}</span>
+<span class="sd">    param_value : float or int</span>
+<span class="sd">        The parameter value.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    result : dict</span>
+<span class="sd">        Layout/index of corresponding parameters.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="n">param</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;alpha&quot;</span><span class="p">,</span> <span class="s2">&quot;com&quot;</span><span class="p">,</span> <span class="s2">&quot;span&quot;</span><span class="p">,</span> <span class="s2">&quot;halflife&quot;</span><span class="p">]:</span>
+        <span class="k">raise</span> <span class="ne">NameError</span><span class="p">(</span><span class="s2">&quot;`param` must be one of {alpha, com, span, halflife}&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">input_alpha</span><span class="p">(</span><span class="n">a</span><span class="p">):</span>
+        <span class="n">com</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="n">a</span> <span class="o">-</span> <span class="mf">1.0</span>
+        <span class="n">span</span> <span class="o">=</span> <span class="mf">2.0</span> <span class="o">/</span> <span class="n">a</span> <span class="o">-</span> <span class="mf">1.0</span>
+        <span class="n">halflife</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mf">0.5</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">a</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;com&quot;</span><span class="p">:</span> <span class="n">com</span><span class="p">,</span> <span class="s2">&quot;span&quot;</span><span class="p">:</span> <span class="n">span</span><span class="p">,</span> <span class="s2">&quot;halflife&quot;</span><span class="p">:</span> <span class="n">halflife</span><span class="p">}</span>
+
+    <span class="k">def</span> <span class="nf">output_alpha</span><span class="p">(</span><span class="n">param</span><span class="p">,</span> <span class="n">p</span><span class="p">):</span>
+        <span class="n">eqs</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;com&quot;</span><span class="p">:</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">+</span> <span class="n">p</span><span class="p">),</span>
+            <span class="s2">&quot;span&quot;</span><span class="p">:</span> <span class="mf">2.0</span> <span class="o">/</span> <span class="p">(</span><span class="n">p</span> <span class="o">+</span> <span class="mf">1.0</span><span class="p">),</span>
+            <span class="s2">&quot;halflife&quot;</span><span class="p">:</span> <span class="mf">1.0</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mf">0.5</span><span class="p">)</span> <span class="o">/</span> <span class="n">p</span><span class="p">),</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="n">eqs</span><span class="p">[</span><span class="n">param</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="n">param</span> <span class="o">==</span> <span class="s2">&quot;alpha&quot;</span><span class="p">:</span>
+        <span class="n">dct</span> <span class="o">=</span> <span class="n">input_alpha</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="n">param_value</span><span class="p">)</span>
+        <span class="n">alpha</span> <span class="o">=</span> <span class="n">param_value</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">alpha</span> <span class="o">=</span> <span class="n">output_alpha</span><span class="p">(</span><span class="n">param</span><span class="o">=</span><span class="n">param</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="n">param_value</span><span class="p">)</span>
+        <span class="n">dct</span> <span class="o">=</span> <span class="n">input_alpha</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="n">alpha</span><span class="p">)</span>
+    <span class="n">dct</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;alpha&quot;</span><span class="p">:</span> <span class="n">alpha</span><span class="p">})</span>
+    <span class="k">return</span> <span class="n">dct</span></div>
+
+
+<div class="viewcode-block" id="ewm_weights"><a class="viewcode-back" href="../02_general.html#general.ewm_weights">[docs]</a><span class="k">def</span> <span class="nf">ewm_weights</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">com</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">span</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">halflife</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Exponential weights as a function of position `i`.</span>
+
+<span class="sd">    Mimics pandas&#39; methodology with adjust=True:</span>
+<span class="sd">    http://pandas.pydata.org/pandas-docs/stable/computation.html#exponentially-weighted-windows</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">any</span><span class="p">((</span><span class="n">com</span><span class="p">,</span> <span class="n">span</span><span class="p">,</span> <span class="n">halflife</span><span class="p">,</span> <span class="n">alpha</span><span class="p">)):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;specify one of `com`, `span`, `halflife`, `alpha`&quot;</span><span class="p">)</span>
+
+    <span class="n">params</span> <span class="o">=</span> <span class="p">[</span><span class="n">com</span><span class="p">,</span> <span class="n">span</span><span class="p">,</span> <span class="n">halflife</span><span class="p">,</span> <span class="n">alpha</span><span class="p">]</span>
+    <span class="n">pos</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">i</span> <span class="k">for</span> <span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">params</span><span class="p">)</span> <span class="k">if</span> <span class="n">x</span><span class="p">)</span>
+    <span class="n">param_value</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">item</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">params</span> <span class="k">if</span> <span class="n">item</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="n">lookup</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">enumerate</span><span class="p">([</span><span class="s2">&quot;com&quot;</span><span class="p">,</span> <span class="s2">&quot;span&quot;</span><span class="p">,</span> <span class="s2">&quot;halflife&quot;</span><span class="p">,</span> <span class="s2">&quot;alpha&quot;</span><span class="p">]))</span>
+    <span class="n">param</span> <span class="o">=</span> <span class="n">lookup</span><span class="p">[</span><span class="n">pos</span><span class="p">]</span>
+    <span class="n">alpha</span> <span class="o">=</span> <span class="n">ewm_params</span><span class="p">(</span><span class="n">param</span><span class="o">=</span><span class="n">param</span><span class="p">,</span> <span class="n">param_value</span><span class="o">=</span><span class="n">param_value</span><span class="p">)[</span><span class="s2">&quot;alpha&quot;</span><span class="p">]</span>
+
+    <span class="n">res</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">alpha</span><span class="p">)</span> <span class="o">**</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">i</span><span class="p">)[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">res</span> <span class="o">/=</span> <span class="n">res</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">res</span></div>
+
+
+<div class="viewcode-block" id="ewm_bootstrap"><a class="viewcode-back" href="../02_general.html#general.ewm_bootstrap">[docs]</a><span class="k">def</span> <span class="nf">ewm_bootstrap</span><span class="p">(</span>
+    <span class="n">a</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">com</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">span</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">halflife</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="kc">None</span>
+<span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Bootstrap a new distribution through exponential weighting.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    a : 1-D array-like</span>
+<span class="sd">        Array from which to generate random sample of elements</span>
+<span class="sd">    size : int or tuple of ints, default None</span>
+<span class="sd">        Output shape.  If None, a single value is returned</span>
+<span class="sd">    com : float, default None</span>
+<span class="sd">        Center of mass; alpha = 1 / (1 + com), for com ≥ 0</span>
+<span class="sd">    span : float, default None</span>
+<span class="sd">        Span parameter; a = 2 / (span + 1), for span ≥ 1</span>
+<span class="sd">    halflife : float, default None</span>
+<span class="sd">        Halflife parameter; alpha = 1 − exp(log(0.5) / halflife),</span>
+<span class="sd">        for halflife &gt; 0</span>
+<span class="sd">    alpha : float, default None</span>
+<span class="sd">        Smoothing factor</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    &gt;&gt;&gt; import pandas as pd</span>
+<span class="sd">    &gt;&gt;&gt; np.random.seed(123)</span>
+
+<span class="sd">    # Our bootstrapped histogram should approximate these freqs</span>
+<span class="sd">    &gt;&gt;&gt; ewm_weights(10, alpha=.10)</span>
+<span class="sd">    [ 0.05948221  0.06609135  0.07343483  0.08159426  0.09066029  0.10073365</span>
+<span class="sd">      0.11192628  0.12436253  0.13818059  0.15353399]</span>
+
+<span class="sd">    &gt;&gt;&gt; res = ewm_bootstrap(np.arange(10), size=int(1e6), alpha=.10)</span>
+<span class="sd">    &gt;&gt;&gt; res = pd.Series(res).value_counts()</span>
+<span class="sd">    &gt;&gt;&gt; (res / res.sum()).head()</span>
+<span class="sd">    9    0.15323</span>
+<span class="sd">    8    0.13834</span>
+<span class="sd">    7    0.12424</span>
+<span class="sd">    6    0.11189</span>
+<span class="sd">    5    0.10113</span>
+<span class="sd">    dtype: float64</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">any</span><span class="p">((</span><span class="n">com</span><span class="p">,</span> <span class="n">span</span><span class="p">,</span> <span class="n">halflife</span><span class="p">,</span> <span class="n">alpha</span><span class="p">)):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Specify one of `com`, `span`, `halflife`, `alpha`.&quot;</span><span class="p">)</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="n">ewm_weights</span><span class="p">(</span>
+        <span class="n">i</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">a</span><span class="p">),</span> <span class="n">com</span><span class="o">=</span><span class="n">com</span><span class="p">,</span> <span class="n">span</span><span class="o">=</span><span class="n">span</span><span class="p">,</span> <span class="n">halflife</span><span class="o">=</span><span class="n">halflife</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="n">alpha</span>
+    <span class="p">)</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="n">a</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">size</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="n">p</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">res</span></div>
+
+
+<div class="viewcode-block" id="factor_loadings"><a class="viewcode-back" href="../02_general.html#general.factor_loadings">[docs]</a><span class="k">def</span> <span class="nf">factor_loadings</span><span class="p">(</span>
+    <span class="n">r</span><span class="p">,</span> <span class="n">factors</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">pickle_from</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">pickle_to</span><span class="o">=</span><span class="kc">None</span>
+<span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Security factor exposures generated through OLS regression.</span>
+
+<span class="sd">    Incorporates a handful of well-known factors models.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    r : Series or DataFrame</span>
+<span class="sd">        The left-hand-side variable(s).  If `r` is nx1 shape (a Series or</span>
+<span class="sd">        single-column DataFrame), the result will be a DataFrame.  If `r` is</span>
+<span class="sd">        an nxm DataFrame, the result will be a dictionary of DataFrames.</span>
+<span class="sd">    factors : DataFrame or None, default None</span>
+<span class="sd">        Factor returns (right-hand-side variables).  If None, factor returns</span>
+<span class="sd">        are loaded from `pyfinance.datasets.load_factors`</span>
+<span class="sd">    scale : bool, default False</span>
+<span class="sd">        If True, cale up/down the volatilities of all factors besides MKT &amp; RF,</span>
+<span class="sd">        to the vol of MKT.  Both means and the standard deviations are</span>
+<span class="sd">        multiplied by the scale factor (ratio of MKT.std() to other stdevs)</span>
+<span class="sd">    pickle_from : str or None, default None</span>
+<span class="sd">        Passed to `pyfinance.datasets.load_factors` if factors is not None</span>
+<span class="sd">    pickle_to : str or None, default None</span>
+<span class="sd">        Passed to `pyfinance.datasets.load_factors` if factors is not None</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    # TODO</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># TODO:</span>
+    <span class="c1"># - Might be appropriate for `returns`, will require higher dimensionality</span>
+    <span class="c1"># - Option to subtract or not subtract RF (Jensen alpha)</span>
+    <span class="c1"># - Annualized alpha</span>
+    <span class="c1"># - Add variance inflation factor to output (method of `ols.OLS`)</span>
+    <span class="c1"># - Add &#39;missing=drop&#39; functionality (see statsmodels.OLS)</span>
+    <span class="c1"># - Take all combinations of factors; which has highest explanatory power</span>
+    <span class="c1">#       or lowest SSE/MSE?</span>
+
+    <span class="k">if</span> <span class="n">factors</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">factors</span> <span class="o">=</span> <span class="n">datasets</span><span class="o">.</span><span class="n">load_factors</span><span class="p">(</span>
+            <span class="n">pickle_from</span><span class="o">=</span><span class="n">pickle_from</span><span class="p">,</span> <span class="n">pickle_to</span><span class="o">=</span><span class="n">pickle_to</span>
+        <span class="p">)</span>
+
+    <span class="n">r</span><span class="p">,</span> <span class="n">factors</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">constrain</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">factors</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">):</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">subtract</span><span class="p">(</span><span class="n">factors</span><span class="p">[</span><span class="s2">&quot;RF&quot;</span><span class="p">])</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">subtract</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">tile</span><span class="p">(</span><span class="n">factors</span><span class="p">[</span><span class="s2">&quot;RF&quot;</span><span class="p">],</span> <span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
+        <span class="c1"># r = r.subtract(factors[&#39;RF&#39;].values.reshape(-1,1))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;`r` must be one of (Series, DataFrame)&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">scale</span><span class="p">:</span>
+        <span class="c1"># Scale up the volatilities of all factors besides MKT &amp; RF, to the</span>
+        <span class="c1"># vol of MKT.  Both means and the standard deviations are multiplied</span>
+        <span class="c1"># by the scale factor (ratio of MKT.std() to other stdevs)</span>
+        <span class="n">tgtvol</span> <span class="o">=</span> <span class="n">factors</span><span class="p">[</span><span class="s2">&quot;MKT&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">std</span><span class="p">()</span>
+        <span class="n">diff</span> <span class="o">=</span> <span class="n">factors</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">difference</span><span class="p">([</span><span class="s2">&quot;MKT&quot;</span><span class="p">,</span> <span class="s2">&quot;RF&quot;</span><span class="p">])</span>  <span class="c1"># don&#39;t scale these</span>
+        <span class="n">vols</span> <span class="o">=</span> <span class="n">factors</span><span class="p">[</span><span class="n">diff</span><span class="p">]</span><span class="o">.</span><span class="n">std</span><span class="p">()</span>
+        <span class="n">factors</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="n">diff</span><span class="p">]</span> <span class="o">=</span> <span class="n">factors</span><span class="p">[</span><span class="n">diff</span><span class="p">]</span> <span class="o">*</span> <span class="n">tgtvol</span> <span class="o">/</span> <span class="n">vols</span>
+
+    <span class="c1"># Right-hand-side dict of models</span>
+    <span class="n">rhs</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">(</span>
+        <span class="p">[</span>
+            <span class="p">(</span><span class="s2">&quot;Capital Asset Pricing Model (CAPM)&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;MKT&quot;</span><span class="p">]),</span>
+            <span class="p">(</span><span class="s2">&quot;Fama-French 3-Factor Model&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;MKT&quot;</span><span class="p">,</span> <span class="s2">&quot;SMB&quot;</span><span class="p">,</span> <span class="s2">&quot;HML&quot;</span><span class="p">]),</span>
+            <span class="p">(</span><span class="s2">&quot;Carhart 4-Factor Model&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;MKT&quot;</span><span class="p">,</span> <span class="s2">&quot;SMB&quot;</span><span class="p">,</span> <span class="s2">&quot;HMLD&quot;</span><span class="p">,</span> <span class="s2">&quot;UMD&quot;</span><span class="p">]),</span>
+            <span class="p">(</span>
+                <span class="s2">&quot;Fama-French 5-Factor Model&quot;</span><span class="p">,</span>
+                <span class="p">[</span><span class="s2">&quot;MKT&quot;</span><span class="p">,</span> <span class="s2">&quot;SMB&quot;</span><span class="p">,</span> <span class="s2">&quot;HMLD&quot;</span><span class="p">,</span> <span class="s2">&quot;RMW&quot;</span><span class="p">,</span> <span class="s2">&quot;CMA&quot;</span><span class="p">],</span>
+            <span class="p">),</span>
+            <span class="p">(</span>
+                <span class="s2">&quot;AQR 6-Factor Model&quot;</span><span class="p">,</span>
+                <span class="p">[</span><span class="s2">&quot;MKT&quot;</span><span class="p">,</span> <span class="s2">&quot;SMB&quot;</span><span class="p">,</span> <span class="s2">&quot;HMLD&quot;</span><span class="p">,</span> <span class="s2">&quot;RMW&quot;</span><span class="p">,</span> <span class="s2">&quot;CMA&quot;</span><span class="p">,</span> <span class="s2">&quot;UMD&quot;</span><span class="p">],</span>
+            <span class="p">),</span>
+            <span class="p">(</span><span class="s2">&quot;Price-Signal Model&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;MKT&quot;</span><span class="p">,</span> <span class="s2">&quot;UMD&quot;</span><span class="p">,</span> <span class="s2">&quot;STR&quot;</span><span class="p">,</span> <span class="s2">&quot;LTR&quot;</span><span class="p">])(</span>
+                <span class="s2">&quot;Fung-Hsieh Trend-Following Model&quot;</span><span class="p">,</span>
+                <span class="p">[</span><span class="s2">&quot;BDLB&quot;</span><span class="p">,</span> <span class="s2">&quot;FXLB&quot;</span><span class="p">,</span> <span class="s2">&quot;CMLB&quot;</span><span class="p">,</span> <span class="s2">&quot;STLB&quot;</span><span class="p">,</span> <span class="s2">&quot;SILB&quot;</span><span class="p">],</span>
+            <span class="p">),</span>
+        <span class="p">]</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Get union of keys and sort them according to `factors.columns`&#39; order;</span>
+    <span class="c1"># used later as columns in result</span>
+    <span class="n">cols</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">itertools</span><span class="o">.</span><span class="n">chain</span><span class="p">(</span><span class="o">*</span><span class="n">rhs</span><span class="o">.</span><span class="n">values</span><span class="p">()))</span>
+    <span class="n">cols</span> <span class="o">=</span> <span class="p">[</span><span class="n">o</span> <span class="k">for</span> <span class="n">o</span> <span class="ow">in</span> <span class="n">factors</span><span class="o">.</span><span class="n">columns</span> <span class="k">if</span> <span class="n">o</span> <span class="ow">in</span> <span class="n">cols</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="s2">&quot;alpha&quot;</span><span class="p">,</span> <span class="s2">&quot;rsq_adj&quot;</span><span class="p">]</span>
+
+    <span class="c1"># Empty DataFrame to be populated with each regression&#39;s attributes</span>
+    <span class="n">stats</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;coef&quot;</span><span class="p">,</span> <span class="s2">&quot;tstat&quot;</span><span class="p">]</span>
+    <span class="n">idx</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">MultiIndex</span><span class="o">.</span><span class="n">from_product</span><span class="p">([</span><span class="n">rhs</span><span class="o">.</span><span class="n">keys</span><span class="p">(),</span> <span class="n">stats</span><span class="p">])</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="n">cols</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">idx</span><span class="p">)</span>
+
+    <span class="c1"># Regression calls</span>
+    <span class="k">if</span> <span class="n">n</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="c1"># Dict of DataFrames</span>
+        <span class="n">d</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">r</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">rhs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="n">res</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+                <span class="n">model</span> <span class="o">=</span> <span class="n">ols</span><span class="o">.</span><span class="n">OLS</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="n">r</span><span class="p">[</span><span class="n">col</span><span class="p">],</span> <span class="n">x</span><span class="o">=</span><span class="n">factors</span><span class="p">[</span><span class="n">v</span><span class="p">],</span> <span class="n">hasconst</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+                <span class="n">res</span><span class="o">.</span><span class="n">loc</span><span class="p">[(</span><span class="n">k</span><span class="p">,</span> <span class="s2">&quot;coef&quot;</span><span class="p">),</span> <span class="n">factors</span><span class="p">[</span><span class="n">v</span><span class="p">]</span><span class="o">.</span><span class="n">columns</span><span class="p">]</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">beta</span><span class="p">()</span>
+                <span class="n">res</span><span class="o">.</span><span class="n">loc</span><span class="p">[(</span><span class="n">k</span><span class="p">,</span> <span class="s2">&quot;tstat&quot;</span><span class="p">),</span> <span class="n">factors</span><span class="p">[</span><span class="n">v</span><span class="p">]</span><span class="o">.</span><span class="n">columns</span><span class="p">]</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">tstat_beta</span><span class="p">()</span>
+                <span class="n">res</span><span class="o">.</span><span class="n">loc</span><span class="p">[(</span><span class="n">k</span><span class="p">,</span> <span class="s2">&quot;coef&quot;</span><span class="p">),</span> <span class="s2">&quot;alpha&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">alpha</span><span class="p">()</span>
+                <span class="n">res</span><span class="o">.</span><span class="n">loc</span><span class="p">[(</span><span class="n">k</span><span class="p">,</span> <span class="s2">&quot;tstat&quot;</span><span class="p">),</span> <span class="s2">&quot;alpha&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">tstat_alpha</span><span class="p">()</span>
+                <span class="n">res</span><span class="o">.</span><span class="n">loc</span><span class="p">[(</span><span class="n">k</span><span class="p">,</span> <span class="s2">&quot;coef&quot;</span><span class="p">),</span> <span class="s2">&quot;rsq_adj&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">rsq_adj</span><span class="p">()</span>
+            <span class="n">d</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">res</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="n">d</span>
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># Single DataFrame</span>
+        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">rhs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">model</span> <span class="o">=</span> <span class="n">ols</span><span class="o">.</span><span class="n">OLS</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="n">r</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="n">factors</span><span class="p">[</span><span class="n">v</span><span class="p">],</span> <span class="n">hasconst</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+            <span class="n">res</span><span class="o">.</span><span class="n">loc</span><span class="p">[(</span><span class="n">k</span><span class="p">,</span> <span class="s2">&quot;coef&quot;</span><span class="p">),</span> <span class="n">factors</span><span class="p">[</span><span class="n">v</span><span class="p">]</span><span class="o">.</span><span class="n">columns</span><span class="p">]</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">beta</span><span class="p">()</span>
+            <span class="n">res</span><span class="o">.</span><span class="n">loc</span><span class="p">[(</span><span class="n">k</span><span class="p">,</span> <span class="s2">&quot;tstat&quot;</span><span class="p">),</span> <span class="n">factors</span><span class="p">[</span><span class="n">v</span><span class="p">]</span><span class="o">.</span><span class="n">columns</span><span class="p">]</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">tstat_beta</span><span class="p">()</span>
+            <span class="n">res</span><span class="o">.</span><span class="n">loc</span><span class="p">[(</span><span class="n">k</span><span class="p">,</span> <span class="s2">&quot;coef&quot;</span><span class="p">),</span> <span class="s2">&quot;alpha&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">alpha</span><span class="p">()</span>
+            <span class="n">res</span><span class="o">.</span><span class="n">loc</span><span class="p">[(</span><span class="n">k</span><span class="p">,</span> <span class="s2">&quot;tstat&quot;</span><span class="p">),</span> <span class="s2">&quot;alpha&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">tstat_alpha</span><span class="p">()</span>
+            <span class="n">res</span><span class="o">.</span><span class="n">loc</span><span class="p">[(</span><span class="n">k</span><span class="p">,</span> <span class="s2">&quot;coef&quot;</span><span class="p">),</span> <span class="s2">&quot;rsq_adj&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">rsq_adj</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">res</span></div>
+
+
+<div class="viewcode-block" id="PCA"><a class="viewcode-back" href="../02_general.html#general.PCA">[docs]</a><span class="k">class</span> <span class="nc">PCA</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Performs principal component analysis (PCA) on a set of returns.</span>
+
+<span class="sd">    Designed as an alternative to sklearn&#39;s PCA implementationn; has less</span>
+<span class="sd">    available parameters but a number of pre-canned convenience methods.  This</span>
+<span class="sd">    class-based implementation is principally geared towards analysis of</span>
+<span class="sd">    asset returns, such as in Rankin (2016).</span>
+
+<span class="sd">    One major difference is that the sign of the eignvectors is not flipped to</span>
+<span class="sd">    enforce deterministic output, as is done in sklearn.</span>
+<span class="sd">        (See sklearn/decomposition/pca.py, L390)</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    m : array-like (DataFrame, np.matrix, np.array)</span>
+<span class="sd">        Time series of returns.  Cannot be sparse.</span>
+<span class="sd">    threshold : float, or str in {&#39;Jolliffe&#39;, &#39;Kaiser&#39;}</span>
+<span class="sd">        The threshold below which eigenvalues and corresponding components</span>
+<span class="sd">        are dropped.  &#39;Jolliffe&#39; is Jolliffe&#39;s criterion (0.7), while</span>
+<span class="sd">        Kaiser&#39;s criterion is 1.0.</span>
+
+<span class="sd">    Resources</span>
+<span class="sd">    ---------</span>
+<span class="sd">    Abdi &amp; Williams, Principal Component Analysis, 2010</span>
+<span class="sd">    Bro, Acar &amp; Kolda, Resolving the Sign Ambiguity in the Singular Value</span>
+<span class="sd">        Decomposition, 2007</span>
+<span class="sd">    Mandel, Use of Singular Value Decomposition in Regression Analysis, 1982</span>
+<span class="sd">    Rankin, Multi-Dimensional Diversification: Improving Portfolio Selection</span>
+<span class="sd">        Using Principal Component Analysis, 2016</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="n">threshold</span><span class="o">=</span><span class="s2">&quot;Jolliffe&quot;</span><span class="p">,</span> <span class="n">u_based_decision</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="c1"># Keep a raw version of m for view and create a scaled version, ms</span>
+        <span class="c1"># scaled to N~(0,1)</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">feature_names</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">columns</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">m</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">values</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">feature_names</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">m</span> <span class="o">=</span> <span class="n">m</span>
+        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">m</span><span class="p">)</span><span class="o">.</span><span class="n">any</span><span class="p">():</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Input contains NaN&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ms</span> <span class="o">=</span> <span class="n">scale</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">m</span><span class="p">)</span>
+
+        <span class="n">thresholds</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;Kaiser&quot;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span> <span class="s2">&quot;Jolliffe&quot;</span><span class="p">:</span> <span class="mf">0.7</span><span class="p">}</span>
+        <span class="k">if</span> <span class="n">threshold</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">threshold</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">threshold</span> <span class="o">=</span> <span class="n">thresholds</span><span class="p">[</span><span class="n">threshold</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">threshold</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">threshold</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">threshold</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">u_based_decision</span> <span class="o">=</span> <span class="n">u_based_decision</span>
+
+<div class="viewcode-block" id="PCA.fit"><a class="viewcode-back" href="../02_general.html#general.PCA.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Fit the model by computing full SVD on m.</span>
+
+<span class="sd">        SVD factors the matrix m as u * np.diag(s) * v, where u and v are</span>
+<span class="sd">        unitary and s is a 1-d array of m‘s singular values.  Note that the SVD</span>
+<span class="sd">        is commonly written as a = U S V.H, and the v returned by this function</span>
+<span class="sd">        is V.H (the Hermitian transpose).  Therefore, we denote V.H as vt, and</span>
+<span class="sd">        back into the actual v, denoted just v.</span>
+
+<span class="sd">        The decomposition uses np.linalg.svd with full_matrices=False, so for</span>
+<span class="sd">        m with shape (M, N), then the shape of:</span>
+<span class="sd">         - u is (M, K)</span>
+<span class="sd">         - v is (K, N</span>
+<span class="sd">        where K = min(M, N)</span>
+
+<span class="sd">        Intertia is the percentage of explained variance.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        self, to enable method chaining</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_samples</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_features</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ms</span><span class="o">.</span><span class="n">shape</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">u</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">s</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">vt</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">svd</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ms</span><span class="p">,</span> <span class="n">full_matrices</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">v</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vt</span><span class="o">.</span><span class="n">T</span>
+
+        <span class="c1"># sklearn&#39;s implementation is to guarantee that the left and right</span>
+        <span class="c1"># singular vectors (U and V) are always the same, by imposing the</span>
+        <span class="c1"># that the largest coefficient of U in absolute value is positive</span>
+        <span class="c1"># This implementation uses u_based_decision=False rather than the</span>
+        <span class="c1"># default True to flip that logic and ensure the resulting</span>
+        <span class="c1"># components and loadings have high positive coefficients</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">u</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">vt</span> <span class="o">=</span> <span class="n">svd_flip</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">u</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">v</span><span class="p">,</span> <span class="n">u_based_decision</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">u_based_decision</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">v</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vt</span><span class="o">.</span><span class="n">T</span>
+
+        <span class="c1"># Drop eigenvalues with value &gt; threshold</span>
+        <span class="c1"># *keep* is number of components retained</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">eigenvalues</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">s</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_samples</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">keep</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">count_nonzero</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">eigenvalues</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">threshold</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">inertia</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">eigenvalues</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">eigenvalues</span><span class="o">.</span><span class="n">sum</span><span class="p">())[:</span> <span class="bp">self</span><span class="o">.</span><span class="n">keep</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cumulative_inertia</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inertia</span><span class="o">.</span><span class="n">cumsum</span><span class="p">()[:</span> <span class="bp">self</span><span class="o">.</span><span class="n">keep</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">eigenvalues</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">eigenvalues</span><span class="p">[:</span> <span class="bp">self</span><span class="o">.</span><span class="n">keep</span><span class="p">]</span>
+
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">eigen_table</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Eigenvalues, expl. variance, and cumulative expl. variance.&quot;&quot;&quot;</span>
+        <span class="n">idx</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Eigenvalue&quot;</span><span class="p">,</span> <span class="s2">&quot;Variability (%)&quot;</span><span class="p">,</span> <span class="s2">&quot;Cumulative (%)&quot;</span><span class="p">]</span>
+        <span class="n">table</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+                <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">eigenvalues</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">inertia</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">cumulative_inertia</span><span class="p">]</span>
+            <span class="p">),</span>
+            <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;F</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">keep</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)],</span>
+            <span class="n">index</span><span class="o">=</span><span class="n">idx</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">table</span>
+
+<div class="viewcode-block" id="PCA.loadings"><a class="viewcode-back" href="../02_general.html#general.PCA.loadings">[docs]</a>    <span class="k">def</span> <span class="nf">loadings</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Loadings = eigenvectors times sqrt(eigenvalues).&quot;&quot;&quot;</span>
+        <span class="n">loadings</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">v</span><span class="p">[:,</span> <span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">keep</span><span class="p">]</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">eigenvalues</span><span class="p">)</span>
+        <span class="n">cols</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;PC</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">keep</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)]</span>
+        <span class="n">loadings</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+            <span class="n">loadings</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">cols</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">feature_names</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">loadings</span></div>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">relative_diversification</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="mf">0.75</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Number of components needed to explain &gt; x% of variance.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">count_nonzero</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cumulative_inertia</span> <span class="o">&lt;</span> <span class="n">x</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">screeplot</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">title</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">xlabel</span><span class="o">=</span><span class="s2">&quot;Eigenvalue&quot;</span><span class="p">,</span>
+        <span class="n">ylabel</span><span class="o">=</span><span class="s2">&quot;Cumulative Explained Variance (%)&quot;</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">keep</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">cumulative_inertia</span><span class="p">,</span> <span class="s2">&quot;o-&quot;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="n">xlabel</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="n">ylabel</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Scree Plot&quot;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">varimax</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">loadings</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">loadings</span><span class="p">()</span><span class="o">.</span><span class="n">values</span>
+        <span class="n">gamma</span> <span class="o">=</span> <span class="mf">1.0</span>
+        <span class="n">q</span> <span class="o">=</span> <span class="mi">20</span>
+        <span class="n">tol</span> <span class="o">=</span> <span class="mf">1e-6</span>
+        <span class="n">p</span><span class="p">,</span> <span class="n">k</span> <span class="o">=</span> <span class="n">loadings</span><span class="o">.</span><span class="n">shape</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="n">k</span><span class="p">)</span>
+        <span class="n">d</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">q</span><span class="p">):</span>
+            <span class="n">d_old</span> <span class="o">=</span> <span class="n">d</span>
+            <span class="n">lam</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">loadings</span><span class="p">,</span> <span class="n">r</span><span class="p">)</span>
+            <span class="n">u</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">vh</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">svd</span><span class="p">(</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span>
+                    <span class="n">loadings</span><span class="o">.</span><span class="n">T</span><span class="p">,</span>
+                    <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">lam</span><span class="p">)</span> <span class="o">**</span> <span class="mi">3</span>
+                    <span class="o">-</span> <span class="p">(</span><span class="n">gamma</span> <span class="o">/</span> <span class="n">p</span><span class="p">)</span>
+                    <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">lam</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">lam</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">lam</span><span class="p">)))),</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
+            <span class="n">r</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">vh</span><span class="p">)</span>
+            <span class="n">d</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">d</span> <span class="o">/</span> <span class="n">d_old</span> <span class="o">&lt;</span> <span class="n">tol</span><span class="p">:</span>
+                <span class="k">break</span>
+
+        <span class="n">cols</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;PC</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">keep</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)]</span>
+
+        <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">loadings</span><span class="p">,</span> <span class="n">r</span><span class="p">),</span> <span class="n">columns</span><span class="o">=</span><span class="n">cols</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">feature_names</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="PortSim"><a class="viewcode-back" href="../02_general.html#general.PortSim">[docs]</a><span class="k">class</span> <span class="nc">PortSim</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Basic portfolio simulation.</span>
+
+<span class="sd">    NOTE: work-in-progress as of 2017.08.25.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    r : Series or DataFrame</span>
+<span class="sd">        Time series of gross-of-fees security/account/fund returns.  Series are</span>
+<span class="sd">        converted to single-column DataFrame with `prep`</span>
+<span class="sd">    fee : float, default 0.</span>
+<span class="sd">        The *annual* percentage fee expressed as a decimal</span>
+<span class="sd">    fee_freq : str, int, or float, default &#39;Q&#39;</span>
+<span class="sd">        The fee frequency.  If str, it is case insensitive and should be:</span>
+<span class="sd">        - One of (&#39;D&#39;, &#39;W&#39;, &#39;M&#39;, &#39;Q&#39;, &#39;A&#39;)</span>
+<span class="sd">        - One of pandas anchored offsets, such as &#39;W-FRI&#39;:</span>
+<span class="sd">          pandas.pydata.org/pandas-docs/stable/timeseries.html#anchored-offsets</span>
+<span class="sd">        If int or float, this is interpreted as the number of billing periods</span>
+<span class="sd">        per year</span>
+<span class="sd">    start : str or date, default None</span>
+<span class="sd">        Date (inclusive) on which to truncate `r`</span>
+<span class="sd">    end : str or date, default None</span>
+<span class="sd">        Date (inclusive) on which to truncate `r`</span>
+<span class="sd">    lookback : dict, default {}</span>
+<span class="sd">        Keyword args dict passed to `constrain_horizon`.  See</span>
+<span class="sd">        utils.constrain_horizon</span>
+<span class="sd">    strict : bool, default False</span>
+<span class="sd">        Passed to `constrain_horizon`.</span>
+<span class="sd">        If True, raise Error if the implied start date on the horizon predates</span>
+<span class="sd">        the actual start date of `r`.  If False, just return `r` in this</span>
+<span class="sd">        situation</span>
+<span class="sd">    dist_amt : int or float, default None</span>
+<span class="sd">        The *annual* dollar distribution.</span>
+<span class="sd">        dist_amt &gt; 0: money withdrawn from account/fund</span>
+<span class="sd">        dist_amt &lt; 0: money deposited to account/fund</span>
+<span class="sd">    v0 : int or float, default float(1e6)</span>
+<span class="sd">        The initial investment</span>
+<span class="sd">    include_start : bool, default True</span>
+<span class="sd">        Whether to prepend a starting date to resulting DataFrame displays</span>
+<span class="sd">    freq : str, default &#39;M&#39;</span>
+<span class="sd">        The frequency of `r`.  Passed to returns.prep</span>
+<span class="sd">    name : str, default None</span>
+<span class="sd">        For cases where a Series is converted to a single-column DataFrame,</span>
+<span class="sd">        `name` specifies the resulting column name; it is passed to</span>
+<span class="sd">        `pd.Series.to_frame`; passed to returns.prep</span>
+<span class="sd">    in_format : str, {&#39;num&#39;, &#39;dec&#39;}</span>
+<span class="sd">        Passed to returns.prep; converts percentage figures from</span>
+<span class="sd">        numeral form to decimal form</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">r</span><span class="p">,</span>
+        <span class="n">fee</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
+        <span class="n">fee_freq</span><span class="o">=</span><span class="s2">&quot;Q&quot;</span><span class="p">,</span>
+        <span class="n">start</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">end</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">lookback</span><span class="o">=</span><span class="p">{},</span>
+        <span class="n">strict</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">dist_amt</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">dist_pct</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">dist_freq</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">v0</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="mf">1e6</span><span class="p">),</span>
+        <span class="n">include_start</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">freq</span><span class="o">=</span><span class="s2">&quot;M&quot;</span><span class="p">,</span>
+        <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">in_format</span><span class="o">=</span><span class="s2">&quot;num&quot;</span><span class="p">,</span>
+    <span class="p">):</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">gross</span> <span class="o">=</span> <span class="n">returns</span><span class="o">.</span><span class="n">prep</span><span class="p">(</span>
+            <span class="n">r</span><span class="o">=</span><span class="n">r</span><span class="p">,</span> <span class="n">freq</span><span class="o">=</span><span class="n">freq</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">in_format</span><span class="o">=</span><span class="n">in_format</span>
+        <span class="p">)</span>
+
+        <span class="c1"># fee_freq: if str -&gt; frequency; if int/float -&gt; periods/yr</span>
+        <span class="c1"># Get `fee` to a per-period float</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">fee_freq</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">)):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">fee_freq</span> <span class="o">=</span> <span class="n">fee_freq</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">fee</span> <span class="o">=</span> <span class="n">fee</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">fee_freq</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">fee_freq</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">fee_freq</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">get_anlz_factor</span><span class="p">(</span><span class="n">fee_freq</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">fee</span> <span class="o">=</span> <span class="n">fee</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">fee_freq</span>
+
+        <span class="c1"># Logic for interaction of `start`, `end`, and `lookback`</span>
+        <span class="c1"># TODO: how should lookback be passed? Consider params to</span>
+        <span class="c1"># `constrain_horizon`</span>
+        <span class="k">if</span> <span class="nb">any</span><span class="p">((</span><span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">))</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">lookback</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">gross</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">gross</span><span class="p">[</span><span class="n">start</span><span class="p">:</span><span class="n">end</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="n">lookback</span><span class="p">:</span>
+            <span class="c1"># TODO: cleanup</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">gross</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">constrain_horizon</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">gross</span><span class="p">,</span> <span class="o">**</span><span class="n">lookback</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">all</span><span class="p">((</span><span class="nb">any</span><span class="p">((</span><span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">)),</span> <span class="n">lookback</span><span class="p">)):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;if `lookback` is specified, both `start` and&quot;</span>
+                <span class="s2">&quot; `end` should be None&quot;</span>
+            <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">gross</span><span class="o">.</span><span class="n">index</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">gross</span><span class="o">.</span><span class="n">columns</span>
+
+        <span class="n">masktypes</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="mf">12.0</span><span class="p">:</span> <span class="s2">&quot;is_month_end&quot;</span><span class="p">,</span>
+            <span class="mf">4.0</span><span class="p">:</span> <span class="s2">&quot;is_quarter_end&quot;</span><span class="p">,</span>
+            <span class="mf">1.0</span><span class="p">:</span> <span class="s2">&quot;is_quarter_end&quot;</span><span class="p">,</span>
+        <span class="p">}</span>
+
+        <span class="n">mask</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">masktypes</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">fee_freq</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">feesched</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">mask</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">fee</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
+
+        <span class="c1"># Net of fees (not yet of distributions)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">net</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">gross</span><span class="o">.</span><span class="n">values</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span>
+            <span class="mf">1.0</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">feesched</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="p">)</span> <span class="o">-</span> <span class="mf">1.0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">net</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">net</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">columns</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">dist_amt</span> <span class="o">=</span> <span class="n">dist_amt</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dist_pct</span> <span class="o">=</span> <span class="n">dist_pct</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dist_freq</span> <span class="o">=</span> <span class="n">dist_freq</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">v0</span> <span class="o">=</span> <span class="n">v0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">include_start</span> <span class="o">=</span> <span class="n">include_start</span>
+
+    <span class="k">def</span> <span class="nf">account_value</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dist_amt</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">ri</span> <span class="o">=</span> <span class="n">returns</span><span class="o">.</span><span class="n">return_index</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">net</span><span class="p">)</span>
+            <span class="n">t</span> <span class="o">=</span> <span class="p">(</span><span class="n">ri</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">is_quarter_end</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span> <span class="o">/</span> <span class="n">ri</span><span class="p">)</span><span class="o">.</span><span class="n">cumsum</span><span class="p">()</span>
+            <span class="n">res</span> <span class="o">=</span> <span class="n">ri</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">v0</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">dist_amt</span> <span class="o">*</span> <span class="n">t</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">include_start</span><span class="p">:</span>
+                <span class="n">res</span> <span class="o">=</span> <span class="n">returns</span><span class="o">.</span><span class="n">insert_start</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="n">base</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">v0</span><span class="p">)</span>
+
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">dist_pct</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">res</span> <span class="o">=</span> <span class="n">returns</span><span class="o">.</span><span class="n">return_index</span><span class="p">(</span>
+                <span class="p">(</span><span class="mf">1.0</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">net</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">dist_pct</span><span class="p">)</span> <span class="o">-</span> <span class="mf">1.0</span><span class="p">,</span>
+                <span class="n">base</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">v0</span><span class="p">,</span>
+                <span class="n">include_start</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">include_start</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="k">return</span> <span class="n">res</span></div>
+
+
+<div class="viewcode-block" id="TEOpt"><a class="viewcode-back" href="../02_general.html#general.TEOpt">[docs]</a><span class="k">class</span> <span class="nc">TEOpt</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Tracking error optimization/security replication.</span>
+
+<span class="sd">    At the end of each period, TEOpt computes an optimization over the trailing</span>
+<span class="sd">    `window` periods, solving for the vector of weights that would have</span>
+<span class="sd">    minimized the tracking error of `r` to `proxies` over that period.</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    # TODO</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    r : DataFrame</span>
+<span class="sd">        The target time series of returns to be replicated</span>
+<span class="sd">    proxies : DataFrame</span>
+<span class="sd">        The available proxies used towards building a replicating portfolio</span>
+<span class="sd">    window : int</span>
+<span class="sd">        The lookback window utilized in each rolling optimization</span>
+<span class="sd">    sumto: float, default 1</span>
+<span class="sd">        Optimization constraint: proxy weights should sum to this parameter</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">proxies</span><span class="p">,</span> <span class="n">window</span><span class="p">,</span> <span class="n">sumto</span><span class="o">=</span><span class="mf">1.0</span><span class="p">):</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">r</span> <span class="o">=</span> <span class="n">r</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">proxies</span> <span class="o">=</span> <span class="n">proxies</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">window</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">window</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sumto</span> <span class="o">=</span> <span class="n">sumto</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">newidx</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="n">window</span> <span class="o">-</span> <span class="mi">1</span> <span class="p">:]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cols</span> <span class="o">=</span> <span class="n">proxies</span><span class="o">.</span><span class="n">columns</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n</span> <span class="o">=</span> <span class="n">proxies</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+        <span class="c1"># TODO: constrain</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_r</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">rolling_windows</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">window</span><span class="o">=</span><span class="n">window</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_proxies</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">rolling_windows</span><span class="p">(</span><span class="n">proxies</span><span class="p">,</span> <span class="n">window</span><span class="o">=</span><span class="n">window</span><span class="p">)</span>
+
+<div class="viewcode-block" id="TEOpt.optimize"><a class="viewcode-back" href="../02_general.html#general.TEOpt.optimize">[docs]</a>    <span class="k">def</span> <span class="nf">optimize</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Analogous to `sklearn`&#39;s fit.  Returns `self` to enable chaining.&quot;&quot;&quot;</span>
+
+        <span class="k">def</span> <span class="nf">te</span><span class="p">(</span><span class="n">weights</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">proxies</span><span class="p">):</span>
+            <span class="sd">&quot;&quot;&quot;Helper func.  `pyfinance.tracking_error` doesn&#39;t work here.&quot;&quot;&quot;</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">weights</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+                <span class="n">weights</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">weights</span><span class="p">)</span>
+            <span class="n">proxy</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">proxies</span> <span class="o">*</span> <span class="n">weights</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">te</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">proxy</span> <span class="o">-</span> <span class="n">r</span><span class="p">)</span>  <span class="c1"># not anlzd...</span>
+            <span class="k">return</span> <span class="n">te</span>
+
+        <span class="n">ew</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">equal_weights</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n</span><span class="p">,</span> <span class="n">sumto</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">sumto</span><span class="p">)</span>
+        <span class="n">bnds</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n</span><span class="p">))</span>
+        <span class="n">cons</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;eq&quot;</span><span class="p">,</span> <span class="s2">&quot;fun&quot;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">sumto</span><span class="p">}</span>
+
+        <span class="n">xs</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">funs</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_r</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_proxies</span><span class="p">):</span>
+            <span class="n">opt</span> <span class="o">=</span> <span class="n">sco</span><span class="o">.</span><span class="n">minimize</span><span class="p">(</span>
+                <span class="n">te</span><span class="p">,</span>
+                <span class="n">x0</span><span class="o">=</span><span class="n">ew</span><span class="p">,</span>
+                <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">),</span>
+                <span class="n">method</span><span class="o">=</span><span class="s2">&quot;SLSQP&quot;</span><span class="p">,</span>
+                <span class="n">bounds</span><span class="o">=</span><span class="n">bnds</span><span class="p">,</span>
+                <span class="n">constraints</span><span class="o">=</span><span class="n">cons</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">x</span><span class="p">,</span> <span class="n">fun</span> <span class="o">=</span> <span class="n">opt</span><span class="p">[</span><span class="s2">&quot;x&quot;</span><span class="p">],</span> <span class="n">opt</span><span class="p">[</span><span class="s2">&quot;fun&quot;</span><span class="p">]</span>
+            <span class="n">xs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+            <span class="n">funs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">fun</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_xs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">xs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_funs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">funs</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="TEOpt.opt_weights"><a class="viewcode-back" href="../02_general.html#general.TEOpt.opt_weights">[docs]</a>    <span class="k">def</span> <span class="nf">opt_weights</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Optimal weights (period-end).&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_xs</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">newidx</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cols</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TEOpt.ex_ante_te"><a class="viewcode-back" href="../02_general.html#general.TEOpt.ex_ante_te">[docs]</a>    <span class="k">def</span> <span class="nf">ex_ante_te</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Tracking error corresponding to each optimized lookback period.&quot;&quot;&quot;</span>
+        <span class="c1"># TODO: check manually</span>
+        <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_funs</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">newidx</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TEOpt.replicate"><a class="viewcode-back" href="../02_general.html#general.TEOpt.replicate">[docs]</a>    <span class="k">def</span> <span class="nf">replicate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Forward-month returns of the replicating portfolio.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">proxies</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">window</span> <span class="p">:]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_xs</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">reindex</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">r</span><span class="o">.</span><span class="n">index</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="variance_inflation_factor"><a class="viewcode-back" href="../02_general.html#general.variance_inflation_factor">[docs]</a><span class="k">def</span> <span class="nf">variance_inflation_factor</span><span class="p">(</span><span class="n">regressors</span><span class="p">,</span> <span class="n">hasconst</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Calculate variance inflation factor (VIF) for each all `regressors`.</span>
+
+<span class="sd">    A wrapper/modification of statsmodels:</span>
+<span class="sd">    statsmodels.stats.outliers_influence.variance_inflation_factor</span>
+
+<span class="sd">    One recommendation is that if VIF is greater than 5, then the explanatory</span>
+<span class="sd">    variable `x` is highly collinear with the other explanatory</span>
+<span class="sd">    variables, and the parameter estimates will have large standard errors</span>
+<span class="sd">    because of this. [source: StatsModels]</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    regressors: DataFrame</span>
+<span class="sd">        DataFrame containing the entire set of regressors</span>
+<span class="sd">    hasconst : bool, default False</span>
+<span class="sd">        If False, a column vector will be added to `regressors` for use in</span>
+<span class="sd">        OLS</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    # Generate some data</span>
+<span class="sd">    from datetime import date</span>
+<span class="sd">    from pandas_datareader.data import DataReader as dr</span>
+
+<span class="sd">    syms = {&#39;TWEXBMTH&#39; : &#39;usd&#39;,</span>
+<span class="sd">            &#39;T10Y2YM&#39; : &#39;term_spread&#39;,</span>
+<span class="sd">            &#39;PCOPPUSDM&#39; : &#39;copper&#39;</span>
+<span class="sd">           }</span>
+<span class="sd">    start = date(2000, 1, 1)</span>
+<span class="sd">    data = (dr(syms.keys(), &#39;fred&#39;, start)</span>
+<span class="sd">            .pct_change()</span>
+<span class="sd">            .dropna())</span>
+<span class="sd">    data = data.rename(columns = syms)</span>
+
+<span class="sd">    print(variance_inflation_factor(data))</span>
+<span class="sd">    usd            1.31609</span>
+<span class="sd">    term_spread    1.03793</span>
+<span class="sd">    copper         1.37055</span>
+<span class="sd">    dtype: float64</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">hasconst</span><span class="p">:</span>
+        <span class="n">regressors</span> <span class="o">=</span> <span class="n">add_constant</span><span class="p">(</span><span class="n">regressors</span><span class="p">,</span> <span class="n">prepend</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">k</span> <span class="o">=</span> <span class="n">regressors</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">vif_sub</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">regressors</span><span class="p">):</span>
+        <span class="n">x_i</span> <span class="o">=</span> <span class="n">regressors</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="n">x</span><span class="p">]</span>
+        <span class="n">mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">k</span><span class="p">)</span> <span class="o">!=</span> <span class="n">x</span>
+        <span class="n">x_not_i</span> <span class="o">=</span> <span class="n">regressors</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="n">mask</span><span class="p">]</span>
+        <span class="n">rsq</span> <span class="o">=</span> <span class="n">linear_model</span><span class="o">.</span><span class="n">OLS</span><span class="p">(</span><span class="n">x_i</span><span class="p">,</span> <span class="n">x_not_i</span><span class="p">,</span> <span class="n">missing</span><span class="o">=</span><span class="s2">&quot;drop&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span><span class="o">.</span><span class="n">rsquared_adj</span>
+        <span class="n">vif</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">rsq</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">vif</span>
+
+    <span class="n">vifs</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">k</span><span class="p">),</span> <span class="n">index</span><span class="o">=</span><span class="n">regressors</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
+    <span class="n">vifs</span> <span class="o">=</span> <span class="n">vifs</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">vif_sub</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">regressors</span><span class="p">,))</span>
+
+    <span class="c1"># Find the constant column (probably called &#39;const&#39;, but not necessarily</span>
+    <span class="c1"># and drop it. `is_nonzero_const` borrowed from statsmodels.add_constant</span>
+    <span class="n">is_nonzero_const</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ptp</span><span class="p">(</span><span class="n">regressors</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span>
+    <span class="n">is_nonzero_const</span> <span class="o">&amp;=</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">regressors</span> <span class="o">!=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">vifs</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">vifs</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="n">is_nonzero_const</span><span class="p">],</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">vifs</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, chenlin.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

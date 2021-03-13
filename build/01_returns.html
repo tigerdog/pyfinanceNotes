@@ -1,0 +1,2564 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>returns模块 &mdash; finance 1.3 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="general模块" href="02_general.html" />
+    <link rel="prev" title="欢迎查看pyfinance文档" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> finance
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#"><strong>returns模块</strong></a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#note">Note</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#tseries"><strong>TSeries类</strong></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#capm"><strong>CAPM方法（资本资产定价模型）</strong></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#ret-rels"><strong>ret_rels方法</strong></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#anlzd-ret"><strong>anlzd_ret方法（年化收益率）</strong></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#cuml-ret"><strong>cuml_ret方法（累计年收益率）</strong></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#rollup-resample"><strong>rollup方法（resample到不同阶段的收益率）</strong></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#anlzd-stdev"><strong>anlzd_stdev方法(年化标准差)</strong></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#semi-stdev"><strong>semi_stdev方法(下行标准差)</strong></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#drawdown-start"><strong>drawdown_start方法(最大回撤起始时间)</strong></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#drawdown-end"><strong>drawdown_end方法(最大回撤结束时间)</strong></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#drawdown-length"><strong>drawdown_length方法(最大回撤天数)</strong></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pct-negative"><strong>pct_negative方法(个股下行–收益负–时间占比)</strong></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pct-positive"><strong>pct_positive(个股上行–收益正–时间占比)</strong></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#sharpe-ratio"><strong>sharpe_ratio(夏普比率)</strong></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#sortino-ratio"><strong>sortino_ratio(索提诺比率)</strong></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#calmar-ratio"><strong>calmar_ratio(卡玛比率)</strong></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#batting-avg"><strong>batting_avg(比基准收益高的时间占比)</strong></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#up-capture"><strong>up_capture(上行期与基准收益比)</strong></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#down-capture"><strong>down_capture(下行期与基准收益比)</strong></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#info-ratio"><strong>info_ratio(信息比率)</strong></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#alpha"><strong>alpha方法</strong></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#beta"><strong>beta方法</strong></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#treynor-ratio"><strong>treynor_ratio(特雷诺指数)</strong></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="02_general.html"><strong>general模块</strong></a></li>
+<li class="toctree-l1"><a class="reference internal" href="03_datasets.html"><strong>datasets模块</strong></a></li>
+<li class="toctree-l1"><a class="reference internal" href="04_ols.html"><strong>ols模块</strong></a></li>
+<li class="toctree-l1"><a class="reference internal" href="05_options.html"><strong>options模块</strong></a></li>
+<li class="toctree-l1"><a class="reference internal" href="06_utils.html"><strong>utils模块</strong></a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">finance</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li><strong>returns模块</strong></li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/01_returns.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-returns">
+<span id="returns"></span><h1><strong>returns模块</strong><a class="headerlink" href="#module-returns" title="Permalink to this headline">¶</a></h1>
+<p>Statistical analysis of security returns time series.</p>
+<p>Intended to mimic functionality of commercial software such as FactSet,
+Axioma, &amp; Zephyr and open-source software such as Pyfolio and ffn.</p>
+<p>The main classes of this module are</p>
+<ul class="simple">
+<li><p>TSeries, a subclassed Pandas Series, and</p></li>
+<li><p>TFrame, a subclassed Pandas DataFrame.</p></li>
+</ul>
+<p>They implement a collection of new methods that pertain specifically to
+investment management and the study of security returns and asset
+performance, such cumulative return indices and drawdown.</p>
+<div class="section" id="note">
+<h2>Note<a class="headerlink" href="#note" title="Permalink to this headline">¶</a></h2>
+<p>Subclassing Pandas objects is a delicate operation, but in this case
+is strictly preferrable to composition or piping.</p>
+<dl class="py class">
+<dt id="returns.TFrame">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">returns.</span></code><code class="sig-name descname"><span class="pre">TFrame</span></code><a class="reference internal" href="_modules/returns.html#TFrame"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#returns.TFrame" title="Permalink to this definition">¶</a></dt>
+<dd><p>Time series of periodic returns for multiple securities.</p>
+<p>Subclass of <cite>pandas.DataFrame</cite>, with an extended set of methods
+geared towards calculating common investment metrics.</p>
+<p>It attempts to optimize for speed, not adding much incremental overhead
+on top of the underlying NumPy and Pandas calls.</p>
+<dl class="simple">
+<dt>freq<span class="classifier">str or None, default None</span></dt><dd><p><cite>freq</cite> may be passed by <em>keyword-argument only</em>.</p>
+</dd>
+</dl>
+<p>TODO</p>
+<p>TODO</p>
+</dd></dl>
+
+<dl class="py class">
+<dt id="returns.TSeries">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">returns.</span></code><code class="sig-name descname"><span class="pre">TSeries</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/returns.html#TSeries"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#returns.TSeries" title="Permalink to this definition">¶</a></dt>
+<dd><p>Time series of periodic returns for a single security.</p>
+<p>Subclass of <cite>pandas.Series</cite>, with an extended set of methods
+geared towards calculating common investment metrics.</p>
+<p>It attempts to optimize for speed, not adding much incremental overhead
+on top of the underlying NumPy and Pandas calls.</p>
+<dl class="simple">
+<dt>freq<span class="classifier">str or None, default None</span></dt><dd><p><cite>freq</cite> may be passed by <em>keyword-argument only</em>.</p>
+</dd>
+</dl>
+<p>alpha : CAPM alpha.</p>
+<blockquote>
+<div><p>The return on an asset in excess of the asset’s required rate
+of return; the risk-adjusted return.
+[Source: CFA Institute]</p>
+</div></blockquote>
+<p>anlzd_ret : Annualized (geometric) return.</p>
+<p>anlzd_stdev : Annualized standard deviation with <cite>ddof</cite> degrees of freedom.</p>
+<p>batting_avg : Percentage of periods when <cite>self</cite> outperformed <cite>benchmark</cite>.</p>
+<p>beta : CAPM beta.</p>
+<blockquote>
+<div><p>A measure of systematic risk that is based on the covariance
+of an asset’s or portfolio’s return with the return of the
+overall market; a measure of the sensitivity of a given
+investment or portfolio to movements in the overall market.
+[Source: CFA Institute]</p>
+</div></blockquote>
+<p>beta_adj : Adjusted beta.</p>
+<blockquote>
+<div><p>Beta that is adjusted to reflect the tendency of beta to
+be mean reverting.
+[Source: CFA Institute]</p>
+<p>Formula:
+adj_factor * raw_beta + (1 - adj_factor)</p>
+</div></blockquote>
+<p>calmar_ratio : Calmar ratio–return per unit of drawdown.</p>
+<blockquote>
+<div><p>The compound annualized rate of return over a specified
+time period divided by the absolute value of maximum
+drawdown over the same time period.
+[Source: CFA Institute]</p>
+</div></blockquote>
+<p>capture_ratio : Capture ratio–ratio of upside to downside capture.</p>
+<blockquote>
+<div><p>Upside capture ratio divided by the downside capture ratio.</p>
+</div></blockquote>
+<p>cuml_ret : Cumulative return–a scalar ending percentage return.</p>
+<p>cuml_idx : Cumulative return index–a TSeries of cumulative returns.</p>
+<p>down_capture : Downside capture ratio.</p>
+<blockquote>
+<div><p>Measures the performance of <cite>self</cite> relative to benchmark
+conditioned on periods where <cite>benchmark</cite> is lt or le to
+<cite>threshold</cite>.</p>
+<p>Downside capture ratios are calculated by taking the fund’s
+monthly return during the periods of negative benchmark
+performance and dividing it by the benchmark return.
+[Source: CFA Institute]</p>
+</div></blockquote>
+<p>downmarket_filter : Drop elementwise samples where <cite>benchmark</cite> &gt; <cite>threshold</cite>.</p>
+<blockquote>
+<div><p>Filters <cite>self</cite> (and optionally, <cite>benchmark</cite>) to periods
+where <cite>benchmark</cite> &lt; <cite>threshold</cite>.  (Or &lt;= <cite>threshold</cite>.)</p>
+</div></blockquote>
+<p>drawdown_end : The date of the drawdown trough.</p>
+<blockquote>
+<div><p>Date at which the drawdown was most negative.</p>
+</div></blockquote>
+<p>drawdown_idx : Drawdown index; TSeries of drawdown from running HWM.</p>
+<p>drawdown_length : Length of drawdown in days.</p>
+<blockquote>
+<div><p>This is the duration from peak to trough.</p>
+</div></blockquote>
+<p>drawdown_recov : Length of drawdown recovery in days.</p>
+<blockquote>
+<div><p>This is the duration from trough to recovery date.</p>
+</div></blockquote>
+<p>drawdown_start : The date of the peak at which most severe drawdown began.</p>
+<p>excess_drawdown_idx : Excess drawdown index; TSeries of excess drawdowns.</p>
+<blockquote>
+<div><p>There are several ways of computing this metric.  For highly
+volatile returns, the <cite>method</cite> specified will have a
+non-negligible effect on the result.</p>
+</div></blockquote>
+<p>excess_ret : Excess return.</p>
+<p>gain_to_loss_ratio : Gain-to-loss ratio, ratio of positive to negative returns.</p>
+<blockquote>
+<div><p>Formula:
+(n pos. / n neg.) * (avg. up-month return / avg. down-month return)
+[Source: CFA Institute]</p>
+</div></blockquote>
+<p>geomean : Geometric mean return over the entire sample.</p>
+<p>growth_of_x : Ending value from growth of <cite>x</cite>, a scalar.</p>
+<p>info_ratio : Information ratio–return per unit of active risk.</p>
+<p>max_drawdown : Most negative drawdown derived from drawdown index.</p>
+<blockquote>
+<div><p>The largest difference between a high-water point and a
+subsequent low.  A portfolio may also be said to be in a
+position of drawdown from a decline from a high-water mark
+until a new high-water mark is reached.
+[Source: CFA Institute]</p>
+</div></blockquote>
+<p>msquared : M-squared, return scaled by relative total risk.</p>
+<blockquote>
+<div><p>A measure of what a portfolio would have returned if it had
+taken on the same <em>total</em> risk as the market index.
+[Source: CFA Institute]</p>
+</div></blockquote>
+<p>pct_negative : Pct. of periods in which <cite>self</cite> is less than <cite>threshold.</cite></p>
+<p>pct_positive : Pct. of periods in which <cite>self</cite> is greater than <cite>threshold.</cite></p>
+<p>recov_date : Drawdown recovery date.</p>
+<blockquote>
+<div><p>Date at which <cite>self</cite> recovered to previous high-water mark.</p>
+</div></blockquote>
+<p>ret_idx : Return index, a time series starting at <cite>base</cite>.</p>
+<p>ret_rels : Return-relatives, <cite>1 + self</cite>.</p>
+<blockquote>
+<div><p>A growth factor that is simply <cite>1 + self</cite>, elementwise.
+This method exists purely for naming purposes.</p>
+</div></blockquote>
+<p>rollup : Downsample <cite>self</cite> through geometric linking.</p>
+<p>rsq : R-squared.</p>
+<blockquote>
+<div><p>The fraction of the total variation that is explained
+by the regression.
+[Source: CFA Institute]</p>
+<p>Also known as: coefficient of determination.</p>
+</div></blockquote>
+<p>rsq_adj : Adjusted R-squared.</p>
+<blockquote>
+<div><p>Formula: 1. - ((1. - <cite>self._rsq</cite>) * (n - 1.) / (n - k - 1.))</p>
+</div></blockquote>
+<p>semi_stdev : Semi-standard deviation; stdev of downside returns.</p>
+<blockquote>
+<div><p>It is designed to address that fact that plain standard
+deviation penalizes “upside volatility.””</p>
+<p>Formula: <cite>sqrt( sum([min(self - thresh, 0] **2 ) / (n - ddof) )</cite></p>
+<p>Also known as: downside deviation.</p>
+</div></blockquote>
+<p>sharpe_ratio : Return over <cite>rf</cite> per unit of total risk.</p>
+<blockquote>
+<div><p>The average return in excess of the risk-free rate divided
+by the standard deviation of return; a measure of the average
+excess return earned per unit of standard deviation of return.
+[Source: CFA Institute]</p>
+</div></blockquote>
+<p>sortino_ratio : Return over a threshold per unit of downside deviation.</p>
+<blockquote>
+<div><p>A performance appraisal ratio that replaces standard deviation
+in the Sharpe ratio with downside deviation.
+[Source: CFA Institute]</p>
+</div></blockquote>
+<p>tracking_error : Standard deviation of excess returns.</p>
+<blockquote>
+<div><p>The standard deviation of the differences between
+a portfolio’s returns and its benchmark’s returns.
+[Source: CFA Institute]</p>
+<p>Also known as: tracking risk; active risk</p>
+</div></blockquote>
+<p>treynor_ratio : Return over <cite>rf</cite> per unit of systematic risk.</p>
+<blockquote>
+<div><p>A measure of risk-adjusted performance that relates a
+portfolio’s excess returns to the portfolio’s beta.
+[Source: CFA Institute]</p>
+</div></blockquote>
+<p>tstat_alpha : The t-statistic of CAPM alpha.</p>
+<p>tstat_beta : The t-statistic of CAPM beta.</p>
+<p>ulcer_idx : Ulcer Index, a composite measure of drawdown severity.</p>
+<blockquote>
+<div><p>A measure of the depth and duration of drawdowns in prices
+from earlier highs.  It is the square root of the mean of
+the squared percentage drawdowns in value.
+[Source: Peter G. Martin]</p>
+</div></blockquote>
+<p>up_capture : Upside capture ratio.</p>
+<blockquote>
+<div><p>Measures the performance of <cite>self</cite> relative to benchmark
+conditioned on periods where <cite>benchmark</cite> is gt or ge to
+<cite>threshold</cite>.</p>
+<p>Upside capture ratios are calculated by taking the fund’s
+monthly return during the periods of positive benchmark
+performance and dividing it by the benchmark return.
+[Source: CFA Institute]</p>
+</div></blockquote>
+<p>upmarket_filter : Drop elementwise samples where <cite>benchmark</cite> &lt; <cite>threshold</cite>.</p>
+<blockquote>
+<div><p>Filters <cite>self</cite> (and optionally, <cite>benchmark</cite>) to periods
+where <cite>benchmark</cite> &gt; <cite>threshold</cite>.  (Or &gt;= <cite>threshold</cite>.)</p>
+</div></blockquote>
+<p>CAPM : Interface to OLS regression against <cite>benchmark</cite>.</p>
+<blockquote>
+<div><p><cite>self.alpha()</cite>, <cite>self.beta()</cite> and several other methods
+stem from here.  For the full method set, see
+<cite>pyfinance.ols.OLS</cite>.</p>
+</div></blockquote>
+<p>TODO</p>
+<dl class="py method">
+<dt id="returns.TSeries.CAPM">
+<code class="sig-name descname"><span class="pre">CAPM</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">benchmark</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">has_const</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_const</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/returns.html#TSeries.CAPM"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#returns.TSeries.CAPM" title="Permalink to this definition">¶</a></dt>
+<dd><p>Interface to OLS regression against <cite>benchmark</cite>.</p>
+<p><cite>self.alpha()</cite>, <cite>self.beta()</cite> and several other methods
+stem from here.  For the full method set, see
+<cite>pyfinance.ols.OLS</cite>.</p>
+<dl class="simple">
+<dt>benchmark<span class="classifier">{pd.Series, TSeries, pd.DataFrame, np.ndarray}</span></dt><dd><p>The benchmark securitie(s) to which <cite>self</cite> is compared.</p>
+</dd>
+<dt>has_const<span class="classifier">bool, default False</span></dt><dd><p>Specifies whether <cite>benchmark</cite> includes a user-supplied constant
+(a column vector).  If False, it is added at instantiation.</p>
+</dd>
+<dt>use_const<span class="classifier">bool, default True</span></dt><dd><p>Whether to include an intercept term in the model output.  Note the
+difference between <cite>has_const</cite> and <cite>use_const</cite>: the former
+specifies whether a column vector of 1s is included in the
+input; the latter specifies whether the model itself
+should include a constant (intercept) term.  Exogenous
+data that is ~N(0,1) would have a constant equal to zero;
+specify use_const=False in this situation.</p>
+</dd>
+</dl>
+<p>pyfinance.ols.OLS</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="returns.TSeries.alpha">
+<code class="sig-name descname"><span class="pre">alpha</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">benchmark</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/returns.html#TSeries.alpha"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#returns.TSeries.alpha" title="Permalink to this definition">¶</a></dt>
+<dd><p>CAPM alpha.</p>
+<p>The return on an asset in excess of the asset’s required rate
+of return; the risk-adjusted return.
+[Source: CFA Institute]</p>
+<dl class="simple">
+<dt>benchmark<span class="classifier">{pd.Series, TSeries, pd.DataFrame, np.ndarray}</span></dt><dd><p>The benchmark securitie(s) to which <cite>self</cite> is compared.</p>
+</dd>
+<dt><a href="#id1"><span class="problematic" id="id2">**</span></a>kwargs</dt><dd><p>Passed to pyfinance.ols.OLS().</p>
+</dd>
+</dl>
+<p>float</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="returns.TSeries.anlzd_ret">
+<code class="sig-name descname"><span class="pre">anlzd_ret</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">freq</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/returns.html#TSeries.anlzd_ret"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#returns.TSeries.anlzd_ret" title="Permalink to this definition">¶</a></dt>
+<dd><p>Annualized (geometric) return.</p>
+<dl>
+<dt>freq<span class="classifier">str or None, default None</span></dt><dd><p>A frequency string used to create an annualization factor.
+If None, <cite>self.freq</cite> will be used.  If that is also None,
+a frequency will be inferred.  If none can be inferred,
+an exception is raised.</p>
+<p>It may be any frequency string or anchored offset string
+recognized by Pandas, such as ‘D’, ‘5D’, ‘Q’, ‘Q-DEC’, or
+‘BQS-APR’.</p>
+</dd>
+</dl>
+<p>float</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="returns.TSeries.anlzd_stdev">
+<code class="sig-name descname"><span class="pre">anlzd_stdev</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ddof</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">freq</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/returns.html#TSeries.anlzd_stdev"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#returns.TSeries.anlzd_stdev" title="Permalink to this definition">¶</a></dt>
+<dd><p>Annualized standard deviation with <cite>ddof</cite> degrees of freedom.</p>
+<dl>
+<dt>ddof<span class="classifier">int, default 0</span></dt><dd><p>Degrees of freedom, passed to pd.Series.std().</p>
+</dd>
+<dt>freq<span class="classifier">str or None, default None</span></dt><dd><p>A frequency string used to create an annualization factor.
+If None, <cite>self.freq</cite> will be used.  If that is also None,
+a frequency will be inferred.  If none can be inferred,
+an exception is raised.</p>
+<p>It may be any frequency string or anchored offset string
+recognized by Pandas, such as ‘D’, ‘5D’, ‘Q’, ‘Q-DEC’, or
+‘BQS-APR’.</p>
+</dd>
+<dt><a href="#id3"><span class="problematic" id="id4">**</span></a>kwargs</dt><dd><p>Passed to pd.Series.std().</p>
+</dd>
+</dl>
+<p>TODO: freq</p>
+<p>float</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="returns.TSeries.batting_avg">
+<code class="sig-name descname"><span class="pre">batting_avg</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">benchmark</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/returns.html#TSeries.batting_avg"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#returns.TSeries.batting_avg" title="Permalink to this definition">¶</a></dt>
+<dd><p>Percentage of periods when <cite>self</cite> outperformed <cite>benchmark</cite>.</p>
+<dl class="simple">
+<dt>benchmark<span class="classifier">{pd.Series, TSeries, 1d np.ndarray}</span></dt><dd><p>The benchmark security to which <cite>self</cite> is compared.</p>
+</dd>
+</dl>
+<p>float</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="returns.TSeries.beta">
+<code class="sig-name descname"><span class="pre">beta</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">benchmark</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/returns.html#TSeries.beta"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#returns.TSeries.beta" title="Permalink to this definition">¶</a></dt>
+<dd><p>CAPM beta.</p>
+<p>A measure of systematic risk that is based on the covariance
+of an asset’s or portfolio’s return with the return of the
+overall market; a measure of the sensitivity of a given
+investment or portfolio to movements in the overall market.
+[Source: CFA Institute]</p>
+<dl class="simple">
+<dt>benchmark<span class="classifier">{pd.Series, TSeries, pd.DataFrame, np.ndarray}</span></dt><dd><p>The benchmark securitie(s) to which <cite>self</cite> is compared.</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>float or np.ndarray</dt><dd><p>If <cite>benchmark</cite> is 1d, returns a scalar.
+If <cite>benchmark</cite> is 2d, returns a 1d ndarray.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="returns.TSeries.beta_adj">
+<code class="sig-name descname"><span class="pre">beta_adj</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">benchmark</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">adj_factor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.6666666666666666</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/returns.html#TSeries.beta_adj"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#returns.TSeries.beta_adj" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adjusted beta.</p>
+<p>Beta that is adjusted to reflect the tendency of beta to
+be mean reverting.
+[Source: CFA Institute]</p>
+<p>Formula:
+adj_factor * raw_beta + (1 - adj_factor)</p>
+<dl class="simple">
+<dt>benchmark<span class="classifier">{pd.Series, TSeries, pd.DataFrame, np.ndarray}</span></dt><dd><p>The benchmark securitie(s) to which <cite>self</cite> is compared.</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>float or np.ndarray</dt><dd><p>If <cite>benchmark</cite> is 1d, returns a scalar.
+If <cite>benchmark</cite> is 2d, returns a 1d ndarray.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="returns.TSeries.calmar_ratio">
+<code class="sig-name descname"><span class="pre">calmar_ratio</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/returns.html#TSeries.calmar_ratio"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#returns.TSeries.calmar_ratio" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calmar ratio–return per unit of drawdown.</p>
+<p>The compound annualized rate of return over a specified
+time period divided by the absolute value of maximum
+drawdown over the same time period.
+[Source: CFA Institute]</p>
+<p>float</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="returns.TSeries.capture_ratio">
+<code class="sig-name descname"><span class="pre">capture_ratio</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">benchmark</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compare_op</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">('ge',</span> <span class="pre">'lt')</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/returns.html#TSeries.capture_ratio"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#returns.TSeries.capture_ratio" title="Permalink to this definition">¶</a></dt>
+<dd><p>Capture ratio–ratio of upside to downside capture.</p>
+<p>Upside capture ratio divided by the downside capture ratio.</p>
+<dl class="simple">
+<dt>benchmark<span class="classifier">{pd.Series, TSeries, 1d np.ndarray}</span></dt><dd><p>The benchmark security to which <cite>self</cite> is compared.</p>
+</dd>
+<dt>threshold<span class="classifier">float, default 0.</span></dt><dd><p>The threshold at which the comparison should be done.
+<cite>self</cite> and <cite>benchmark</cite> are “filtered” to periods where
+<cite>benchmark</cite> is greater than/less than <cite>threshold</cite>.</p>
+</dd>
+<dt>compare_op<span class="classifier">{tuple, str, list}, default (‘ge’, ‘lt’)</span></dt><dd><p>Comparison operator used to compare to <cite>threshold</cite>.
+If a sequence, the two elements are passed to
+<cite>self.up_capture()</cite> and <cite>self.down_capture()</cite>, respectively.
+If <cite>str</cite>, indicates the comparison operater used in
+both method calls.</p>
+</dd>
+</dl>
+<p>float</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="returns.TSeries.cuml_idx">
+<code class="sig-name descname"><span class="pre">cuml_idx</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/returns.html#TSeries.cuml_idx"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#returns.TSeries.cuml_idx" title="Permalink to this definition">¶</a></dt>
+<dd><p>Cumulative return index–a TSeries of cumulative returns.</p>
+<p>TSeries</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="returns.TSeries.cuml_ret">
+<code class="sig-name descname"><span class="pre">cuml_ret</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/returns.html#TSeries.cuml_ret"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#returns.TSeries.cuml_ret" title="Permalink to this definition">¶</a></dt>
+<dd><p>Cumulative return–a scalar ending percentage return.</p>
+<p>float</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="returns.TSeries.down_capture">
+<code class="sig-name descname"><span class="pre">down_capture</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">benchmark</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compare_op</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'lt'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/returns.html#TSeries.down_capture"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#returns.TSeries.down_capture" title="Permalink to this definition">¶</a></dt>
+<dd><p>Downside capture ratio.</p>
+<p>Measures the performance of <cite>self</cite> relative to benchmark
+conditioned on periods where <cite>benchmark</cite> is lt or le to
+<cite>threshold</cite>.</p>
+<p>Downside capture ratios are calculated by taking the fund’s
+monthly return during the periods of negative benchmark
+performance and dividing it by the benchmark return.
+[Source: CFA Institute]</p>
+<dl class="simple">
+<dt>benchmark<span class="classifier">{pd.Series, TSeries, 1d np.ndarray}</span></dt><dd><p>The benchmark security to which <cite>self</cite> is compared.</p>
+</dd>
+<dt>threshold<span class="classifier">float, default 0.</span></dt><dd><p>The threshold at which the comparison should be done.
+<cite>self</cite> and <cite>benchmark</cite> are “filtered” to periods where
+<cite>benchmark</cite> is lt/le <cite>threshold</cite>.</p>
+</dd>
+<dt>compare_op<span class="classifier">{‘lt’, ‘le’}</span></dt><dd><p>Comparison operator used to compare to <cite>threshold</cite>.
+‘lt’ is less-than; ‘le’ is less-than-or-equal.</p>
+</dd>
+</dl>
+<p>float</p>
+<p>This metric uses geometric, not arithmetic, mean return.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="returns.TSeries.downmarket_filter">
+<code class="sig-name descname"><span class="pre">downmarket_filter</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">benchmark</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compare_op</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'lt'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">include_benchmark</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/returns.html#TSeries.downmarket_filter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#returns.TSeries.downmarket_filter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Drop elementwise samples where <cite>benchmark</cite> &gt; <cite>threshold</cite>.</p>
+<p>Filters <cite>self</cite> (and optionally, <cite>benchmark</cite>) to periods
+where <cite>benchmark</cite> &lt; <cite>threshold</cite>.  (Or &lt;= <cite>threshold</cite>.)</p>
+<dl class="simple">
+<dt>benchmark<span class="classifier">{pd.Series, TSeries, 1d np.ndarray}</span></dt><dd><p>The benchmark security to which <cite>self</cite> is compared.</p>
+</dd>
+<dt>threshold<span class="classifier">float, default 0.0</span></dt><dd><p>The threshold at which the comparison should be done.
+<cite>self</cite> and <cite>benchmark</cite> are “filtered” to periods where
+<cite>benchmark</cite> is lt/le <cite>threshold</cite>.</p>
+</dd>
+<dt>compare_op<span class="classifier">{‘lt’, ‘le’}</span></dt><dd><p>Comparison operator used to compare to <cite>threshold</cite>.
+‘lt’ is less-than; ‘le’ is less-than-or-equal.</p>
+</dd>
+<dt>include_benchmark<span class="classifier">bool, default False</span></dt><dd><p>If True, return tuple of (<cite>self</cite>, <cite>benchmark</cite>) both
+filtered.  If False, return only <cite>self</cite> filtered.</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>TSeries or tuple of TSeries</dt><dd><p>TSeries if <cite>include_benchmark=False</cite>, otherwise, tuple.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="returns.TSeries.drawdown_end">
+<code class="sig-name descname"><span class="pre">drawdown_end</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">return_date</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/returns.html#TSeries.drawdown_end"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#returns.TSeries.drawdown_end" title="Permalink to this definition">¶</a></dt>
+<dd><p>The date of the drawdown trough.</p>
+<p>Date at which the drawdown was most negative.</p>
+<dl class="simple">
+<dt>return_date<span class="classifier">bool, default False</span></dt><dd><p>If True, return a <cite>datetime.date</cite> object.
+If False, return a Pandas Timestamp object.</p>
+</dd>
+</dl>
+<p>datetime.date or pandas._libs.tslib.Timestamp</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="returns.TSeries.drawdown_idx">
+<code class="sig-name descname"><span class="pre">drawdown_idx</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/returns.html#TSeries.drawdown_idx"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#returns.TSeries.drawdown_idx" title="Permalink to this definition">¶</a></dt>
+<dd><p>Drawdown index; TSeries of drawdown from running HWM.</p>
+<p>TSeries</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="returns.TSeries.drawdown_length">
+<code class="sig-name descname"><span class="pre">drawdown_length</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">return_int</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/returns.html#TSeries.drawdown_length"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#returns.TSeries.drawdown_length" title="Permalink to this definition">¶</a></dt>
+<dd><p>Length of drawdown in days.</p>
+<p>This is the duration from peak to trough.</p>
+<dl class="simple">
+<dt>return_int<span class="classifier">bool, default False</span></dt><dd><p>If True, return the number of days as an int.
+If False, return a Pandas Timedelta object.</p>
+</dd>
+</dl>
+<p>int or pandas._libs.tslib.Timedelta</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="returns.TSeries.drawdown_recov">
+<code class="sig-name descname"><span class="pre">drawdown_recov</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">return_int</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/returns.html#TSeries.drawdown_recov"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#returns.TSeries.drawdown_recov" title="Permalink to this definition">¶</a></dt>
+<dd><p>Length of drawdown recovery in days.</p>
+<p>This is the duration from trough to recovery date.</p>
+<dl class="simple">
+<dt>return_int<span class="classifier">bool, default False</span></dt><dd><p>If True, return the number of days as an int.
+If False, return a Pandas Timedelta object.</p>
+</dd>
+</dl>
+<p>int or pandas._libs.tslib.Timedelta</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="returns.TSeries.drawdown_start">
+<code class="sig-name descname"><span class="pre">drawdown_start</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">return_date</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/returns.html#TSeries.drawdown_start"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#returns.TSeries.drawdown_start" title="Permalink to this definition">¶</a></dt>
+<dd><p>The date of the peak at which most severe drawdown began.</p>
+<dl class="simple">
+<dt>return_date<span class="classifier">bool, default False</span></dt><dd><p>If True, return a <cite>datetime.date</cite> object.
+If False, return a Pandas Timestamp object.</p>
+</dd>
+</dl>
+<p>datetime.date or pandas._libs.tslib.Timestamp</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="returns.TSeries.excess_drawdown_idx">
+<code class="sig-name descname"><span class="pre">excess_drawdown_idx</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">benchmark</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'caer'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/returns.html#TSeries.excess_drawdown_idx"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#returns.TSeries.excess_drawdown_idx" title="Permalink to this definition">¶</a></dt>
+<dd><p>Excess drawdown index; TSeries of excess drawdowns.</p>
+<p>There are several ways of computing this metric.  For highly
+volatile returns, the <cite>method</cite> specified will have a
+non-negligible effect on the result.</p>
+<dl class="simple">
+<dt>benchmark<span class="classifier">{pd.Series, TSeries, 1d np.ndarray}</span></dt><dd><p>The benchmark security to which <cite>self</cite> is compared.</p>
+</dd>
+<dt>method<span class="classifier">{‘caer’ (0), ‘cger’ (1), ‘ecr’ (2), ‘ecrr’ (3)}</span></dt><dd><p>Indicates the methodology used.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="returns.TSeries.excess_ret">
+<code class="sig-name descname"><span class="pre">excess_ret</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">benchmark</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'arithmetic'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/returns.html#TSeries.excess_ret"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#returns.TSeries.excess_ret" title="Permalink to this definition">¶</a></dt>
+<dd><p>Excess return.</p>
+<dl class="simple">
+<dt>benchmark<span class="classifier">{pd.Series, TSeries, 1d np.ndarray}</span></dt><dd><p>The benchmark security to which <cite>self</cite> is compared.</p>
+</dd>
+<dt>method<span class="classifier">{{‘arith’, ‘arithmetic’}, {‘geo’, ‘geometric’}}</span></dt><dd><p>The methodology used.  An arithmetic excess return is a
+straightforward subtraction.  A geometric excess return
+is the ratio of return-relatives of <cite>self</cite> to <cite>benchmark</cite>,
+minus one.</p>
+</dd>
+</dl>
+<p>Also known as: active return.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="returns.TSeries.gain_to_loss_ratio">
+<code class="sig-name descname"><span class="pre">gain_to_loss_ratio</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/returns.html#TSeries.gain_to_loss_ratio"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#returns.TSeries.gain_to_loss_ratio" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gain-to-loss ratio, ratio of positive to negative returns.</p>
+<p>Formula:
+(n pos. / n neg.) * (avg. up-month return / avg. down-month return)
+[Source: CFA Institute]</p>
+<p>float</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="returns.TSeries.geomean">
+<code class="sig-name descname"><span class="pre">geomean</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/returns.html#TSeries.geomean"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#returns.TSeries.geomean" title="Permalink to this definition">¶</a></dt>
+<dd><p>Geometric mean return over the entire sample.</p>
+<p>float</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="returns.TSeries.growth_of_x">
+<code class="sig-name descname"><span class="pre">growth_of_x</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/returns.html#TSeries.growth_of_x"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#returns.TSeries.growth_of_x" title="Permalink to this definition">¶</a></dt>
+<dd><p>Ending value from growth of <cite>x</cite>, a scalar.</p>
+<p>float</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="returns.TSeries.info_ratio">
+<code class="sig-name descname"><span class="pre">info_ratio</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">benchmark</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ddof</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/returns.html#TSeries.info_ratio"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#returns.TSeries.info_ratio" title="Permalink to this definition">¶</a></dt>
+<dd><p>Information ratio–return per unit of active risk.</p>
+<dl class="simple">
+<dt>benchmark<span class="classifier">{pd.Series, TSeries, 1d np.ndarray}</span></dt><dd><p>The benchmark security to which <cite>self</cite> is compared.</p>
+</dd>
+<dt>ddof<span class="classifier">int, default 0</span></dt><dd><p>Degrees of freedom, passed to pd.Series.std().</p>
+</dd>
+</dl>
+<p>float</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="returns.TSeries.max_drawdown">
+<code class="sig-name descname"><span class="pre">max_drawdown</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/returns.html#TSeries.max_drawdown"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#returns.TSeries.max_drawdown" title="Permalink to this definition">¶</a></dt>
+<dd><p>Most negative drawdown derived from drawdown index.</p>
+<p>The largest difference between a high-water point and a
+subsequent low.  A portfolio may also be said to be in a
+position of drawdown from a decline from a high-water mark
+until a new high-water mark is reached.
+[Source: CFA Institute]</p>
+<p>float</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="returns.TSeries.msquared">
+<code class="sig-name descname"><span class="pre">msquared</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">benchmark</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rf</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.02</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ddof</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/returns.html#TSeries.msquared"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#returns.TSeries.msquared" title="Permalink to this definition">¶</a></dt>
+<dd><p>M-squared, return scaled by relative total risk.</p>
+<p>A measure of what a portfolio would have returned if it had
+taken on the same <em>total</em> risk as the market index.
+[Source: CFA Institute]</p>
+<dl>
+<dt>benchmark<span class="classifier">{pd.Series, TSeries, 1d np.ndarray}</span></dt><dd><p>The benchmark security to which <cite>self</cite> is compared.</p>
+</dd>
+<dt>rf<span class="classifier">{float, TSeries, pd.Series}, default 0.02</span></dt><dd><p>If float, this represents an <em>compounded annualized</em>
+risk-free rate; 2.0% is the default.
+If a TSeries or pd.Series, this represents a time series
+of periodic returns to a risk-free security.</p>
+<p>To download a risk-free rate return series using
+3-month US T-bill yields, see:<cite>pyfinance.datasets.load_rf</cite>.</p>
+</dd>
+<dt>ddof<span class="classifier">int, default 0</span></dt><dd><p>Degrees of freedom, passed to pd.Series.std().</p>
+</dd>
+</dl>
+<p>float</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="returns.TSeries.pct_negative">
+<code class="sig-name descname"><span class="pre">pct_negative</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/returns.html#TSeries.pct_negative"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#returns.TSeries.pct_negative" title="Permalink to this definition">¶</a></dt>
+<dd><p>Pct. of periods in which <cite>self</cite> is less than <cite>threshold.</cite></p>
+<p>threshold : {float, TSeries, pd.Series}, default 0.</p>
+<p>float</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="returns.TSeries.pct_positive">
+<code class="sig-name descname"><span class="pre">pct_positive</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/returns.html#TSeries.pct_positive"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#returns.TSeries.pct_positive" title="Permalink to this definition">¶</a></dt>
+<dd><p>Pct. of periods in which <cite>self</cite> is greater than <cite>threshold.</cite></p>
+<p>threshold : {float, TSeries, pd.Series}, default 0.</p>
+<p>float</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="returns.TSeries.recov_date">
+<code class="sig-name descname"><span class="pre">recov_date</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">return_date</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/returns.html#TSeries.recov_date"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#returns.TSeries.recov_date" title="Permalink to this definition">¶</a></dt>
+<dd><p>Drawdown recovery date.</p>
+<p>Date at which <cite>self</cite> recovered to previous high-water mark.</p>
+<dl class="simple">
+<dt>return_date<span class="classifier">bool, default False</span></dt><dd><p>If True, return a <cite>datetime.date</cite> object.
+If False, return a Pandas Timestamp object.</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>{datetime.date, pandas._libs.tslib.Timestamp, pd.NaT}</dt><dd><p>Returns NaT if recovery has not occured.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="returns.TSeries.ret_idx">
+<code class="sig-name descname"><span class="pre">ret_idx</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">base</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/returns.html#TSeries.ret_idx"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#returns.TSeries.ret_idx" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return index, a time series starting at <cite>base</cite>.</p>
+<p>base : float, default 1.</p>
+<p>float</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="returns.TSeries.ret_rels">
+<code class="sig-name descname"><span class="pre">ret_rels</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/returns.html#TSeries.ret_rels"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#returns.TSeries.ret_rels" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return-relatives, <cite>1 + self</cite>.</p>
+<p>A growth factor that is simply <cite>1 + self</cite>, elementwise.
+This method exists purely for naming purposes.</p>
+<p>TSeries</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="returns.TSeries.rollup">
+<code class="sig-name descname"><span class="pre">rollup</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">freq</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/returns.html#TSeries.rollup"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#returns.TSeries.rollup" title="Permalink to this definition">¶</a></dt>
+<dd><p>Downsample <cite>self</cite> through geometric linking.</p>
+<dl class="simple">
+<dt>freq<span class="classifier">{‘D’, ‘W’, ‘M’, ‘Q’, ‘A’}</span></dt><dd><p>The frequency of the result.</p>
+</dd>
+<dt><a href="#id5"><span class="problematic" id="id6">**</span></a>kwargs</dt><dd><p>Passed to <cite>self.resample()</cite>.</p>
+</dd>
+</dl>
+<p>TSeries</p>
+<p># Derive quarterly returns from monthly returns.
+&gt;&gt;&gt; import numpy as np
+&gt;&gt;&gt; from pyfinance import TSeries
+&gt;&gt;&gt; np.random.seed(444)
+&gt;&gt;&gt; ts = TSeries(np.random.randn(12) / 100 + 0.002,
+…              index=pd.date_range(‘2016’, periods=12, freq=’M’))
+&gt;&gt;&gt; ts.rollup(‘Q’)
+2016-03-31    0.0274
+2016-06-30   -0.0032
+2016-09-30   -0.0028
+2016-12-31    0.0127
+Freq: Q-DEC, dtype: float64</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="returns.TSeries.rsq">
+<code class="sig-name descname"><span class="pre">rsq</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">benchmark</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/returns.html#TSeries.rsq"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#returns.TSeries.rsq" title="Permalink to this definition">¶</a></dt>
+<dd><p>R-squared.</p>
+<p>The fraction of the total variation that is explained
+by the regression.
+[Source: CFA Institute]</p>
+<p>Also known as: coefficient of determination.</p>
+<dl class="simple">
+<dt>benchmark<span class="classifier">{pd.Series, TSeries, pd.DataFrame, np.ndarray}</span></dt><dd><p>The benchmark securitie(s) to which <cite>self</cite> is compared.</p>
+</dd>
+<dt><a href="#id7"><span class="problematic" id="id8">**</span></a>kwargs</dt><dd><p>Passed to pyfinance.ols.OLS().</p>
+</dd>
+</dl>
+<p>float</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="returns.TSeries.rsq_adj">
+<code class="sig-name descname"><span class="pre">rsq_adj</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">benchmark</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/returns.html#TSeries.rsq_adj"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#returns.TSeries.rsq_adj" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adjusted R-squared.</p>
+<p>Formula: 1. - ((1. - <cite>self._rsq</cite>) * (n - 1.) / (n - k - 1.))</p>
+<dl class="simple">
+<dt>benchmark<span class="classifier">{pd.Series, TSeries, pd.DataFrame, np.ndarray}</span></dt><dd><p>The benchmark securitie(s) to which <cite>self</cite> is compared.</p>
+</dd>
+<dt><a href="#id9"><span class="problematic" id="id10">**</span></a>kwargs</dt><dd><p>Passed to pyfinance.ols.OLS().</p>
+</dd>
+</dl>
+<p>float</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="returns.TSeries.semi_stdev">
+<code class="sig-name descname"><span class="pre">semi_stdev</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ddof</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">freq</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/returns.html#TSeries.semi_stdev"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#returns.TSeries.semi_stdev" title="Permalink to this definition">¶</a></dt>
+<dd><p>Semi-standard deviation; stdev of downside returns.</p>
+<p>It is designed to address that fact that plain standard
+deviation penalizes “upside volatility.””</p>
+<p>Formula: <cite>sqrt( sum([min(self - thresh, 0] **2 ) / (n - ddof) )</cite></p>
+<p>Also known as: downside deviation.</p>
+<dl>
+<dt>threshold<span class="classifier">{float, TSeries, pd.Series}, default 0.</span></dt><dd><p>While zero is the default, it is also customary to use
+a “minimum acceptable return” (MAR) or a risk-free rate.
+Note: this is assumed to be a <em>periodic</em>, not necessarily
+annualized, return.</p>
+</dd>
+<dt>ddof<span class="classifier">int, default 0</span></dt><dd><p>Degrees of freedom, passed to pd.Series.std().</p>
+</dd>
+<dt>freq<span class="classifier">str or None, default None</span></dt><dd><p>A frequency string used to create an annualization factor.
+If None, <cite>self.freq</cite> will be used.  If that is also None,
+a frequency will be inferred.  If none can be inferred,
+an exception is raised.</p>
+<p>It may be any frequency string or anchored offset string
+recognized by Pandas, such as ‘D’, ‘5D’, ‘Q’, ‘Q-DEC’, or
+‘BQS-APR’.</p>
+</dd>
+</dl>
+<p>float</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="returns.TSeries.sharpe_ratio">
+<code class="sig-name descname"><span class="pre">sharpe_ratio</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rf</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.02</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ddof</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/returns.html#TSeries.sharpe_ratio"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#returns.TSeries.sharpe_ratio" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return over <cite>rf</cite> per unit of total risk.</p>
+<p>The average return in excess of the risk-free rate divided
+by the standard deviation of return; a measure of the average
+excess return earned per unit of standard deviation of return.
+[Source: CFA Institute]</p>
+<dl>
+<dt>rf<span class="classifier">{float, TSeries, pd.Series}, default 0.02</span></dt><dd><p>If float, this represents an <em>compounded annualized</em>
+risk-free rate; 2.0% is the default.
+If a TSeries or pd.Series, this represents a time series
+of periodic returns to a risk-free security.</p>
+<p>To download a risk-free rate return series using
+3-month US T-bill yields, see:<cite>pyfinance.datasets.load_rf</cite>.</p>
+</dd>
+<dt>ddof<span class="classifier">int, default 0</span></dt><dd><p>Degrees of freedom, passed to pd.Series.std().</p>
+</dd>
+</dl>
+<p>float</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="returns.TSeries.sortino_ratio">
+<code class="sig-name descname"><span class="pre">sortino_ratio</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ddof</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">freq</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">250</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/returns.html#TSeries.sortino_ratio"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#returns.TSeries.sortino_ratio" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return over a threshold per unit of downside deviation.</p>
+<p>A performance appraisal ratio that replaces standard deviation
+in the Sharpe ratio with downside deviation.
+[Source: CFA Institute]</p>
+<dl>
+<dt>threshold<span class="classifier">{float, TSeries, pd.Series}, default 0.</span></dt><dd><p>While zero is the default, it is also customary to use
+a “minimum acceptable return” (MAR) or a risk-free rate.
+Note: this is assumed to be a <em>periodic</em>, not necessarily
+annualized, return.</p>
+</dd>
+<dt>ddof<span class="classifier">int, default 0</span></dt><dd><p>Degrees of freedom, passed to pd.Series.std().</p>
+</dd>
+<dt>freq<span class="classifier">str or None, default None</span></dt><dd><p>A frequency string used to create an annualization factor.
+If None, <cite>self.freq</cite> will be used.  If that is also None,
+a frequency will be inferred.  If none can be inferred,
+an exception is raised.</p>
+<p>It may be any frequency string or anchored offset string
+recognized by Pandas, such as ‘D’, ‘5D’, ‘Q’, ‘Q-DEC’, or
+‘BQS-APR’.</p>
+</dd>
+</dl>
+<p>float</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="returns.TSeries.tracking_error">
+<code class="sig-name descname"><span class="pre">tracking_error</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">benchmark</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ddof</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/returns.html#TSeries.tracking_error"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#returns.TSeries.tracking_error" title="Permalink to this definition">¶</a></dt>
+<dd><p>Standard deviation of excess returns.</p>
+<p>The standard deviation of the differences between
+a portfolio’s returns and its benchmark’s returns.
+[Source: CFA Institute]</p>
+<p>Also known as: tracking risk; active risk</p>
+<dl class="simple">
+<dt>benchmark<span class="classifier">{pd.Series, TSeries, 1d np.ndarray}</span></dt><dd><p>The benchmark security to which <cite>self</cite> is compared.</p>
+</dd>
+<dt>ddof<span class="classifier">int, default 0</span></dt><dd><p>Degrees of freedom, passed to pd.Series.std().</p>
+</dd>
+</dl>
+<p>float</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="returns.TSeries.treynor_ratio">
+<code class="sig-name descname"><span class="pre">treynor_ratio</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">benchmark</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rf</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.02</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/returns.html#TSeries.treynor_ratio"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#returns.TSeries.treynor_ratio" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return over <cite>rf</cite> per unit of systematic risk.</p>
+<p>A measure of risk-adjusted performance that relates a
+portfolio’s excess returns to the portfolio’s beta.
+[Source: CFA Institute]</p>
+<dl>
+<dt>benchmark<span class="classifier">{pd.Series, TSeries, 1d np.ndarray}</span></dt><dd><p>The benchmark security to which <cite>self</cite> is compared.</p>
+</dd>
+<dt>rf<span class="classifier">{float, TSeries, pd.Series}, default 0.02</span></dt><dd><p>If float, this represents an <em>compounded annualized</em>
+risk-free rate; 2.0% is the default.
+If a TSeries or pd.Series, this represents a time series
+of periodic returns to a risk-free security.</p>
+<p>To download a risk-free rate return series using
+3-month US T-bill yields, see:<cite>pyfinance.datasets.load_rf</cite>.</p>
+</dd>
+</dl>
+<p>float</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="returns.TSeries.tstat_alpha">
+<code class="sig-name descname"><span class="pre">tstat_alpha</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">benchmark</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/returns.html#TSeries.tstat_alpha"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#returns.TSeries.tstat_alpha" title="Permalink to this definition">¶</a></dt>
+<dd><p>The t-statistic of CAPM alpha.</p>
+<dl class="simple">
+<dt>benchmark<span class="classifier">{pd.Series, TSeries, pd.DataFrame, np.ndarray}</span></dt><dd><p>The benchmark securitie(s) to which <cite>self</cite> is compared.</p>
+</dd>
+<dt><a href="#id11"><span class="problematic" id="id12">**</span></a>kwargs</dt><dd><p>Passed to pyfinance.ols.OLS().</p>
+</dd>
+</dl>
+<p>float</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="returns.TSeries.tstat_beta">
+<code class="sig-name descname"><span class="pre">tstat_beta</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">benchmark</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/returns.html#TSeries.tstat_beta"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#returns.TSeries.tstat_beta" title="Permalink to this definition">¶</a></dt>
+<dd><p>The t-statistic of CAPM beta.</p>
+<dl class="simple">
+<dt>benchmark<span class="classifier">{pd.Series, TSeries, pd.DataFrame, np.ndarray}</span></dt><dd><p>The benchmark securitie(s) to which <cite>self</cite> is compared.</p>
+</dd>
+<dt><a href="#id13"><span class="problematic" id="id14">**</span></a>kwargs</dt><dd><p>Passed to pyfinance.ols.OLS().</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>float or np.ndarray</dt><dd><p>If <cite>benchmark</cite> is 1d, returns a scalar.
+If <cite>benchmark</cite> is 2d, returns a 1d ndarray.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="returns.TSeries.ulcer_idx">
+<code class="sig-name descname"><span class="pre">ulcer_idx</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/returns.html#TSeries.ulcer_idx"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#returns.TSeries.ulcer_idx" title="Permalink to this definition">¶</a></dt>
+<dd><p>Ulcer Index, a composite measure of drawdown severity.</p>
+<p>A measure of the depth and duration of drawdowns in prices
+from earlier highs.  It is the square root of the mean of
+the squared percentage drawdowns in value.
+[Source: Peter G. Martin]</p>
+<p>float</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="returns.TSeries.up_capture">
+<code class="sig-name descname"><span class="pre">up_capture</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">benchmark</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compare_op</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'ge'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/returns.html#TSeries.up_capture"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#returns.TSeries.up_capture" title="Permalink to this definition">¶</a></dt>
+<dd><p>Upside capture ratio.</p>
+<p>Measures the performance of <cite>self</cite> relative to benchmark
+conditioned on periods where <cite>benchmark</cite> is gt or ge to
+<cite>threshold</cite>.</p>
+<p>Upside capture ratios are calculated by taking the fund’s
+monthly return during the periods of positive benchmark
+performance and dividing it by the benchmark return.
+[Source: CFA Institute]</p>
+<dl class="simple">
+<dt>benchmark<span class="classifier">{pd.Series, TSeries, 1d np.ndarray}</span></dt><dd><p>The benchmark security to which <cite>self</cite> is compared.</p>
+</dd>
+<dt>threshold<span class="classifier">float, default 0.</span></dt><dd><p>The threshold at which the comparison should be done.
+<cite>self</cite> and <cite>benchmark</cite> are “filtered” to periods where
+<cite>benchmark</cite> is gt/ge <cite>threshold</cite>.</p>
+</dd>
+<dt>compare_op<span class="classifier">{‘ge’, ‘gt’}</span></dt><dd><p>Comparison operator used to compare to <cite>threshold</cite>.
+‘gt’ is greater-than; ‘ge’ is greater-than-or-equal.</p>
+</dd>
+</dl>
+<p>float</p>
+<p>This metric uses geometric, not arithmetic, mean return.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="returns.TSeries.upmarket_filter">
+<code class="sig-name descname"><span class="pre">upmarket_filter</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">benchmark</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compare_op</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'ge'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">include_benchmark</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/returns.html#TSeries.upmarket_filter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#returns.TSeries.upmarket_filter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Drop elementwise samples where <cite>benchmark</cite> &lt; <cite>threshold</cite>.</p>
+<p>Filters <cite>self</cite> (and optionally, <cite>benchmark</cite>) to periods
+where <cite>benchmark</cite> &gt; <cite>threshold</cite>.  (Or &gt;= <cite>threshold</cite>.)</p>
+<dl class="simple">
+<dt>benchmark<span class="classifier">{pd.Series, TSeries, 1d np.ndarray}</span></dt><dd><p>The benchmark security to which <cite>self</cite> is compared.</p>
+</dd>
+<dt>threshold<span class="classifier">float, default 0.0</span></dt><dd><p>The threshold at which the comparison should be done.
+<cite>self</cite> and <cite>benchmark</cite> are “filtered” to periods where
+<cite>benchmark</cite> is gt/ge <cite>threshold</cite>.</p>
+</dd>
+<dt>compare_op<span class="classifier">{‘ge’, ‘gt’}</span></dt><dd><p>Comparison operator used to compare to <cite>threshold</cite>.
+‘gt’ is greater-than; ‘ge’ is greater-than-or-equal.</p>
+</dd>
+<dt>include_benchmark<span class="classifier">bool, default False</span></dt><dd><p>If True, return tuple of (<cite>self</cite>, <cite>benchmark</cite>) both
+filtered.  If False, return only <cite>self</cite> filtered.</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>TSeries or tuple of TSeries</dt><dd><p>TSeries if <cite>include_benchmark=False</cite>, otherwise, tuple.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="tseries">
+<h2><strong>TSeries类</strong><a class="headerlink" href="#tseries" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="id0">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">returns.</span></code><code class="sig-name descname"><span class="pre">TSeries</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/returns.html#TSeries"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id0" title="Permalink to this definition">¶</a></dt>
+<dd><p>Time series of periodic returns for a single security.</p>
+<p>Subclass of <cite>pandas.Series</cite>, with an extended set of methods
+geared towards calculating common investment metrics.</p>
+<p>It attempts to optimize for speed, not adding much incremental overhead
+on top of the underlying NumPy and Pandas calls.</p>
+<dl class="simple">
+<dt>freq<span class="classifier">str or None, default None</span></dt><dd><p><cite>freq</cite> may be passed by <em>keyword-argument only</em>.</p>
+</dd>
+</dl>
+<p>alpha : CAPM alpha.</p>
+<blockquote>
+<div><p>The return on an asset in excess of the asset’s required rate
+of return; the risk-adjusted return.
+[Source: CFA Institute]</p>
+</div></blockquote>
+<p>anlzd_ret : Annualized (geometric) return.</p>
+<p>anlzd_stdev : Annualized standard deviation with <cite>ddof</cite> degrees of freedom.</p>
+<p>batting_avg : Percentage of periods when <cite>self</cite> outperformed <cite>benchmark</cite>.</p>
+<p>beta : CAPM beta.</p>
+<blockquote>
+<div><p>A measure of systematic risk that is based on the covariance
+of an asset’s or portfolio’s return with the return of the
+overall market; a measure of the sensitivity of a given
+investment or portfolio to movements in the overall market.
+[Source: CFA Institute]</p>
+</div></blockquote>
+<p>beta_adj : Adjusted beta.</p>
+<blockquote>
+<div><p>Beta that is adjusted to reflect the tendency of beta to
+be mean reverting.
+[Source: CFA Institute]</p>
+<p>Formula:
+adj_factor * raw_beta + (1 - adj_factor)</p>
+</div></blockquote>
+<p>calmar_ratio : Calmar ratio–return per unit of drawdown.</p>
+<blockquote>
+<div><p>The compound annualized rate of return over a specified
+time period divided by the absolute value of maximum
+drawdown over the same time period.
+[Source: CFA Institute]</p>
+</div></blockquote>
+<p>capture_ratio : Capture ratio–ratio of upside to downside capture.</p>
+<blockquote>
+<div><p>Upside capture ratio divided by the downside capture ratio.</p>
+</div></blockquote>
+<p>cuml_ret : Cumulative return–a scalar ending percentage return.</p>
+<p>cuml_idx : Cumulative return index–a TSeries of cumulative returns.</p>
+<p>down_capture : Downside capture ratio.</p>
+<blockquote>
+<div><p>Measures the performance of <cite>self</cite> relative to benchmark
+conditioned on periods where <cite>benchmark</cite> is lt or le to
+<cite>threshold</cite>.</p>
+<p>Downside capture ratios are calculated by taking the fund’s
+monthly return during the periods of negative benchmark
+performance and dividing it by the benchmark return.
+[Source: CFA Institute]</p>
+</div></blockquote>
+<p>downmarket_filter : Drop elementwise samples where <cite>benchmark</cite> &gt; <cite>threshold</cite>.</p>
+<blockquote>
+<div><p>Filters <cite>self</cite> (and optionally, <cite>benchmark</cite>) to periods
+where <cite>benchmark</cite> &lt; <cite>threshold</cite>.  (Or &lt;= <cite>threshold</cite>.)</p>
+</div></blockquote>
+<p>drawdown_end : The date of the drawdown trough.</p>
+<blockquote>
+<div><p>Date at which the drawdown was most negative.</p>
+</div></blockquote>
+<p>drawdown_idx : Drawdown index; TSeries of drawdown from running HWM.</p>
+<p>drawdown_length : Length of drawdown in days.</p>
+<blockquote>
+<div><p>This is the duration from peak to trough.</p>
+</div></blockquote>
+<p>drawdown_recov : Length of drawdown recovery in days.</p>
+<blockquote>
+<div><p>This is the duration from trough to recovery date.</p>
+</div></blockquote>
+<p>drawdown_start : The date of the peak at which most severe drawdown began.</p>
+<p>excess_drawdown_idx : Excess drawdown index; TSeries of excess drawdowns.</p>
+<blockquote>
+<div><p>There are several ways of computing this metric.  For highly
+volatile returns, the <cite>method</cite> specified will have a
+non-negligible effect on the result.</p>
+</div></blockquote>
+<p>excess_ret : Excess return.</p>
+<p>gain_to_loss_ratio : Gain-to-loss ratio, ratio of positive to negative returns.</p>
+<blockquote>
+<div><p>Formula:
+(n pos. / n neg.) * (avg. up-month return / avg. down-month return)
+[Source: CFA Institute]</p>
+</div></blockquote>
+<p>geomean : Geometric mean return over the entire sample.</p>
+<p>growth_of_x : Ending value from growth of <cite>x</cite>, a scalar.</p>
+<p>info_ratio : Information ratio–return per unit of active risk.</p>
+<p>max_drawdown : Most negative drawdown derived from drawdown index.</p>
+<blockquote>
+<div><p>The largest difference between a high-water point and a
+subsequent low.  A portfolio may also be said to be in a
+position of drawdown from a decline from a high-water mark
+until a new high-water mark is reached.
+[Source: CFA Institute]</p>
+</div></blockquote>
+<p>msquared : M-squared, return scaled by relative total risk.</p>
+<blockquote>
+<div><p>A measure of what a portfolio would have returned if it had
+taken on the same <em>total</em> risk as the market index.
+[Source: CFA Institute]</p>
+</div></blockquote>
+<p>pct_negative : Pct. of periods in which <cite>self</cite> is less than <cite>threshold.</cite></p>
+<p>pct_positive : Pct. of periods in which <cite>self</cite> is greater than <cite>threshold.</cite></p>
+<p>recov_date : Drawdown recovery date.</p>
+<blockquote>
+<div><p>Date at which <cite>self</cite> recovered to previous high-water mark.</p>
+</div></blockquote>
+<p>ret_idx : Return index, a time series starting at <cite>base</cite>.</p>
+<p>ret_rels : Return-relatives, <cite>1 + self</cite>.</p>
+<blockquote>
+<div><p>A growth factor that is simply <cite>1 + self</cite>, elementwise.
+This method exists purely for naming purposes.</p>
+</div></blockquote>
+<p>rollup : Downsample <cite>self</cite> through geometric linking.</p>
+<p>rsq : R-squared.</p>
+<blockquote>
+<div><p>The fraction of the total variation that is explained
+by the regression.
+[Source: CFA Institute]</p>
+<p>Also known as: coefficient of determination.</p>
+</div></blockquote>
+<p>rsq_adj : Adjusted R-squared.</p>
+<blockquote>
+<div><p>Formula: 1. - ((1. - <cite>self._rsq</cite>) * (n - 1.) / (n - k - 1.))</p>
+</div></blockquote>
+<p>semi_stdev : Semi-standard deviation; stdev of downside returns.</p>
+<blockquote>
+<div><p>It is designed to address that fact that plain standard
+deviation penalizes “upside volatility.””</p>
+<p>Formula: <cite>sqrt( sum([min(self - thresh, 0] **2 ) / (n - ddof) )</cite></p>
+<p>Also known as: downside deviation.</p>
+</div></blockquote>
+<p>sharpe_ratio : Return over <cite>rf</cite> per unit of total risk.</p>
+<blockquote>
+<div><p>The average return in excess of the risk-free rate divided
+by the standard deviation of return; a measure of the average
+excess return earned per unit of standard deviation of return.
+[Source: CFA Institute]</p>
+</div></blockquote>
+<p>sortino_ratio : Return over a threshold per unit of downside deviation.</p>
+<blockquote>
+<div><p>A performance appraisal ratio that replaces standard deviation
+in the Sharpe ratio with downside deviation.
+[Source: CFA Institute]</p>
+</div></blockquote>
+<p>tracking_error : Standard deviation of excess returns.</p>
+<blockquote>
+<div><p>The standard deviation of the differences between
+a portfolio’s returns and its benchmark’s returns.
+[Source: CFA Institute]</p>
+<p>Also known as: tracking risk; active risk</p>
+</div></blockquote>
+<p>treynor_ratio : Return over <cite>rf</cite> per unit of systematic risk.</p>
+<blockquote>
+<div><p>A measure of risk-adjusted performance that relates a
+portfolio’s excess returns to the portfolio’s beta.
+[Source: CFA Institute]</p>
+</div></blockquote>
+<p>tstat_alpha : The t-statistic of CAPM alpha.</p>
+<p>tstat_beta : The t-statistic of CAPM beta.</p>
+<p>ulcer_idx : Ulcer Index, a composite measure of drawdown severity.</p>
+<blockquote>
+<div><p>A measure of the depth and duration of drawdowns in prices
+from earlier highs.  It is the square root of the mean of
+the squared percentage drawdowns in value.
+[Source: Peter G. Martin]</p>
+</div></blockquote>
+<p>up_capture : Upside capture ratio.</p>
+<blockquote>
+<div><p>Measures the performance of <cite>self</cite> relative to benchmark
+conditioned on periods where <cite>benchmark</cite> is gt or ge to
+<cite>threshold</cite>.</p>
+<p>Upside capture ratios are calculated by taking the fund’s
+monthly return during the periods of positive benchmark
+performance and dividing it by the benchmark return.
+[Source: CFA Institute]</p>
+</div></blockquote>
+<p>upmarket_filter : Drop elementwise samples where <cite>benchmark</cite> &lt; <cite>threshold</cite>.</p>
+<blockquote>
+<div><p>Filters <cite>self</cite> (and optionally, <cite>benchmark</cite>) to periods
+where <cite>benchmark</cite> &gt; <cite>threshold</cite>.  (Or &gt;= <cite>threshold</cite>.)</p>
+</div></blockquote>
+<p>CAPM : Interface to OLS regression against <cite>benchmark</cite>.</p>
+<blockquote>
+<div><p><cite>self.alpha()</cite>, <cite>self.beta()</cite> and several other methods
+stem from here.  For the full method set, see
+<cite>pyfinance.ols.OLS</cite>.</p>
+</div></blockquote>
+<p>TODO</p>
+<dl class="py method">
+<dt id="id15">
+<code class="sig-name descname"><span class="pre">CAPM</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">benchmark</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">has_const</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_const</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/returns.html#TSeries.CAPM"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id15" title="Permalink to this definition">¶</a></dt>
+<dd><p>Interface to OLS regression against <cite>benchmark</cite>.</p>
+<p><cite>self.alpha()</cite>, <cite>self.beta()</cite> and several other methods
+stem from here.  For the full method set, see
+<cite>pyfinance.ols.OLS</cite>.</p>
+<dl class="simple">
+<dt>benchmark<span class="classifier">{pd.Series, TSeries, pd.DataFrame, np.ndarray}</span></dt><dd><p>The benchmark securitie(s) to which <cite>self</cite> is compared.</p>
+</dd>
+<dt>has_const<span class="classifier">bool, default False</span></dt><dd><p>Specifies whether <cite>benchmark</cite> includes a user-supplied constant
+(a column vector).  If False, it is added at instantiation.</p>
+</dd>
+<dt>use_const<span class="classifier">bool, default True</span></dt><dd><p>Whether to include an intercept term in the model output.  Note the
+difference between <cite>has_const</cite> and <cite>use_const</cite>: the former
+specifies whether a column vector of 1s is included in the
+input; the latter specifies whether the model itself
+should include a constant (intercept) term.  Exogenous
+data that is ~N(0,1) would have a constant equal to zero;
+specify use_const=False in this situation.</p>
+</dd>
+</dl>
+<p>pyfinance.ols.OLS</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="id16">
+<code class="sig-name descname"><span class="pre">alpha</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">benchmark</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/returns.html#TSeries.alpha"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id16" title="Permalink to this definition">¶</a></dt>
+<dd><p>CAPM alpha.</p>
+<p>The return on an asset in excess of the asset’s required rate
+of return; the risk-adjusted return.
+[Source: CFA Institute]</p>
+<dl class="simple">
+<dt>benchmark<span class="classifier">{pd.Series, TSeries, pd.DataFrame, np.ndarray}</span></dt><dd><p>The benchmark securitie(s) to which <cite>self</cite> is compared.</p>
+</dd>
+<dt><a href="#id17"><span class="problematic" id="id18">**</span></a>kwargs</dt><dd><p>Passed to pyfinance.ols.OLS().</p>
+</dd>
+</dl>
+<p>float</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="id19">
+<code class="sig-name descname"><span class="pre">anlzd_ret</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">freq</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/returns.html#TSeries.anlzd_ret"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id19" title="Permalink to this definition">¶</a></dt>
+<dd><p>Annualized (geometric) return.</p>
+<dl>
+<dt>freq<span class="classifier">str or None, default None</span></dt><dd><p>A frequency string used to create an annualization factor.
+If None, <cite>self.freq</cite> will be used.  If that is also None,
+a frequency will be inferred.  If none can be inferred,
+an exception is raised.</p>
+<p>It may be any frequency string or anchored offset string
+recognized by Pandas, such as ‘D’, ‘5D’, ‘Q’, ‘Q-DEC’, or
+‘BQS-APR’.</p>
+</dd>
+</dl>
+<p>float</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="id20">
+<code class="sig-name descname"><span class="pre">anlzd_stdev</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ddof</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">freq</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/returns.html#TSeries.anlzd_stdev"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id20" title="Permalink to this definition">¶</a></dt>
+<dd><p>Annualized standard deviation with <cite>ddof</cite> degrees of freedom.</p>
+<dl>
+<dt>ddof<span class="classifier">int, default 0</span></dt><dd><p>Degrees of freedom, passed to pd.Series.std().</p>
+</dd>
+<dt>freq<span class="classifier">str or None, default None</span></dt><dd><p>A frequency string used to create an annualization factor.
+If None, <cite>self.freq</cite> will be used.  If that is also None,
+a frequency will be inferred.  If none can be inferred,
+an exception is raised.</p>
+<p>It may be any frequency string or anchored offset string
+recognized by Pandas, such as ‘D’, ‘5D’, ‘Q’, ‘Q-DEC’, or
+‘BQS-APR’.</p>
+</dd>
+<dt><a href="#id21"><span class="problematic" id="id22">**</span></a>kwargs</dt><dd><p>Passed to pd.Series.std().</p>
+</dd>
+</dl>
+<p>TODO: freq</p>
+<p>float</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="id23">
+<code class="sig-name descname"><span class="pre">batting_avg</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">benchmark</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/returns.html#TSeries.batting_avg"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id23" title="Permalink to this definition">¶</a></dt>
+<dd><p>Percentage of periods when <cite>self</cite> outperformed <cite>benchmark</cite>.</p>
+<dl class="simple">
+<dt>benchmark<span class="classifier">{pd.Series, TSeries, 1d np.ndarray}</span></dt><dd><p>The benchmark security to which <cite>self</cite> is compared.</p>
+</dd>
+</dl>
+<p>float</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="id24">
+<code class="sig-name descname"><span class="pre">beta</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">benchmark</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/returns.html#TSeries.beta"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id24" title="Permalink to this definition">¶</a></dt>
+<dd><p>CAPM beta.</p>
+<p>A measure of systematic risk that is based on the covariance
+of an asset’s or portfolio’s return with the return of the
+overall market; a measure of the sensitivity of a given
+investment or portfolio to movements in the overall market.
+[Source: CFA Institute]</p>
+<dl class="simple">
+<dt>benchmark<span class="classifier">{pd.Series, TSeries, pd.DataFrame, np.ndarray}</span></dt><dd><p>The benchmark securitie(s) to which <cite>self</cite> is compared.</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>float or np.ndarray</dt><dd><p>If <cite>benchmark</cite> is 1d, returns a scalar.
+If <cite>benchmark</cite> is 2d, returns a 1d ndarray.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="id25">
+<code class="sig-name descname"><span class="pre">beta_adj</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">benchmark</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">adj_factor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.6666666666666666</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/returns.html#TSeries.beta_adj"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id25" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adjusted beta.</p>
+<p>Beta that is adjusted to reflect the tendency of beta to
+be mean reverting.
+[Source: CFA Institute]</p>
+<p>Formula:
+adj_factor * raw_beta + (1 - adj_factor)</p>
+<dl class="simple">
+<dt>benchmark<span class="classifier">{pd.Series, TSeries, pd.DataFrame, np.ndarray}</span></dt><dd><p>The benchmark securitie(s) to which <cite>self</cite> is compared.</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>float or np.ndarray</dt><dd><p>If <cite>benchmark</cite> is 1d, returns a scalar.
+If <cite>benchmark</cite> is 2d, returns a 1d ndarray.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="id26">
+<code class="sig-name descname"><span class="pre">calmar_ratio</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/returns.html#TSeries.calmar_ratio"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id26" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calmar ratio–return per unit of drawdown.</p>
+<p>The compound annualized rate of return over a specified
+time period divided by the absolute value of maximum
+drawdown over the same time period.
+[Source: CFA Institute]</p>
+<p>float</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="id27">
+<code class="sig-name descname"><span class="pre">capture_ratio</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">benchmark</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compare_op</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">('ge',</span> <span class="pre">'lt')</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/returns.html#TSeries.capture_ratio"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id27" title="Permalink to this definition">¶</a></dt>
+<dd><p>Capture ratio–ratio of upside to downside capture.</p>
+<p>Upside capture ratio divided by the downside capture ratio.</p>
+<dl class="simple">
+<dt>benchmark<span class="classifier">{pd.Series, TSeries, 1d np.ndarray}</span></dt><dd><p>The benchmark security to which <cite>self</cite> is compared.</p>
+</dd>
+<dt>threshold<span class="classifier">float, default 0.</span></dt><dd><p>The threshold at which the comparison should be done.
+<cite>self</cite> and <cite>benchmark</cite> are “filtered” to periods where
+<cite>benchmark</cite> is greater than/less than <cite>threshold</cite>.</p>
+</dd>
+<dt>compare_op<span class="classifier">{tuple, str, list}, default (‘ge’, ‘lt’)</span></dt><dd><p>Comparison operator used to compare to <cite>threshold</cite>.
+If a sequence, the two elements are passed to
+<cite>self.up_capture()</cite> and <cite>self.down_capture()</cite>, respectively.
+If <cite>str</cite>, indicates the comparison operater used in
+both method calls.</p>
+</dd>
+</dl>
+<p>float</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="id28">
+<code class="sig-name descname"><span class="pre">cuml_idx</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/returns.html#TSeries.cuml_idx"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id28" title="Permalink to this definition">¶</a></dt>
+<dd><p>Cumulative return index–a TSeries of cumulative returns.</p>
+<p>TSeries</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="id29">
+<code class="sig-name descname"><span class="pre">cuml_ret</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/returns.html#TSeries.cuml_ret"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id29" title="Permalink to this definition">¶</a></dt>
+<dd><p>Cumulative return–a scalar ending percentage return.</p>
+<p>float</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="id30">
+<code class="sig-name descname"><span class="pre">down_capture</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">benchmark</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compare_op</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'lt'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/returns.html#TSeries.down_capture"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id30" title="Permalink to this definition">¶</a></dt>
+<dd><p>Downside capture ratio.</p>
+<p>Measures the performance of <cite>self</cite> relative to benchmark
+conditioned on periods where <cite>benchmark</cite> is lt or le to
+<cite>threshold</cite>.</p>
+<p>Downside capture ratios are calculated by taking the fund’s
+monthly return during the periods of negative benchmark
+performance and dividing it by the benchmark return.
+[Source: CFA Institute]</p>
+<dl class="simple">
+<dt>benchmark<span class="classifier">{pd.Series, TSeries, 1d np.ndarray}</span></dt><dd><p>The benchmark security to which <cite>self</cite> is compared.</p>
+</dd>
+<dt>threshold<span class="classifier">float, default 0.</span></dt><dd><p>The threshold at which the comparison should be done.
+<cite>self</cite> and <cite>benchmark</cite> are “filtered” to periods where
+<cite>benchmark</cite> is lt/le <cite>threshold</cite>.</p>
+</dd>
+<dt>compare_op<span class="classifier">{‘lt’, ‘le’}</span></dt><dd><p>Comparison operator used to compare to <cite>threshold</cite>.
+‘lt’ is less-than; ‘le’ is less-than-or-equal.</p>
+</dd>
+</dl>
+<p>float</p>
+<p>This metric uses geometric, not arithmetic, mean return.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="id31">
+<code class="sig-name descname"><span class="pre">downmarket_filter</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">benchmark</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compare_op</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'lt'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">include_benchmark</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/returns.html#TSeries.downmarket_filter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id31" title="Permalink to this definition">¶</a></dt>
+<dd><p>Drop elementwise samples where <cite>benchmark</cite> &gt; <cite>threshold</cite>.</p>
+<p>Filters <cite>self</cite> (and optionally, <cite>benchmark</cite>) to periods
+where <cite>benchmark</cite> &lt; <cite>threshold</cite>.  (Or &lt;= <cite>threshold</cite>.)</p>
+<dl class="simple">
+<dt>benchmark<span class="classifier">{pd.Series, TSeries, 1d np.ndarray}</span></dt><dd><p>The benchmark security to which <cite>self</cite> is compared.</p>
+</dd>
+<dt>threshold<span class="classifier">float, default 0.0</span></dt><dd><p>The threshold at which the comparison should be done.
+<cite>self</cite> and <cite>benchmark</cite> are “filtered” to periods where
+<cite>benchmark</cite> is lt/le <cite>threshold</cite>.</p>
+</dd>
+<dt>compare_op<span class="classifier">{‘lt’, ‘le’}</span></dt><dd><p>Comparison operator used to compare to <cite>threshold</cite>.
+‘lt’ is less-than; ‘le’ is less-than-or-equal.</p>
+</dd>
+<dt>include_benchmark<span class="classifier">bool, default False</span></dt><dd><p>If True, return tuple of (<cite>self</cite>, <cite>benchmark</cite>) both
+filtered.  If False, return only <cite>self</cite> filtered.</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>TSeries or tuple of TSeries</dt><dd><p>TSeries if <cite>include_benchmark=False</cite>, otherwise, tuple.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="id32">
+<code class="sig-name descname"><span class="pre">drawdown_end</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">return_date</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/returns.html#TSeries.drawdown_end"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id32" title="Permalink to this definition">¶</a></dt>
+<dd><p>The date of the drawdown trough.</p>
+<p>Date at which the drawdown was most negative.</p>
+<dl class="simple">
+<dt>return_date<span class="classifier">bool, default False</span></dt><dd><p>If True, return a <cite>datetime.date</cite> object.
+If False, return a Pandas Timestamp object.</p>
+</dd>
+</dl>
+<p>datetime.date or pandas._libs.tslib.Timestamp</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="id33">
+<code class="sig-name descname"><span class="pre">drawdown_idx</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/returns.html#TSeries.drawdown_idx"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id33" title="Permalink to this definition">¶</a></dt>
+<dd><p>Drawdown index; TSeries of drawdown from running HWM.</p>
+<p>TSeries</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="id34">
+<code class="sig-name descname"><span class="pre">drawdown_length</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">return_int</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/returns.html#TSeries.drawdown_length"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id34" title="Permalink to this definition">¶</a></dt>
+<dd><p>Length of drawdown in days.</p>
+<p>This is the duration from peak to trough.</p>
+<dl class="simple">
+<dt>return_int<span class="classifier">bool, default False</span></dt><dd><p>If True, return the number of days as an int.
+If False, return a Pandas Timedelta object.</p>
+</dd>
+</dl>
+<p>int or pandas._libs.tslib.Timedelta</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="id35">
+<code class="sig-name descname"><span class="pre">drawdown_recov</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">return_int</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/returns.html#TSeries.drawdown_recov"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id35" title="Permalink to this definition">¶</a></dt>
+<dd><p>Length of drawdown recovery in days.</p>
+<p>This is the duration from trough to recovery date.</p>
+<dl class="simple">
+<dt>return_int<span class="classifier">bool, default False</span></dt><dd><p>If True, return the number of days as an int.
+If False, return a Pandas Timedelta object.</p>
+</dd>
+</dl>
+<p>int or pandas._libs.tslib.Timedelta</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="id36">
+<code class="sig-name descname"><span class="pre">drawdown_start</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">return_date</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/returns.html#TSeries.drawdown_start"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id36" title="Permalink to this definition">¶</a></dt>
+<dd><p>The date of the peak at which most severe drawdown began.</p>
+<dl class="simple">
+<dt>return_date<span class="classifier">bool, default False</span></dt><dd><p>If True, return a <cite>datetime.date</cite> object.
+If False, return a Pandas Timestamp object.</p>
+</dd>
+</dl>
+<p>datetime.date or pandas._libs.tslib.Timestamp</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="id37">
+<code class="sig-name descname"><span class="pre">excess_drawdown_idx</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">benchmark</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'caer'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/returns.html#TSeries.excess_drawdown_idx"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id37" title="Permalink to this definition">¶</a></dt>
+<dd><p>Excess drawdown index; TSeries of excess drawdowns.</p>
+<p>There are several ways of computing this metric.  For highly
+volatile returns, the <cite>method</cite> specified will have a
+non-negligible effect on the result.</p>
+<dl class="simple">
+<dt>benchmark<span class="classifier">{pd.Series, TSeries, 1d np.ndarray}</span></dt><dd><p>The benchmark security to which <cite>self</cite> is compared.</p>
+</dd>
+<dt>method<span class="classifier">{‘caer’ (0), ‘cger’ (1), ‘ecr’ (2), ‘ecrr’ (3)}</span></dt><dd><p>Indicates the methodology used.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="id38">
+<code class="sig-name descname"><span class="pre">excess_ret</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">benchmark</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'arithmetic'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/returns.html#TSeries.excess_ret"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id38" title="Permalink to this definition">¶</a></dt>
+<dd><p>Excess return.</p>
+<dl class="simple">
+<dt>benchmark<span class="classifier">{pd.Series, TSeries, 1d np.ndarray}</span></dt><dd><p>The benchmark security to which <cite>self</cite> is compared.</p>
+</dd>
+<dt>method<span class="classifier">{{‘arith’, ‘arithmetic’}, {‘geo’, ‘geometric’}}</span></dt><dd><p>The methodology used.  An arithmetic excess return is a
+straightforward subtraction.  A geometric excess return
+is the ratio of return-relatives of <cite>self</cite> to <cite>benchmark</cite>,
+minus one.</p>
+</dd>
+</dl>
+<p>Also known as: active return.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="id39">
+<code class="sig-name descname"><span class="pre">gain_to_loss_ratio</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/returns.html#TSeries.gain_to_loss_ratio"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id39" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gain-to-loss ratio, ratio of positive to negative returns.</p>
+<p>Formula:
+(n pos. / n neg.) * (avg. up-month return / avg. down-month return)
+[Source: CFA Institute]</p>
+<p>float</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="id40">
+<code class="sig-name descname"><span class="pre">geomean</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/returns.html#TSeries.geomean"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id40" title="Permalink to this definition">¶</a></dt>
+<dd><p>Geometric mean return over the entire sample.</p>
+<p>float</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="id41">
+<code class="sig-name descname"><span class="pre">growth_of_x</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/returns.html#TSeries.growth_of_x"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id41" title="Permalink to this definition">¶</a></dt>
+<dd><p>Ending value from growth of <cite>x</cite>, a scalar.</p>
+<p>float</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="id42">
+<code class="sig-name descname"><span class="pre">info_ratio</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">benchmark</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ddof</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/returns.html#TSeries.info_ratio"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id42" title="Permalink to this definition">¶</a></dt>
+<dd><p>Information ratio–return per unit of active risk.</p>
+<dl class="simple">
+<dt>benchmark<span class="classifier">{pd.Series, TSeries, 1d np.ndarray}</span></dt><dd><p>The benchmark security to which <cite>self</cite> is compared.</p>
+</dd>
+<dt>ddof<span class="classifier">int, default 0</span></dt><dd><p>Degrees of freedom, passed to pd.Series.std().</p>
+</dd>
+</dl>
+<p>float</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="id43">
+<code class="sig-name descname"><span class="pre">max_drawdown</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/returns.html#TSeries.max_drawdown"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id43" title="Permalink to this definition">¶</a></dt>
+<dd><p>Most negative drawdown derived from drawdown index.</p>
+<p>The largest difference between a high-water point and a
+subsequent low.  A portfolio may also be said to be in a
+position of drawdown from a decline from a high-water mark
+until a new high-water mark is reached.
+[Source: CFA Institute]</p>
+<p>float</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="id44">
+<code class="sig-name descname"><span class="pre">msquared</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">benchmark</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rf</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.02</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ddof</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/returns.html#TSeries.msquared"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id44" title="Permalink to this definition">¶</a></dt>
+<dd><p>M-squared, return scaled by relative total risk.</p>
+<p>A measure of what a portfolio would have returned if it had
+taken on the same <em>total</em> risk as the market index.
+[Source: CFA Institute]</p>
+<dl>
+<dt>benchmark<span class="classifier">{pd.Series, TSeries, 1d np.ndarray}</span></dt><dd><p>The benchmark security to which <cite>self</cite> is compared.</p>
+</dd>
+<dt>rf<span class="classifier">{float, TSeries, pd.Series}, default 0.02</span></dt><dd><p>If float, this represents an <em>compounded annualized</em>
+risk-free rate; 2.0% is the default.
+If a TSeries or pd.Series, this represents a time series
+of periodic returns to a risk-free security.</p>
+<p>To download a risk-free rate return series using
+3-month US T-bill yields, see:<cite>pyfinance.datasets.load_rf</cite>.</p>
+</dd>
+<dt>ddof<span class="classifier">int, default 0</span></dt><dd><p>Degrees of freedom, passed to pd.Series.std().</p>
+</dd>
+</dl>
+<p>float</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="id45">
+<code class="sig-name descname"><span class="pre">pct_negative</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/returns.html#TSeries.pct_negative"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id45" title="Permalink to this definition">¶</a></dt>
+<dd><p>Pct. of periods in which <cite>self</cite> is less than <cite>threshold.</cite></p>
+<p>threshold : {float, TSeries, pd.Series}, default 0.</p>
+<p>float</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="id46">
+<code class="sig-name descname"><span class="pre">pct_positive</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/returns.html#TSeries.pct_positive"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id46" title="Permalink to this definition">¶</a></dt>
+<dd><p>Pct. of periods in which <cite>self</cite> is greater than <cite>threshold.</cite></p>
+<p>threshold : {float, TSeries, pd.Series}, default 0.</p>
+<p>float</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="id47">
+<code class="sig-name descname"><span class="pre">recov_date</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">return_date</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/returns.html#TSeries.recov_date"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id47" title="Permalink to this definition">¶</a></dt>
+<dd><p>Drawdown recovery date.</p>
+<p>Date at which <cite>self</cite> recovered to previous high-water mark.</p>
+<dl class="simple">
+<dt>return_date<span class="classifier">bool, default False</span></dt><dd><p>If True, return a <cite>datetime.date</cite> object.
+If False, return a Pandas Timestamp object.</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>{datetime.date, pandas._libs.tslib.Timestamp, pd.NaT}</dt><dd><p>Returns NaT if recovery has not occured.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="id48">
+<code class="sig-name descname"><span class="pre">ret_idx</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">base</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/returns.html#TSeries.ret_idx"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id48" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return index, a time series starting at <cite>base</cite>.</p>
+<p>base : float, default 1.</p>
+<p>float</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="id49">
+<code class="sig-name descname"><span class="pre">ret_rels</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/returns.html#TSeries.ret_rels"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id49" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return-relatives, <cite>1 + self</cite>.</p>
+<p>A growth factor that is simply <cite>1 + self</cite>, elementwise.
+This method exists purely for naming purposes.</p>
+<p>TSeries</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="id50">
+<code class="sig-name descname"><span class="pre">rollup</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">freq</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/returns.html#TSeries.rollup"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id50" title="Permalink to this definition">¶</a></dt>
+<dd><p>Downsample <cite>self</cite> through geometric linking.</p>
+<dl class="simple">
+<dt>freq<span class="classifier">{‘D’, ‘W’, ‘M’, ‘Q’, ‘A’}</span></dt><dd><p>The frequency of the result.</p>
+</dd>
+<dt><a href="#id51"><span class="problematic" id="id52">**</span></a>kwargs</dt><dd><p>Passed to <cite>self.resample()</cite>.</p>
+</dd>
+</dl>
+<p>TSeries</p>
+<p># Derive quarterly returns from monthly returns.
+&gt;&gt;&gt; import numpy as np
+&gt;&gt;&gt; from pyfinance import TSeries
+&gt;&gt;&gt; np.random.seed(444)
+&gt;&gt;&gt; ts = TSeries(np.random.randn(12) / 100 + 0.002,
+…              index=pd.date_range(‘2016’, periods=12, freq=’M’))
+&gt;&gt;&gt; ts.rollup(‘Q’)
+2016-03-31    0.0274
+2016-06-30   -0.0032
+2016-09-30   -0.0028
+2016-12-31    0.0127
+Freq: Q-DEC, dtype: float64</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="id53">
+<code class="sig-name descname"><span class="pre">rsq</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">benchmark</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/returns.html#TSeries.rsq"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id53" title="Permalink to this definition">¶</a></dt>
+<dd><p>R-squared.</p>
+<p>The fraction of the total variation that is explained
+by the regression.
+[Source: CFA Institute]</p>
+<p>Also known as: coefficient of determination.</p>
+<dl class="simple">
+<dt>benchmark<span class="classifier">{pd.Series, TSeries, pd.DataFrame, np.ndarray}</span></dt><dd><p>The benchmark securitie(s) to which <cite>self</cite> is compared.</p>
+</dd>
+<dt><a href="#id54"><span class="problematic" id="id55">**</span></a>kwargs</dt><dd><p>Passed to pyfinance.ols.OLS().</p>
+</dd>
+</dl>
+<p>float</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="id56">
+<code class="sig-name descname"><span class="pre">rsq_adj</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">benchmark</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/returns.html#TSeries.rsq_adj"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id56" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adjusted R-squared.</p>
+<p>Formula: 1. - ((1. - <cite>self._rsq</cite>) * (n - 1.) / (n - k - 1.))</p>
+<dl class="simple">
+<dt>benchmark<span class="classifier">{pd.Series, TSeries, pd.DataFrame, np.ndarray}</span></dt><dd><p>The benchmark securitie(s) to which <cite>self</cite> is compared.</p>
+</dd>
+<dt><a href="#id57"><span class="problematic" id="id58">**</span></a>kwargs</dt><dd><p>Passed to pyfinance.ols.OLS().</p>
+</dd>
+</dl>
+<p>float</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="id59">
+<code class="sig-name descname"><span class="pre">semi_stdev</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ddof</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">freq</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/returns.html#TSeries.semi_stdev"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id59" title="Permalink to this definition">¶</a></dt>
+<dd><p>Semi-standard deviation; stdev of downside returns.</p>
+<p>It is designed to address that fact that plain standard
+deviation penalizes “upside volatility.””</p>
+<p>Formula: <cite>sqrt( sum([min(self - thresh, 0] **2 ) / (n - ddof) )</cite></p>
+<p>Also known as: downside deviation.</p>
+<dl>
+<dt>threshold<span class="classifier">{float, TSeries, pd.Series}, default 0.</span></dt><dd><p>While zero is the default, it is also customary to use
+a “minimum acceptable return” (MAR) or a risk-free rate.
+Note: this is assumed to be a <em>periodic</em>, not necessarily
+annualized, return.</p>
+</dd>
+<dt>ddof<span class="classifier">int, default 0</span></dt><dd><p>Degrees of freedom, passed to pd.Series.std().</p>
+</dd>
+<dt>freq<span class="classifier">str or None, default None</span></dt><dd><p>A frequency string used to create an annualization factor.
+If None, <cite>self.freq</cite> will be used.  If that is also None,
+a frequency will be inferred.  If none can be inferred,
+an exception is raised.</p>
+<p>It may be any frequency string or anchored offset string
+recognized by Pandas, such as ‘D’, ‘5D’, ‘Q’, ‘Q-DEC’, or
+‘BQS-APR’.</p>
+</dd>
+</dl>
+<p>float</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="id60">
+<code class="sig-name descname"><span class="pre">sharpe_ratio</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rf</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.02</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ddof</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/returns.html#TSeries.sharpe_ratio"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id60" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return over <cite>rf</cite> per unit of total risk.</p>
+<p>The average return in excess of the risk-free rate divided
+by the standard deviation of return; a measure of the average
+excess return earned per unit of standard deviation of return.
+[Source: CFA Institute]</p>
+<dl>
+<dt>rf<span class="classifier">{float, TSeries, pd.Series}, default 0.02</span></dt><dd><p>If float, this represents an <em>compounded annualized</em>
+risk-free rate; 2.0% is the default.
+If a TSeries or pd.Series, this represents a time series
+of periodic returns to a risk-free security.</p>
+<p>To download a risk-free rate return series using
+3-month US T-bill yields, see:<cite>pyfinance.datasets.load_rf</cite>.</p>
+</dd>
+<dt>ddof<span class="classifier">int, default 0</span></dt><dd><p>Degrees of freedom, passed to pd.Series.std().</p>
+</dd>
+</dl>
+<p>float</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="id61">
+<code class="sig-name descname"><span class="pre">sortino_ratio</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ddof</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">freq</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">250</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/returns.html#TSeries.sortino_ratio"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id61" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return over a threshold per unit of downside deviation.</p>
+<p>A performance appraisal ratio that replaces standard deviation
+in the Sharpe ratio with downside deviation.
+[Source: CFA Institute]</p>
+<dl>
+<dt>threshold<span class="classifier">{float, TSeries, pd.Series}, default 0.</span></dt><dd><p>While zero is the default, it is also customary to use
+a “minimum acceptable return” (MAR) or a risk-free rate.
+Note: this is assumed to be a <em>periodic</em>, not necessarily
+annualized, return.</p>
+</dd>
+<dt>ddof<span class="classifier">int, default 0</span></dt><dd><p>Degrees of freedom, passed to pd.Series.std().</p>
+</dd>
+<dt>freq<span class="classifier">str or None, default None</span></dt><dd><p>A frequency string used to create an annualization factor.
+If None, <cite>self.freq</cite> will be used.  If that is also None,
+a frequency will be inferred.  If none can be inferred,
+an exception is raised.</p>
+<p>It may be any frequency string or anchored offset string
+recognized by Pandas, such as ‘D’, ‘5D’, ‘Q’, ‘Q-DEC’, or
+‘BQS-APR’.</p>
+</dd>
+</dl>
+<p>float</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="id62">
+<code class="sig-name descname"><span class="pre">tracking_error</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">benchmark</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ddof</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/returns.html#TSeries.tracking_error"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id62" title="Permalink to this definition">¶</a></dt>
+<dd><p>Standard deviation of excess returns.</p>
+<p>The standard deviation of the differences between
+a portfolio’s returns and its benchmark’s returns.
+[Source: CFA Institute]</p>
+<p>Also known as: tracking risk; active risk</p>
+<dl class="simple">
+<dt>benchmark<span class="classifier">{pd.Series, TSeries, 1d np.ndarray}</span></dt><dd><p>The benchmark security to which <cite>self</cite> is compared.</p>
+</dd>
+<dt>ddof<span class="classifier">int, default 0</span></dt><dd><p>Degrees of freedom, passed to pd.Series.std().</p>
+</dd>
+</dl>
+<p>float</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="id63">
+<code class="sig-name descname"><span class="pre">treynor_ratio</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">benchmark</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rf</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.02</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/returns.html#TSeries.treynor_ratio"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id63" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return over <cite>rf</cite> per unit of systematic risk.</p>
+<p>A measure of risk-adjusted performance that relates a
+portfolio’s excess returns to the portfolio’s beta.
+[Source: CFA Institute]</p>
+<dl>
+<dt>benchmark<span class="classifier">{pd.Series, TSeries, 1d np.ndarray}</span></dt><dd><p>The benchmark security to which <cite>self</cite> is compared.</p>
+</dd>
+<dt>rf<span class="classifier">{float, TSeries, pd.Series}, default 0.02</span></dt><dd><p>If float, this represents an <em>compounded annualized</em>
+risk-free rate; 2.0% is the default.
+If a TSeries or pd.Series, this represents a time series
+of periodic returns to a risk-free security.</p>
+<p>To download a risk-free rate return series using
+3-month US T-bill yields, see:<cite>pyfinance.datasets.load_rf</cite>.</p>
+</dd>
+</dl>
+<p>float</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="id64">
+<code class="sig-name descname"><span class="pre">tstat_alpha</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">benchmark</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/returns.html#TSeries.tstat_alpha"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id64" title="Permalink to this definition">¶</a></dt>
+<dd><p>The t-statistic of CAPM alpha.</p>
+<dl class="simple">
+<dt>benchmark<span class="classifier">{pd.Series, TSeries, pd.DataFrame, np.ndarray}</span></dt><dd><p>The benchmark securitie(s) to which <cite>self</cite> is compared.</p>
+</dd>
+<dt><a href="#id65"><span class="problematic" id="id66">**</span></a>kwargs</dt><dd><p>Passed to pyfinance.ols.OLS().</p>
+</dd>
+</dl>
+<p>float</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="id67">
+<code class="sig-name descname"><span class="pre">tstat_beta</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">benchmark</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/returns.html#TSeries.tstat_beta"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id67" title="Permalink to this definition">¶</a></dt>
+<dd><p>The t-statistic of CAPM beta.</p>
+<dl class="simple">
+<dt>benchmark<span class="classifier">{pd.Series, TSeries, pd.DataFrame, np.ndarray}</span></dt><dd><p>The benchmark securitie(s) to which <cite>self</cite> is compared.</p>
+</dd>
+<dt><a href="#id68"><span class="problematic" id="id69">**</span></a>kwargs</dt><dd><p>Passed to pyfinance.ols.OLS().</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>float or np.ndarray</dt><dd><p>If <cite>benchmark</cite> is 1d, returns a scalar.
+If <cite>benchmark</cite> is 2d, returns a 1d ndarray.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="id70">
+<code class="sig-name descname"><span class="pre">ulcer_idx</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/returns.html#TSeries.ulcer_idx"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id70" title="Permalink to this definition">¶</a></dt>
+<dd><p>Ulcer Index, a composite measure of drawdown severity.</p>
+<p>A measure of the depth and duration of drawdowns in prices
+from earlier highs.  It is the square root of the mean of
+the squared percentage drawdowns in value.
+[Source: Peter G. Martin]</p>
+<p>float</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="id72">
+<code class="sig-name descname"><span class="pre">up_capture</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">benchmark</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compare_op</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'ge'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/returns.html#TSeries.up_capture"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id72" title="Permalink to this definition">¶</a></dt>
+<dd><p>Upside capture ratio.</p>
+<p>Measures the performance of <cite>self</cite> relative to benchmark
+conditioned on periods where <cite>benchmark</cite> is gt or ge to
+<cite>threshold</cite>.</p>
+<p>Upside capture ratios are calculated by taking the fund’s
+monthly return during the periods of positive benchmark
+performance and dividing it by the benchmark return.
+[Source: CFA Institute]</p>
+<dl class="simple">
+<dt>benchmark<span class="classifier">{pd.Series, TSeries, 1d np.ndarray}</span></dt><dd><p>The benchmark security to which <cite>self</cite> is compared.</p>
+</dd>
+<dt>threshold<span class="classifier">float, default 0.</span></dt><dd><p>The threshold at which the comparison should be done.
+<cite>self</cite> and <cite>benchmark</cite> are “filtered” to periods where
+<cite>benchmark</cite> is gt/ge <cite>threshold</cite>.</p>
+</dd>
+<dt>compare_op<span class="classifier">{‘ge’, ‘gt’}</span></dt><dd><p>Comparison operator used to compare to <cite>threshold</cite>.
+‘gt’ is greater-than; ‘ge’ is greater-than-or-equal.</p>
+</dd>
+</dl>
+<p>float</p>
+<p>This metric uses geometric, not arithmetic, mean return.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="id73">
+<code class="sig-name descname"><span class="pre">upmarket_filter</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">benchmark</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compare_op</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'ge'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">include_benchmark</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/returns.html#TSeries.upmarket_filter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id73" title="Permalink to this definition">¶</a></dt>
+<dd><p>Drop elementwise samples where <cite>benchmark</cite> &lt; <cite>threshold</cite>.</p>
+<p>Filters <cite>self</cite> (and optionally, <cite>benchmark</cite>) to periods
+where <cite>benchmark</cite> &gt; <cite>threshold</cite>.  (Or &gt;= <cite>threshold</cite>.)</p>
+<dl class="simple">
+<dt>benchmark<span class="classifier">{pd.Series, TSeries, 1d np.ndarray}</span></dt><dd><p>The benchmark security to which <cite>self</cite> is compared.</p>
+</dd>
+<dt>threshold<span class="classifier">float, default 0.0</span></dt><dd><p>The threshold at which the comparison should be done.
+<cite>self</cite> and <cite>benchmark</cite> are “filtered” to periods where
+<cite>benchmark</cite> is gt/ge <cite>threshold</cite>.</p>
+</dd>
+<dt>compare_op<span class="classifier">{‘ge’, ‘gt’}</span></dt><dd><p>Comparison operator used to compare to <cite>threshold</cite>.
+‘gt’ is greater-than; ‘ge’ is greater-than-or-equal.</p>
+</dd>
+<dt>include_benchmark<span class="classifier">bool, default False</span></dt><dd><p>If True, return tuple of (<cite>self</cite>, <cite>benchmark</cite>) both
+filtered.  If False, return only <cite>self</cite> filtered.</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>TSeries or tuple of TSeries</dt><dd><p>TSeries if <cite>include_benchmark=False</cite>, otherwise, tuple.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<div class="section" id="capm">
+<h3><strong>CAPM方法（资本资产定价模型）</strong><a class="headerlink" href="#capm" title="Permalink to this headline">¶</a></h3>
+<dl class="py method">
+<dt id="id74">
+<code class="sig-prename descclassname"><span class="pre">TSeries.</span></code><code class="sig-name descname"><span class="pre">CAPM</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">benchmark</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">has_const</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_const</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/returns.html#TSeries.CAPM"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id74" title="Permalink to this definition">¶</a></dt>
+<dd><p>Interface to OLS regression against <cite>benchmark</cite>.</p>
+<p><cite>self.alpha()</cite>, <cite>self.beta()</cite> and several other methods
+stem from here.  For the full method set, see
+<cite>pyfinance.ols.OLS</cite>.</p>
+<dl class="simple">
+<dt>benchmark<span class="classifier">{pd.Series, TSeries, pd.DataFrame, np.ndarray}</span></dt><dd><p>The benchmark securitie(s) to which <cite>self</cite> is compared.</p>
+</dd>
+<dt>has_const<span class="classifier">bool, default False</span></dt><dd><p>Specifies whether <cite>benchmark</cite> includes a user-supplied constant
+(a column vector).  If False, it is added at instantiation.</p>
+</dd>
+<dt>use_const<span class="classifier">bool, default True</span></dt><dd><p>Whether to include an intercept term in the model output.  Note the
+difference between <cite>has_const</cite> and <cite>use_const</cite>: the former
+specifies whether a column vector of 1s is included in the
+input; the latter specifies whether the model itself
+should include a constant (intercept) term.  Exogenous
+data that is ~N(0,1) would have a constant equal to zero;
+specify use_const=False in this situation.</p>
+</dd>
+</dl>
+<p>pyfinance.ols.OLS</p>
+</dd></dl>
+
+</div>
+<div class="section" id="ret-rels">
+<h3><strong>ret_rels方法</strong><a class="headerlink" href="#ret-rels" title="Permalink to this headline">¶</a></h3>
+<dl class="py method">
+<dt id="id75">
+<code class="sig-prename descclassname"><span class="pre">TSeries.</span></code><code class="sig-name descname"><span class="pre">ret_rels</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/returns.html#TSeries.ret_rels"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id75" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return-relatives, <cite>1 + self</cite>.</p>
+<p>A growth factor that is simply <cite>1 + self</cite>, elementwise.
+This method exists purely for naming purposes.</p>
+<p>TSeries</p>
+</dd></dl>
+
+</div>
+<div class="section" id="anlzd-ret">
+<h3><strong>anlzd_ret方法（年化收益率）</strong><a class="headerlink" href="#anlzd-ret" title="Permalink to this headline">¶</a></h3>
+<dl class="py method">
+<dt id="id76">
+<code class="sig-prename descclassname"><span class="pre">TSeries.</span></code><code class="sig-name descname"><span class="pre">anlzd_ret</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">freq</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/returns.html#TSeries.anlzd_ret"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id76" title="Permalink to this definition">¶</a></dt>
+<dd><p>Annualized (geometric) return.</p>
+<dl>
+<dt>freq<span class="classifier">str or None, default None</span></dt><dd><p>A frequency string used to create an annualization factor.
+If None, <cite>self.freq</cite> will be used.  If that is also None,
+a frequency will be inferred.  If none can be inferred,
+an exception is raised.</p>
+<p>It may be any frequency string or anchored offset string
+recognized by Pandas, such as ‘D’, ‘5D’, ‘Q’, ‘Q-DEC’, or
+‘BQS-APR’.</p>
+</dd>
+</dl>
+<p>float</p>
+</dd></dl>
+
+</div>
+<div class="section" id="cuml-ret">
+<h3><strong>cuml_ret方法（累计年收益率）</strong><a class="headerlink" href="#cuml-ret" title="Permalink to this headline">¶</a></h3>
+<dl class="py method">
+<dt id="id77">
+<code class="sig-prename descclassname"><span class="pre">TSeries.</span></code><code class="sig-name descname"><span class="pre">cuml_ret</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/returns.html#TSeries.cuml_ret"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id77" title="Permalink to this definition">¶</a></dt>
+<dd><p>Cumulative return–a scalar ending percentage return.</p>
+<p>float</p>
+</dd></dl>
+
+</div>
+<div class="section" id="rollup-resample">
+<h3><strong>rollup方法（resample到不同阶段的收益率）</strong><a class="headerlink" href="#rollup-resample" title="Permalink to this headline">¶</a></h3>
+<dl class="py method">
+<dt id="id78">
+<code class="sig-prename descclassname"><span class="pre">TSeries.</span></code><code class="sig-name descname"><span class="pre">rollup</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">freq</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/returns.html#TSeries.rollup"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id78" title="Permalink to this definition">¶</a></dt>
+<dd><p>Downsample <cite>self</cite> through geometric linking.</p>
+<dl class="simple">
+<dt>freq<span class="classifier">{‘D’, ‘W’, ‘M’, ‘Q’, ‘A’}</span></dt><dd><p>The frequency of the result.</p>
+</dd>
+<dt><a href="#id79"><span class="problematic" id="id80">**</span></a>kwargs</dt><dd><p>Passed to <cite>self.resample()</cite>.</p>
+</dd>
+</dl>
+<p>TSeries</p>
+<p># Derive quarterly returns from monthly returns.
+&gt;&gt;&gt; import numpy as np
+&gt;&gt;&gt; from pyfinance import TSeries
+&gt;&gt;&gt; np.random.seed(444)
+&gt;&gt;&gt; ts = TSeries(np.random.randn(12) / 100 + 0.002,
+…              index=pd.date_range(‘2016’, periods=12, freq=’M’))
+&gt;&gt;&gt; ts.rollup(‘Q’)
+2016-03-31    0.0274
+2016-06-30   -0.0032
+2016-09-30   -0.0028
+2016-12-31    0.0127
+Freq: Q-DEC, dtype: float64</p>
+</dd></dl>
+
+</div>
+<div class="section" id="anlzd-stdev">
+<h3><strong>anlzd_stdev方法(年化标准差)</strong><a class="headerlink" href="#anlzd-stdev" title="Permalink to this headline">¶</a></h3>
+<p><em>默认已经被我改成freq=250</em></p>
+<dl class="py method">
+<dt id="id81">
+<code class="sig-prename descclassname"><span class="pre">TSeries.</span></code><code class="sig-name descname"><span class="pre">anlzd_stdev</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ddof</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">freq</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/returns.html#TSeries.anlzd_stdev"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id81" title="Permalink to this definition">¶</a></dt>
+<dd><p>Annualized standard deviation with <cite>ddof</cite> degrees of freedom.</p>
+<dl>
+<dt>ddof<span class="classifier">int, default 0</span></dt><dd><p>Degrees of freedom, passed to pd.Series.std().</p>
+</dd>
+<dt>freq<span class="classifier">str or None, default None</span></dt><dd><p>A frequency string used to create an annualization factor.
+If None, <cite>self.freq</cite> will be used.  If that is also None,
+a frequency will be inferred.  If none can be inferred,
+an exception is raised.</p>
+<p>It may be any frequency string or anchored offset string
+recognized by Pandas, such as ‘D’, ‘5D’, ‘Q’, ‘Q-DEC’, or
+‘BQS-APR’.</p>
+</dd>
+<dt><a href="#id82"><span class="problematic" id="id83">**</span></a>kwargs</dt><dd><p>Passed to pd.Series.std().</p>
+</dd>
+</dl>
+<p>TODO: freq</p>
+<p>float</p>
+</dd></dl>
+
+</div>
+<div class="section" id="semi-stdev">
+<h3><strong>semi_stdev方法(下行标准差)</strong><a class="headerlink" href="#semi-stdev" title="Permalink to this headline">¶</a></h3>
+<p><em>默认已经被我改成freq=250</em></p>
+<dl class="py method">
+<dt id="id84">
+<code class="sig-prename descclassname"><span class="pre">TSeries.</span></code><code class="sig-name descname"><span class="pre">semi_stdev</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ddof</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">freq</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/returns.html#TSeries.semi_stdev"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id84" title="Permalink to this definition">¶</a></dt>
+<dd><p>Semi-standard deviation; stdev of downside returns.</p>
+<p>It is designed to address that fact that plain standard
+deviation penalizes “upside volatility.””</p>
+<p>Formula: <cite>sqrt( sum([min(self - thresh, 0] **2 ) / (n - ddof) )</cite></p>
+<p>Also known as: downside deviation.</p>
+<dl>
+<dt>threshold<span class="classifier">{float, TSeries, pd.Series}, default 0.</span></dt><dd><p>While zero is the default, it is also customary to use
+a “minimum acceptable return” (MAR) or a risk-free rate.
+Note: this is assumed to be a <em>periodic</em>, not necessarily
+annualized, return.</p>
+</dd>
+<dt>ddof<span class="classifier">int, default 0</span></dt><dd><p>Degrees of freedom, passed to pd.Series.std().</p>
+</dd>
+<dt>freq<span class="classifier">str or None, default None</span></dt><dd><p>A frequency string used to create an annualization factor.
+If None, <cite>self.freq</cite> will be used.  If that is also None,
+a frequency will be inferred.  If none can be inferred,
+an exception is raised.</p>
+<p>It may be any frequency string or anchored offset string
+recognized by Pandas, such as ‘D’, ‘5D’, ‘Q’, ‘Q-DEC’, or
+‘BQS-APR’.</p>
+</dd>
+</dl>
+<p>float</p>
+</dd></dl>
+
+</div>
+<div class="section" id="drawdown-start">
+<h3><strong>drawdown_start方法(最大回撤起始时间)</strong><a class="headerlink" href="#drawdown-start" title="Permalink to this headline">¶</a></h3>
+<dl class="py method">
+<dt id="id85">
+<code class="sig-prename descclassname"><span class="pre">TSeries.</span></code><code class="sig-name descname"><span class="pre">drawdown_start</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">return_date</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/returns.html#TSeries.drawdown_start"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id85" title="Permalink to this definition">¶</a></dt>
+<dd><p>The date of the peak at which most severe drawdown began.</p>
+<dl class="simple">
+<dt>return_date<span class="classifier">bool, default False</span></dt><dd><p>If True, return a <cite>datetime.date</cite> object.
+If False, return a Pandas Timestamp object.</p>
+</dd>
+</dl>
+<p>datetime.date or pandas._libs.tslib.Timestamp</p>
+</dd></dl>
+
+</div>
+<div class="section" id="drawdown-end">
+<h3><strong>drawdown_end方法(最大回撤结束时间)</strong><a class="headerlink" href="#drawdown-end" title="Permalink to this headline">¶</a></h3>
+<dl class="py method">
+<dt id="id86">
+<code class="sig-prename descclassname"><span class="pre">TSeries.</span></code><code class="sig-name descname"><span class="pre">drawdown_end</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">return_date</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/returns.html#TSeries.drawdown_end"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id86" title="Permalink to this definition">¶</a></dt>
+<dd><p>The date of the drawdown trough.</p>
+<p>Date at which the drawdown was most negative.</p>
+<dl class="simple">
+<dt>return_date<span class="classifier">bool, default False</span></dt><dd><p>If True, return a <cite>datetime.date</cite> object.
+If False, return a Pandas Timestamp object.</p>
+</dd>
+</dl>
+<p>datetime.date or pandas._libs.tslib.Timestamp</p>
+</dd></dl>
+
+</div>
+<div class="section" id="drawdown-length">
+<h3><strong>drawdown_length方法(最大回撤天数)</strong><a class="headerlink" href="#drawdown-length" title="Permalink to this headline">¶</a></h3>
+<dl class="py method">
+<dt id="id87">
+<code class="sig-prename descclassname"><span class="pre">TSeries.</span></code><code class="sig-name descname"><span class="pre">drawdown_length</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">return_int</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/returns.html#TSeries.drawdown_length"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id87" title="Permalink to this definition">¶</a></dt>
+<dd><p>Length of drawdown in days.</p>
+<p>This is the duration from peak to trough.</p>
+<dl class="simple">
+<dt>return_int<span class="classifier">bool, default False</span></dt><dd><p>If True, return the number of days as an int.
+If False, return a Pandas Timedelta object.</p>
+</dd>
+</dl>
+<p>int or pandas._libs.tslib.Timedelta</p>
+</dd></dl>
+
+</div>
+<div class="section" id="pct-negative">
+<h3><strong>pct_negative方法(个股下行–收益负–时间占比)</strong><a class="headerlink" href="#pct-negative" title="Permalink to this headline">¶</a></h3>
+<p><em>收益小于0的个数的占比</em></p>
+<dl class="py method">
+<dt id="id88">
+<code class="sig-prename descclassname"><span class="pre">TSeries.</span></code><code class="sig-name descname"><span class="pre">pct_negative</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/returns.html#TSeries.pct_negative"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id88" title="Permalink to this definition">¶</a></dt>
+<dd><p>Pct. of periods in which <cite>self</cite> is less than <cite>threshold.</cite></p>
+<p>threshold : {float, TSeries, pd.Series}, default 0.</p>
+<p>float</p>
+</dd></dl>
+
+</div>
+<div class="section" id="pct-positive">
+<h3><strong>pct_positive(个股上行–收益正–时间占比)</strong><a class="headerlink" href="#pct-positive" title="Permalink to this headline">¶</a></h3>
+<dl class="py method">
+<dt id="id89">
+<code class="sig-prename descclassname"><span class="pre">TSeries.</span></code><code class="sig-name descname"><span class="pre">pct_positive</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/returns.html#TSeries.pct_positive"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id89" title="Permalink to this definition">¶</a></dt>
+<dd><p>Pct. of periods in which <cite>self</cite> is greater than <cite>threshold.</cite></p>
+<p>threshold : {float, TSeries, pd.Series}, default 0.</p>
+<p>float</p>
+</dd></dl>
+
+</div>
+<div class="section" id="sharpe-ratio">
+<h3><strong>sharpe_ratio(夏普比率)</strong><a class="headerlink" href="#sharpe-ratio" title="Permalink to this headline">¶</a></h3>
+<p><em>rf –risk free</em></p>
+<p><em>分子要减去无风险利率</em></p>
+<p><em>Formula=(年化收益-无风险利率)/年化收益标准差</em></p>
+<dl class="py method">
+<dt id="id90">
+<code class="sig-prename descclassname"><span class="pre">TSeries.</span></code><code class="sig-name descname"><span class="pre">sharpe_ratio</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rf</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.02</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ddof</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/returns.html#TSeries.sharpe_ratio"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id90" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return over <cite>rf</cite> per unit of total risk.</p>
+<p>The average return in excess of the risk-free rate divided
+by the standard deviation of return; a measure of the average
+excess return earned per unit of standard deviation of return.
+[Source: CFA Institute]</p>
+<dl>
+<dt>rf<span class="classifier">{float, TSeries, pd.Series}, default 0.02</span></dt><dd><p>If float, this represents an <em>compounded annualized</em>
+risk-free rate; 2.0% is the default.
+If a TSeries or pd.Series, this represents a time series
+of periodic returns to a risk-free security.</p>
+<p>To download a risk-free rate return series using
+3-month US T-bill yields, see:<cite>pyfinance.datasets.load_rf</cite>.</p>
+</dd>
+<dt>ddof<span class="classifier">int, default 0</span></dt><dd><p>Degrees of freedom, passed to pd.Series.std().</p>
+</dd>
+</dl>
+<p>float</p>
+</dd></dl>
+
+</div>
+<div class="section" id="sortino-ratio">
+<h3><strong>sortino_ratio(索提诺比率)</strong><a class="headerlink" href="#sortino-ratio" title="Permalink to this headline">¶</a></h3>
+<p><em>用下行标准差来替代年化标准差</em></p>
+<p><em>我已经改默认值 freq=250</em></p>
+<dl class="py method">
+<dt id="id91">
+<code class="sig-prename descclassname"><span class="pre">TSeries.</span></code><code class="sig-name descname"><span class="pre">sortino_ratio</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ddof</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">freq</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">250</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/returns.html#TSeries.sortino_ratio"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id91" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return over a threshold per unit of downside deviation.</p>
+<p>A performance appraisal ratio that replaces standard deviation
+in the Sharpe ratio with downside deviation.
+[Source: CFA Institute]</p>
+<dl>
+<dt>threshold<span class="classifier">{float, TSeries, pd.Series}, default 0.</span></dt><dd><p>While zero is the default, it is also customary to use
+a “minimum acceptable return” (MAR) or a risk-free rate.
+Note: this is assumed to be a <em>periodic</em>, not necessarily
+annualized, return.</p>
+</dd>
+<dt>ddof<span class="classifier">int, default 0</span></dt><dd><p>Degrees of freedom, passed to pd.Series.std().</p>
+</dd>
+<dt>freq<span class="classifier">str or None, default None</span></dt><dd><p>A frequency string used to create an annualization factor.
+If None, <cite>self.freq</cite> will be used.  If that is also None,
+a frequency will be inferred.  If none can be inferred,
+an exception is raised.</p>
+<p>It may be any frequency string or anchored offset string
+recognized by Pandas, such as ‘D’, ‘5D’, ‘Q’, ‘Q-DEC’, or
+‘BQS-APR’.</p>
+</dd>
+</dl>
+<p>float</p>
+</dd></dl>
+
+</div>
+<div class="section" id="calmar-ratio">
+<h3><strong>calmar_ratio(卡玛比率)</strong><a class="headerlink" href="#calmar-ratio" title="Permalink to this headline">¶</a></h3>
+<p><em>用年化收益/最大回撤率</em></p>
+<p><em>不考虑方向（上涨还是下跌，取绝对值</em></p>
+<p><em>是否可以理解最大回撤率是一个波动的指标</em></p>
+<p><em>年化标准差或者说下行标准差是一个风险指标（反映的是风险）</em></p>
+<dl class="py method">
+<dt id="id92">
+<code class="sig-prename descclassname"><span class="pre">TSeries.</span></code><code class="sig-name descname"><span class="pre">calmar_ratio</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/returns.html#TSeries.calmar_ratio"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id92" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calmar ratio–return per unit of drawdown.</p>
+<p>The compound annualized rate of return over a specified
+time period divided by the absolute value of maximum
+drawdown over the same time period.
+[Source: CFA Institute]</p>
+<p>float</p>
+</dd></dl>
+
+</div>
+<div class="section" id="batting-avg">
+<h3><strong>batting_avg(比基准收益高的时间占比)</strong><a class="headerlink" href="#batting-avg" title="Permalink to this headline">¶</a></h3>
+<p><em>用算术方法和基准进行比较，其实就是减法</em></p>
+<p><em>用几何方法和基准进行比较，其实就是除法（比率：各自+1后相除）</em></p>
+<dl class="py method">
+<dt id="id93">
+<code class="sig-prename descclassname"><span class="pre">TSeries.</span></code><code class="sig-name descname"><span class="pre">batting_avg</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">benchmark</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/returns.html#TSeries.batting_avg"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id93" title="Permalink to this definition">¶</a></dt>
+<dd><p>Percentage of periods when <cite>self</cite> outperformed <cite>benchmark</cite>.</p>
+<dl class="simple">
+<dt>benchmark<span class="classifier">{pd.Series, TSeries, 1d np.ndarray}</span></dt><dd><p>The benchmark security to which <cite>self</cite> is compared.</p>
+</dd>
+</dl>
+<p>float</p>
+</dd></dl>
+
+</div>
+<div class="section" id="up-capture">
+<h3><strong>up_capture(上行期与基准收益比)</strong><a class="headerlink" href="#up-capture" title="Permalink to this headline">¶</a></h3>
+<p><em>采用了几何均值，即连乘再开n次方</em></p>
+<dl class="py method">
+<dt id="id94">
+<code class="sig-prename descclassname"><span class="pre">TSeries.</span></code><code class="sig-name descname"><span class="pre">up_capture</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">benchmark</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compare_op</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'ge'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/returns.html#TSeries.up_capture"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id94" title="Permalink to this definition">¶</a></dt>
+<dd><p>Upside capture ratio.</p>
+<p>Measures the performance of <cite>self</cite> relative to benchmark
+conditioned on periods where <cite>benchmark</cite> is gt or ge to
+<cite>threshold</cite>.</p>
+<p>Upside capture ratios are calculated by taking the fund’s
+monthly return during the periods of positive benchmark
+performance and dividing it by the benchmark return.
+[Source: CFA Institute]</p>
+<dl class="simple">
+<dt>benchmark<span class="classifier">{pd.Series, TSeries, 1d np.ndarray}</span></dt><dd><p>The benchmark security to which <cite>self</cite> is compared.</p>
+</dd>
+<dt>threshold<span class="classifier">float, default 0.</span></dt><dd><p>The threshold at which the comparison should be done.
+<cite>self</cite> and <cite>benchmark</cite> are “filtered” to periods where
+<cite>benchmark</cite> is gt/ge <cite>threshold</cite>.</p>
+</dd>
+<dt>compare_op<span class="classifier">{‘ge’, ‘gt’}</span></dt><dd><p>Comparison operator used to compare to <cite>threshold</cite>.
+‘gt’ is greater-than; ‘ge’ is greater-than-or-equal.</p>
+</dd>
+</dl>
+<p>float</p>
+<p>This metric uses geometric, not arithmetic, mean return.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="down-capture">
+<h3><strong>down_capture(下行期与基准收益比)</strong><a class="headerlink" href="#down-capture" title="Permalink to this headline">¶</a></h3>
+<p><em>采用了几何均值，即连乘再开n次方</em></p>
+<dl class="py method">
+<dt id="id95">
+<code class="sig-prename descclassname"><span class="pre">TSeries.</span></code><code class="sig-name descname"><span class="pre">down_capture</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">benchmark</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compare_op</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'lt'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/returns.html#TSeries.down_capture"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id95" title="Permalink to this definition">¶</a></dt>
+<dd><p>Downside capture ratio.</p>
+<p>Measures the performance of <cite>self</cite> relative to benchmark
+conditioned on periods where <cite>benchmark</cite> is lt or le to
+<cite>threshold</cite>.</p>
+<p>Downside capture ratios are calculated by taking the fund’s
+monthly return during the periods of negative benchmark
+performance and dividing it by the benchmark return.
+[Source: CFA Institute]</p>
+<dl class="simple">
+<dt>benchmark<span class="classifier">{pd.Series, TSeries, 1d np.ndarray}</span></dt><dd><p>The benchmark security to which <cite>self</cite> is compared.</p>
+</dd>
+<dt>threshold<span class="classifier">float, default 0.</span></dt><dd><p>The threshold at which the comparison should be done.
+<cite>self</cite> and <cite>benchmark</cite> are “filtered” to periods where
+<cite>benchmark</cite> is lt/le <cite>threshold</cite>.</p>
+</dd>
+<dt>compare_op<span class="classifier">{‘lt’, ‘le’}</span></dt><dd><p>Comparison operator used to compare to <cite>threshold</cite>.
+‘lt’ is less-than; ‘le’ is less-than-or-equal.</p>
+</dd>
+</dl>
+<p>float</p>
+<p>This metric uses geometric, not arithmetic, mean return.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="info-ratio">
+<h3><strong>info_ratio(信息比率)</strong><a class="headerlink" href="#info-ratio" title="Permalink to this headline">¶</a></h3>
+<p><em>所谓的单位超额收益即年化的超额收益</em></p>
+<p><em>所谓的单位风险即年化的超额收益标准差</em></p>
+<p><a href="#id96"><span class="problematic" id="id97">*</span></a>标准差，衡量价格变动大小的一种指标，指的是在过去一段时间内，资产的各个计价区间的投资回报，偏离所有区间平均回报的大小程度。</p>
+<p>“一个标准差是 x%”， 这句话中有投资结果发生机率高低的意义，也有投资结果大小的意义。</p>
+<p>例如：“过去一年”，“上证指数”“月回报”的标准差若为35%，就是说在一个标准差的发生机率（约68.27%），你投资一年的结果，会落在赚或赔 35%之内，而大部分的投资结果（例如在两个标准差的机率95.45%），会落在赚或赔 70%之内，只有极小的机率（剩下的4.55%），投资的结果会赚或赔超过 70%。</p>
+<p>也就是说，当一个投资标的标准差愈大，代表价格波动愈大，投资结果与投资预期（投资人通常会以过去区间的平均回报形成投资预期）可能有很大的落差，标准差愈大，投资结果愈难以预期，可能的投资亏损会让投资人无法承受，投资人需谨慎配置。</p>
+<dl class="py method">
+<dt id="id98">
+<code class="sig-prename descclassname"><span class="pre">TSeries.</span></code><code class="sig-name descname"><span class="pre">info_ratio</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">benchmark</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ddof</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/returns.html#TSeries.info_ratio"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id98" title="Permalink to this definition">¶</a></dt>
+<dd><p>Information ratio–return per unit of active risk.</p>
+<dl class="simple">
+<dt>benchmark<span class="classifier">{pd.Series, TSeries, 1d np.ndarray}</span></dt><dd><p>The benchmark security to which <cite>self</cite> is compared.</p>
+</dd>
+<dt>ddof<span class="classifier">int, default 0</span></dt><dd><p>Degrees of freedom, passed to pd.Series.std().</p>
+</dd>
+</dl>
+<p>float</p>
+</dd></dl>
+
+</div>
+<div class="section" id="alpha">
+<h3><strong>alpha方法</strong><a class="headerlink" href="#alpha" title="Permalink to this headline">¶</a></h3>
+<p><strong>所谓的alpha、贝塔其实就是用最小二乘法OLS做直线回归</strong>
+<strong>贝塔就是斜率，</strong>
+<strong>阿尔法就是截距</strong></p>
+<p><strong>以后公式要写成 y=βx+α</strong></p>
+<p><strong>在实际中，很多主动型基金的贝塔系统接近于1。</strong></p>
+<p><strong>所以粗略来看，可以把大盘指数收益率当作贝塔收益，</strong>
+<strong>指数收益率超越大盘的部分当作阿尔法收益。</strong></p>
+<p><strong>capm模型里预测的收益对应的是市场风险，也就是rm-rf。</strong></p>
+<p><strong>如果是想知道一只股票的预期收益率，就把这个股票的beta放入公式</strong></p>
+<dl class="py method">
+<dt id="id99">
+<code class="sig-prename descclassname"><span class="pre">TSeries.</span></code><code class="sig-name descname"><span class="pre">alpha</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">benchmark</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/returns.html#TSeries.alpha"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id99" title="Permalink to this definition">¶</a></dt>
+<dd><p>CAPM alpha.</p>
+<p>The return on an asset in excess of the asset’s required rate
+of return; the risk-adjusted return.
+[Source: CFA Institute]</p>
+<dl class="simple">
+<dt>benchmark<span class="classifier">{pd.Series, TSeries, pd.DataFrame, np.ndarray}</span></dt><dd><p>The benchmark securitie(s) to which <cite>self</cite> is compared.</p>
+</dd>
+<dt><a href="#id100"><span class="problematic" id="id101">**</span></a>kwargs</dt><dd><p>Passed to pyfinance.ols.OLS().</p>
+</dd>
+</dl>
+<p>float</p>
+</dd></dl>
+
+</div>
+<div class="section" id="beta">
+<h3><strong>beta方法</strong><a class="headerlink" href="#beta" title="Permalink to this headline">¶</a></h3>
+<p><em>beta值反映的是系统风险</em></p>
+<p><em>即最小二乘法的第二个解</em></p>
+<p><strong>个体和基准协方差/（基准的方差）</strong></p>
+<dl class="py method">
+<dt id="id102">
+<code class="sig-prename descclassname"><span class="pre">TSeries.</span></code><code class="sig-name descname"><span class="pre">beta</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">benchmark</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/returns.html#TSeries.beta"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id102" title="Permalink to this definition">¶</a></dt>
+<dd><p>CAPM beta.</p>
+<p>A measure of systematic risk that is based on the covariance
+of an asset’s or portfolio’s return with the return of the
+overall market; a measure of the sensitivity of a given
+investment or portfolio to movements in the overall market.
+[Source: CFA Institute]</p>
+<dl class="simple">
+<dt>benchmark<span class="classifier">{pd.Series, TSeries, pd.DataFrame, np.ndarray}</span></dt><dd><p>The benchmark securitie(s) to which <cite>self</cite> is compared.</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>float or np.ndarray</dt><dd><p>If <cite>benchmark</cite> is 1d, returns a scalar.
+If <cite>benchmark</cite> is 2d, returns a 1d ndarray.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="treynor-ratio">
+<h3><strong>treynor_ratio(特雷诺指数)</strong><a class="headerlink" href="#treynor-ratio" title="Permalink to this headline">¶</a></h3>
+<p><em>分子=年化收益-无风险利率（即保本理财的利率）</em></p>
+<p><em>分母=CAPM模型中的beta值</em></p>
+<dl class="py method">
+<dt id="id103">
+<code class="sig-prename descclassname"><span class="pre">TSeries.</span></code><code class="sig-name descname"><span class="pre">treynor_ratio</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">benchmark</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rf</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.02</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/returns.html#TSeries.treynor_ratio"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id103" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return over <cite>rf</cite> per unit of systematic risk.</p>
+<p>A measure of risk-adjusted performance that relates a
+portfolio’s excess returns to the portfolio’s beta.
+[Source: CFA Institute]</p>
+<dl>
+<dt>benchmark<span class="classifier">{pd.Series, TSeries, 1d np.ndarray}</span></dt><dd><p>The benchmark security to which <cite>self</cite> is compared.</p>
+</dd>
+<dt>rf<span class="classifier">{float, TSeries, pd.Series}, default 0.02</span></dt><dd><p>If float, this represents an <em>compounded annualized</em>
+risk-free rate; 2.0% is the default.
+If a TSeries or pd.Series, this represents a time series
+of periodic returns to a risk-free security.</p>
+<p>To download a risk-free rate return series using
+3-month US T-bill yields, see:<cite>pyfinance.datasets.load_rf</cite>.</p>
+</dd>
+</dl>
+<p>float</p>
+</dd></dl>
+
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="02_general.html" class="btn btn-neutral float-right" title="general模块" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="index.html" class="btn btn-neutral float-left" title="欢迎查看pyfinance文档" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, chenlin.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

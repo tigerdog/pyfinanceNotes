@@ -1,0 +1,437 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>datasets模块 &mdash; finance 1.3 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="ols模块" href="04_ols.html" />
+    <link rel="prev" title="general模块" href="02_general.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> finance
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="01_returns.html"><strong>returns模块</strong></a></li>
+<li class="toctree-l1"><a class="reference internal" href="02_general.html"><strong>general模块</strong></a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#"><strong>datasets模块</strong></a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#descriptions">Descriptions</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="04_ols.html"><strong>ols模块</strong></a></li>
+<li class="toctree-l1"><a class="reference internal" href="05_options.html"><strong>options模块</strong></a></li>
+<li class="toctree-l1"><a class="reference internal" href="06_utils.html"><strong>utils模块</strong></a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">finance</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li><strong>datasets模块</strong></li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/03_datasets.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-datasets">
+<span id="datasets"></span><h1><strong>datasets模块</strong><a class="headerlink" href="#module-datasets" title="Permalink to this headline">¶</a></h1>
+<p>Financial dataset web scrubbing.</p>
+<div class="section" id="descriptions">
+<h2>Descriptions<a class="headerlink" href="#descriptions" title="Permalink to this headline">¶</a></h2>
+<dl class="simple">
+<dt>load_13f</dt><dd><p>Parse SEC 13F XML file to pandas DataFrame.</p>
+</dd>
+<dt>load_factors</dt><dd><p>Load risk factor returns.</p>
+</dd>
+<dt>load_industries</dt><dd><p>Load industry portfolio returns from Ken French’s website.</p>
+</dd>
+<dt>load_rates</dt><dd><p>Load database of interest rates (CP, corporate, government).</p>
+</dd>
+<dt>load_rf</dt><dd><p>Build a risk-free rate return series using 3-month US T-bill yields.</p>
+</dd>
+<dt>load_retaildata</dt><dd><p>Load and clean retail trade data from census.gov.</p>
+</dd>
+</dl>
+<dl class="py function">
+<dt id="datasets.load_13f">
+<code class="sig-prename descclassname"><span class="pre">datasets.</span></code><code class="sig-name descname"><span class="pre">load_13f</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">url</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/datasets.html#load_13f"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#datasets.load_13f" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load and parse an SEC.gov-hosted 13F XML file to Pandas DataFrame.</p>
+<p>Provide the URL to the raw .xml form13fInfoTable.  (See example below.)</p>
+<dl class="simple">
+<dt>url<span class="classifier">str</span></dt><dd><p>Link to .xml file.</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>df<span class="classifier">pd.DataFrame</span></dt><dd><p>Holdings snapshot.</p>
+</dd>
+</dl>
+<p># Third Point LLC June 2017 13F
+&gt;&gt;&gt; from pyfinance import datasets
+&gt;&gt;&gt; url = ‘<a class="reference external" href="https://www.sec.gov/Archives/edgar/data/1040273/000108514617001787/form13fInfoTable.xml">https://www.sec.gov/Archives/edgar/data/1040273/000108514617001787/form13fInfoTable.xml</a>’  # noqa
+&gt;&gt;&gt; df = datasets.load_13f(url=url)</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="datasets.load_factors">
+<code class="sig-prename descclassname"><span class="pre">datasets.</span></code><code class="sig-name descname"><span class="pre">load_factors</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/datasets.html#load_factors"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#datasets.load_factors" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load risk factor returns.</p>
+<p>Symbol      Description                                            Source
+——      ———-                                             ——
+MKT                                                                French
+SMB         Size (small minus big)                                 French
+HML         Value (high minus low)                                 French
+RMW         Profitability (robust minus weak)                      French
+CMA         Investment (conservative minus aggressive)             French
+UMD         Momentum (up minus down)                               French
+STR         Short-term reversal                                    French
+LTR         Long-term reversal                                     French
+BETA        Beta                                                   French
+ACC         Accruals                                               French
+VAR         Variance                                               French
+IVAR        Residual variance                                      French
+EP          Earnings-to-price                                      French
+CP          Cash flow-to-price                                     French
+DP          Dividend-to-price                                      French
+BAB         Betting against beta                                   AQR
+QMJ         Quality minus junk                                     AQR
+HMLD        Value (high minus low) [modified version]              AQR
+LIQ         Liquidity                                              Pastor
+BDLB        Bond lookback straddle                                 Hsieh
+FXLB        Curency lookback straddle                              Hsieh
+CMLB        Commodity lookback straddle                            Hsieh
+IRLB        Interest rate lookback straddle                        Hsieh
+STLB        Stock lookback straddle                                Hsieh
+PUT         CBOE S&amp;P 500 PutWrite Index                            CBOE
+BXM         CBOE S&amp;P 500 BuyWrite Index®                           CBOE
+RXM         CBOE S&amp;P 500 Risk Reversal Index                       CBOE</p>
+<p>Source      Link
+——      —-
+French      <a class="reference external" href="http://mba.tuck.dartmouth.edu/pages/faculty/ken.french/data_library.html">http://mba.tuck.dartmouth.edu/pages/faculty/ken.french/data_library.html</a>  # noqa
+Pastor      <a class="reference external" href="http://faculty.chicagobooth.edu/lubos.pastor/research/liq_data_1962_2016.txt">http://faculty.chicagobooth.edu/lubos.pastor/research/liq_data_1962_2016.txt</a>  # noqa
+AQR         <a class="reference external" href="https://www.aqr.com/library/data-sets">https://www.aqr.com/library/data-sets</a>
+Hsieh       <a class="reference external" href="https://faculty.fuqua.duke.edu/~dah7/HFData.htm">https://faculty.fuqua.duke.edu/~dah7/HFData.htm</a>
+Fed         <a class="reference external" href="https://fred.stlouisfed.org/">https://fred.stlouisfed.org/</a>
+CBOE        <a class="reference external" href="http://www.cboe.com/products/strategy-benchmark-indexes">http://www.cboe.com/products/strategy-benchmark-indexes</a></p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="datasets.load_industries">
+<code class="sig-prename descclassname"><span class="pre">datasets.</span></code><code class="sig-name descname"><span class="pre">load_industries</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/datasets.html#load_industries"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#datasets.load_industries" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load industry portfolio returns from Ken French’s website.</p>
+<dl class="simple">
+<dt>industries<span class="classifier">dictionary of Pandas DataFrames</span></dt><dd><p>Each key is a portfolio group.</p>
+</dd>
+</dl>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">pyfinance</span> <span class="kn">import</span> <span class="n">datasets</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ind</span> <span class="o">=</span> <span class="n">datasets</span><span class="o">.</span><span class="n">load_industries</span><span class="p">()</span>
+</pre></div>
+</div>
+<p># Monthly returns to 5 industry portfolios
+&gt;&gt;&gt; ind[5].head()</p>
+<blockquote>
+<div><p>Cnsmr  Manuf  HiTec  Hlth   Other</p>
+</div></blockquote>
+<p>Date
+1950-01-31   1.26   1.47   3.21   1.06   3.19
+1950-02-28   1.91   1.29   2.06   1.92   1.02
+1950-03-31   0.28   1.93   3.46  -2.90  -0.68
+1950-04-30   3.22   5.21   3.58   5.52   1.50
+1950-05-31   3.81   6.18   1.07   3.96   1.36</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="datasets.load_rates">
+<code class="sig-prename descclassname"><span class="pre">datasets.</span></code><code class="sig-name descname"><span class="pre">load_rates</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">freq</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'D'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/datasets.html#load_rates"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#datasets.load_rates" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load interest rates from <a class="reference external" href="https://fred.stlouisfed.org/">https://fred.stlouisfed.org/</a>.</p>
+<dl class="simple">
+<dt>reload<span class="classifier">bool, default True</span></dt><dd><p>If True, download the data from source rather than loading pickled data</p>
+</dd>
+<dt>freq<span class="classifier">str {‘D’, ‘W’, ‘M’}, default ‘D’</span></dt><dd><p>Frequency of time series; daily, weekly, or monthly</p>
+</dd>
+<dt>start<span class="classifier">str or datetime, default ‘1963’, optional</span></dt><dd><p>Start date of time series</p>
+</dd>
+<dt>dropna<span class="classifier">bool, default True</span></dt><dd><p>If True, drop NaN along rows in resulting DataFrame</p>
+</dd>
+<dt>how<span class="classifier">str, default ‘any’</span></dt><dd><p>Passed to dropna()</p>
+</dd>
+</dl>
+<p>Board of Governors of the Federal Reserve System
+H.15 Selected Interest Rates
+<a class="reference external" href="https://www.federalreserve.gov/releases/h15/">https://www.federalreserve.gov/releases/h15/</a></p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="datasets.load_rf">
+<code class="sig-prename descclassname"><span class="pre">datasets.</span></code><code class="sig-name descname"><span class="pre">load_rf</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">freq</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'M'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/datasets.html#load_rf"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#datasets.load_rf" title="Permalink to this definition">¶</a></dt>
+<dd><p>Build a risk-free rate return series using 3-month US T-bill yields.</p>
+<p>The 3-Month Treasury Bill: Secondary Market Rate from the Federal Reserve
+(a yield) is convert to a total return.  See ‘Methodology’ for details.</p>
+<p>The time series should closely mimic returns of the BofA Merrill Lynch US
+Treasury Bill (3M) (Local Total Return) index.</p>
+<dl class="simple">
+<dt>freq<span class="classifier">str, sequence, or set</span></dt><dd><p>If a single-character string, return a single-column DataFrame with
+index frequency corresponding to <cite>freq</cite>.  If a sequence or set, return
+a dict of DataFrames with the keys corresponding to <a href="#id1"><span class="problematic" id="id2">`</span></a>freq`(s)</p>
+</dd>
+</dl>
+<p>The Federal Reserve publishes a daily chart of Selected Interest Rates
+(release H.15; www.federalreserve.gov/releases/h15/).  As with a yield
+curve, some yields are interpolated from recent issues because Treasury
+auctions do not occur daily.</p>
+<p>While the de-annualized ex-ante yield itself is a fairly good tracker of
+the day’s total return, it is not perfect and can exhibit non-neglible
+error in periods of volatile short rates.  The purpose of this function
+is to convert yields to total returns for 3-month T-bills.  It is a
+straightforward process given that these are discount (zero-coupon)
+securities.  It consists of buying a 3-month bond at the beginning of each
+month, then amortizing that bond throughout the month to back into the
+price of a &lt;3-month tenor bond.</p>
+<p>The source data (pulled from fred.stlouisfed.org) is quoted on a discount
+basis.  (See footnote 4 from release H.15.)  This is converted to a
+bond-equivlanet yield (BEY) and then translated to a hypothetical daily
+total return.</p>
+<p>The process largely follows Morningstar’s published Return Calculation of
+U.S. Treasury Constant Maturity Indices, and is as follows:
+- At the beginning of each month a bill is purchased at the prior month-end</p>
+<blockquote>
+<div><p>price, and daily returns in the month reflect the change in daily
+valuation of this bill</p>
+</div></blockquote>
+<ul class="simple">
+<li><p>If t is not a business day, its yield is the yield of the prior
+business day.</p></li>
+<li><p>At each day during the month, the price of a 3-month bill purchased on
+the final calendar day of the previous month is computed.</p></li>
+<li><p>Month-end pricing is unique.  At each month-end date, there are
+effectively two bonds and two prices.  The first is the bond
+hypothetically purchased on the final day of the prior month with 2m
+remaining to maturity, and the second is a new-issue bond purchased that
+day with 3m to maturity.  The former is used as the numerator to compute
+that day’s total return, while the latter is used as the denominator
+to compute the next day’s (1st day of next month) total return.</p></li>
+</ul>
+<p>Description of the BofA Merrill Lynch US 3-Month Treasury Bill Index:
+The BofA Merrill Lynch US 3-Month Treasury Bill Index is comprised of a
+single issue purchased at the beginning of the month and held for a full
+month. At the end of the month that issue is sold and rolled into a newly
+selected issue. The     issue selected at each month-end rebalancing is the
+outstanding Treasury Bill that matures closest to, but not beyond, three
+months from the rebalancing date. To qualify for selection, an issue must
+have settled on or before the month-end rebalancing date.</p>
+<blockquote>
+<div><p>(Source: Bank of America Merrill Lynch)</p>
+</div></blockquote>
+<dl class="simple">
+<dt>FRED: 3-Month Treasury Bill: Secondary Market Rate (DTB3)</dt><dd><p><a class="reference external" href="https://fred.stlouisfed.org/series/DTB3">https://fred.stlouisfed.org/series/DTB3</a></p>
+</dd>
+<dt>McGraw-Hill/Irwin, Interest Rates, 2008.</dt><dd><p><a class="reference external" href="https://people.ucsc.edu/~lbaum/econ80h/LS-Chap009.pdf">https://people.ucsc.edu/~lbaum/econ80h/LS-Chap009.pdf</a></p>
+</dd>
+<dt>Morningstar, Return Calculation of U.S. Treasury Constant Maturity Indices,</dt><dd><p>September 2008.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="datasets.load_shiller">
+<code class="sig-prename descclassname"><span class="pre">datasets.</span></code><code class="sig-name descname"><span class="pre">load_shiller</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/datasets.html#load_shiller"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#datasets.load_shiller" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load market &amp; macroeconomic data from Robert Shiller’s website.</p>
+<dl class="simple">
+<dt>iedata<span class="classifier">pd.DataFrame</span></dt><dd><p>Time series of S&amp;P 500 and interest rate variables.</p>
+</dd>
+</dl>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">pyfinance</span> <span class="kn">import</span> <span class="n">datasets</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">shiller</span> <span class="o">=</span> <span class="n">datasets</span><span class="o">.</span><span class="n">load_shiller</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">shiller</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:</span><span class="mi">7</span><span class="p">,</span> <span class="p">:</span><span class="mi">5</span><span class="p">]</span>
+<span class="go">            sp50p  sp50d  sp50e      cpi  real_rate</span>
+<span class="go">date</span>
+<span class="go">1871-01-31   4.44   0.26    0.4  12.4641     5.3200</span>
+<span class="go">1871-02-28   4.50   0.26    0.4  12.8446     5.3233</span>
+<span class="go">1871-03-31   4.61   0.26    0.4  13.0350     5.3267</span>
+<span class="go">1871-04-30   4.74   0.26    0.4  12.5592     5.3300</span>
+<span class="go">1871-05-31   4.86   0.26    0.4  12.2738     5.3333</span>
+<span class="go">1871-06-30   4.82   0.26    0.4  12.0835     5.3367</span>
+<span class="go">1871-07-31   4.73   0.26    0.4  12.0835     5.3400</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="04_ols.html" class="btn btn-neutral float-right" title="ols模块" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="02_general.html" class="btn btn-neutral float-left" title="general模块" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, chenlin.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

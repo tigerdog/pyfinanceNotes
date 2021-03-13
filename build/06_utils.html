@@ -1,0 +1,565 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>utils模块 &mdash; finance 1.3 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="options模块" href="05_options.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> finance
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="01_returns.html"><strong>returns模块</strong></a></li>
+<li class="toctree-l1"><a class="reference internal" href="02_general.html"><strong>general模块</strong></a></li>
+<li class="toctree-l1"><a class="reference internal" href="03_datasets.html"><strong>datasets模块</strong></a></li>
+<li class="toctree-l1"><a class="reference internal" href="04_ols.html"><strong>ols模块</strong></a></li>
+<li class="toctree-l1"><a class="reference internal" href="05_options.html"><strong>options模块</strong></a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#"><strong>utils模块</strong></a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#descriptions">Descriptions</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">finance</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li><strong>utils模块</strong></li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/06_utils.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-utils">
+<span id="utils"></span><h1><strong>utils模块</strong><a class="headerlink" href="#module-utils" title="Permalink to this headline">¶</a></h1>
+<p>pyfinance utility functions.</p>
+<div class="section" id="descriptions">
+<h2>Descriptions<a class="headerlink" href="#descriptions" title="Permalink to this headline">¶</a></h2>
+<dl class="simple">
+<dt>appender</dt><dd><p>Decorator for appending commonly used parameter definitions.</p>
+</dd>
+<dt>avail</dt><dd><p>Return start &amp; end availability for each column in a DataFrame.</p>
+</dd>
+<dt>can_broadcast</dt><dd><p>Logic test: can input NumPy arrays be broadcast?</p>
+</dd>
+<dt>constrain</dt><dd><p>Constrain group of DataFrames &amp; Series to intersection of indices.</p>
+</dd>
+<dt>constrain_horizon</dt><dd><p>Constrain a Series/DataFrame to a specified lookback period.</p>
+</dd>
+<dt>dropcols</dt><dd><p>Drop columns that contain NaN within [start, end] inclusive.</p>
+</dd>
+<dt>encode</dt><dd><p>One-hot encode the given input strings.</p>
+</dd>
+<dt>equal_weights</dt><dd><p>Generate <cite>n</cite> equal weights (decimals) summing to <cite>sumto</cite>.</p>
+</dd>
+<dt>expanding_stdize</dt><dd><p>Standardize a pandas object column-wise on expanding window.</p>
+</dd>
+<dt>flatten</dt><dd><p>Flatten a nested iterable.  Returns a generator object.</p>
+</dd>
+<dt>get_anlz_factor</dt><dd><p>Find the number of periods per year given a frequency.</p>
+</dd>
+<dt>isiterable</dt><dd><p>Test whether <cite>obj</cite> is iterable.</p>
+</dd>
+<dt>public_dir</dt><dd><p>List of attributes except those starting with specified underscores.</p>
+</dd>
+<dt>random_tickers</dt><dd><p>Generate a size <cite>n</cite> list of random ticker symbols, each len <cite>length</cite>.</p>
+</dd>
+<dt>random_weights</dt><dd><p>Generate a np.array of <cite>n</cite> random weights that sum to <cite>sumto</cite>.</p>
+</dd>
+<dt>rolling_windows</dt><dd><p>Creates rolling-window ‘blocks’ of length <cite>window</cite> from <cite>a</cite>.</p>
+</dd>
+<dt>view</dt><dd><p>Abbreviated view similar to .head, but limit both rows &amp; columns.</p>
+</dd>
+</dl>
+<dl class="py function">
+<dt id="utils.appender">
+<code class="sig-prename descclassname"><span class="pre">utils.</span></code><code class="sig-name descname"><span class="pre">appender</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">defaultdocs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">passed_to</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils.html#appender"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.appender" title="Permalink to this definition">¶</a></dt>
+<dd><p>Decorator for appending commonly used parameter definitions.</p>
+<p>Useful in cases where functions repeatedly use the same parameters.  (But
+where a class implementation is not appropriate.)</p>
+<p><cite>defaultdocs</cite> -&gt; dict, format as shown in Example below, with keys being
+parameters and values being descriptions.</p>
+<p>ddocs = {</p>
+<blockquote>
+<div><p>‘a’ :
+‘’’
+a : int, default 0</p>
+<blockquote>
+<div><p>the first parameter</p>
+</div></blockquote>
+<p>‘’’,</p>
+<p>‘b’ :
+‘’’
+b : int, default 1</p>
+<blockquote>
+<div><p>the second parameter</p>
+</div></blockquote>
+<p>‘’’
+}</p>
+</div></blockquote>
+<p>&#64;appender(ddocs)
+def f(a, b):</p>
+<blockquote>
+<div><p>‘’’Title doc.’’’
+# Params here
+pass</p>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py function">
+<dt id="utils.avail">
+<code class="sig-prename descclassname"><span class="pre">utils.</span></code><code class="sig-name descname"><span class="pre">avail</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils.html#avail"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.avail" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return start &amp; end availability for each column in a DataFrame.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="utils.can_broadcast">
+<code class="sig-prename descclassname"><span class="pre">utils.</span></code><code class="sig-name descname"><span class="pre">can_broadcast</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils.html#can_broadcast"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.can_broadcast" title="Permalink to this definition">¶</a></dt>
+<dd><p>Logic test: can input arrays be broadcast?</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="utils.constrain">
+<code class="sig-prename descclassname"><span class="pre">utils.</span></code><code class="sig-name descname"><span class="pre">constrain</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">objs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils.html#constrain"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.constrain" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constrain group of DataFrames &amp; Series to intersection of indices.</p>
+<dl class="simple">
+<dt>objs<span class="classifier">iterable</span></dt><dd><p>DataFrames and/or Series to constrain</p>
+</dd>
+</dl>
+<p>new_dfs : list of DataFrames, copied rather than inplace</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="utils.constrain_horizon">
+<code class="sig-prename descclassname"><span class="pre">utils.</span></code><code class="sig-name descname"><span class="pre">constrain_horizon</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">strict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cust</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">years</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">quarters</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">months</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">days</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weeks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">year</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">month</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">day</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils.html#constrain_horizon"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.constrain_horizon" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constrain a Series/DataFrame to a specified lookback period.</p>
+<p>See the documentation for dateutil.relativedelta:
+dateutil.readthedocs.io/en/stable/relativedelta.html</p>
+<dl class="simple">
+<dt>r<span class="classifier">DataFrame or Series</span></dt><dd><p>The target pandas object to constrain</p>
+</dd>
+<dt>strict<span class="classifier">bool, default False</span></dt><dd><p>If True, raise Error if the implied start date on the horizon predates
+the actual start date of <cite>r</cite>.  If False, just return <cite>r</cite> in this
+situation</p>
+</dd>
+<dt>years, months, weeks, days<span class="classifier">int, default 0</span></dt><dd><p>Relative information; specify as positive to subtract periods.  Adding
+or subtracting a relativedelta with relative information performs
+the corresponding aritmetic operation on the original datetime value
+with the information in the relativedelta</p>
+</dd>
+<dt>quarters<span class="classifier">int, default 0</span></dt><dd><p>Similar to the other plural relative info periods above, but note that
+this param is custom here.  (It is not a standard relativedelta param)</p>
+</dd>
+<dt>year, month, day<span class="classifier">int, default None</span></dt><dd><p>Absolute information; specify as positive to subtract periods.  Adding
+relativedelta with absolute information does not perform an aritmetic
+operation, but rather REPLACES the corresponding value in the
+original datetime with the value(s) in relativedelta</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="utils.dropcols">
+<code class="sig-prename descclassname"><span class="pre">utils.</span></code><code class="sig-name descname"><span class="pre">dropcols</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils.html#dropcols"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.dropcols" title="Permalink to this definition">¶</a></dt>
+<dd><p>Drop columns that contain NaN within [start, end] inclusive.</p>
+<p>A wrapper around DataFrame.dropna() that builds an easier <em>subset</em>
+syntax for tseries-indexed DataFrames.</p>
+<p>df : DataFrame
+start : str or datetime, default None</p>
+<blockquote>
+<div><p>start cutoff date, inclusive</p>
+</div></blockquote>
+<dl class="simple">
+<dt>end<span class="classifier">str or datetime, default None</span></dt><dd><p>end cutoff date, inclusive</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>df = DataFrame(np.random.randn(10,3),</dt><dd><p>index=pd.date_range(‘2017’, periods=10))</p>
+</dd>
+</dl>
+<p># Drop in some NaN
+df.set_value(‘2017-01-04’, 0, np.nan)
+df.set_value(‘2017-01-02’, 2, np.nan)
+df.loc[‘2017-01-05’:, 1] = np.nan</p>
+<p># only col2 will be kept–its NaN value falls before <cite>start</cite>
+print(dropcols(df, start=’2017-01-03’))</p>
+<blockquote>
+<div><p>2</p>
+</div></blockquote>
+<p>2017-01-01  0.12939
+2017-01-02      NaN
+2017-01-03  0.16596
+2017-01-04  1.06442
+2017-01-05 -1.87040
+2017-01-06 -0.17160
+2017-01-07  0.94588
+2017-01-08  1.49246
+2017-01-09  0.02042
+2017-01-10  0.75094</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="utils.encode">
+<code class="sig-prename descclassname"><span class="pre">utils.</span></code><code class="sig-name descname"><span class="pre">encode</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils.html#encode"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.encode" title="Permalink to this definition">¶</a></dt>
+<dd><p>One-hot encode the given input strings.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="utils.equal_weights">
+<code class="sig-prename descclassname"><span class="pre">utils.</span></code><code class="sig-name descname"><span class="pre">equal_weights</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sumto</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils.html#equal_weights"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.equal_weights" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate <cite>n</cite> equal weights (decimals) summing to <cite>sumto</cite>.</p>
+<p>Note that sum is subject to typical Python floating point limitations.</p>
+<p>n -&gt; int or float; the number of weights, summing to <cite>sumto</cite></p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">equal_weights</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+<span class="go">[ 0.2  0.2  0.2  0.2  0.2]</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">equal_weights</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="n">sumto</span><span class="o">=</span><span class="mf">1.2</span><span class="p">)</span>
+<span class="go">[ 0.24  0.24  0.24  0.24  0.24]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt id="utils.expanding_stdize">
+<code class="sig-prename descclassname"><span class="pre">utils.</span></code><code class="sig-name descname"><span class="pre">expanding_stdize</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils.html#expanding_stdize"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.expanding_stdize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Standardize a pandas object column-wise on expanding window.</p>
+<p><a href="#id1"><span class="problematic" id="id2">**</span></a>kwargs -&gt; passed to <cite>obj.expanding</cite></p>
+<p>df = pd.DataFrame(np.random.randn(10, 3))
+print(expanding_stdize(df, min_periods=5))</p>
+<blockquote>
+<div><p>0        1        2</p>
+</div></blockquote>
+<p>0      NaN      NaN      NaN
+1      NaN      NaN      NaN
+2      NaN      NaN      NaN
+3      NaN      NaN      NaN
+4  0.67639 -1.03507  0.96610
+5  0.95008 -0.26067  0.27761
+6  1.67793 -0.50816  0.19293
+7  1.50364 -1.10035 -0.87859
+8 -0.64949  0.08028 -0.51354
+9  0.15280 -0.73283 -0.84907</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="utils.public_dir">
+<code class="sig-prename descclassname"><span class="pre">utils.</span></code><code class="sig-name descname"><span class="pre">public_dir</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_underscores</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type_</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils.html#public_dir"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.public_dir" title="Permalink to this definition">¶</a></dt>
+<dd><p>Like <cite>dir()</cite> with additional options for object inspection.</p>
+<dl class="simple">
+<dt>obj: object</dt><dd><p>Any object that could be passed to <cite>dir()</cite></p>
+</dd>
+<dt>max_underscores: int, default 0</dt><dd><p>If &gt; 0, names that begin with underscores repeated n or more
+times will be excluded.</p>
+</dd>
+<dt><a href="#id3"><span class="problematic" id="id4">type_</span></a>: None, sequence, str, or type</dt><dd><p>Filter to objects of these type(s) only.  if ‘callable’ or
+‘func’ is passed, gets mapped to collections.Callable.  if the
+string-version of a type (i.e. ‘str’) is passed, it gets
+eval’d to its type.</p>
+</dd>
+</dl>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">os</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Get all public string constants from os.path</span>
+<span class="go">    public_dir(os.path, max_underscores=1, type_=str)</span>
+<span class="go">[&#39;curdir&#39;, &#39;defpath&#39;, &#39;devnull&#39;, &#39;extsep&#39;, &#39;pardir&#39;, &#39;pathsep&#39;, &#39;sep&#39;]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Get integer constants</span>
+<span class="go">    public_dir(os.path, max_underscores=1, type_=&#39;int&#39;)</span>
+<span class="go">[&#39;supports_unicode_filenames&#39;]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt id="utils.random_tickers">
+<code class="sig-prename descclassname"><span class="pre">utils.</span></code><code class="sig-name descname"><span class="pre">random_tickers</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="pre">length</span></em>, <em class="sig-param"><span class="pre">n_tickers</span></em>, <em class="sig-param"><span class="pre">endswith=None</span></em>, <em class="sig-param"><span class="pre">letters=None</span></em>, <em class="sig-param"><span class="pre">slicer=&lt;class</span> <span class="pre">'itertools.islice'&gt;</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils.html#random_tickers"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.random_tickers" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate a length-n_tickers list of unique random ticker symbols.</p>
+<dl class="simple">
+<dt>length<span class="classifier">int</span></dt><dd><p>The length of each ticker string.</p>
+</dd>
+<dt>n_tickers<span class="classifier">int</span></dt><dd><p>Number of tickers to generate.</p>
+</dd>
+<dt>endswith<span class="classifier">str, default None</span></dt><dd><p>Specify the ending element(s) of each ticker (for example, ‘X’).</p>
+</dd>
+<dt>letters<span class="classifier">sequence, default None</span></dt><dd><p>Sequence of possible letters to choose from.  If None, defaults to
+<cite>string.ascii_uppercase</cite>.</p>
+</dd>
+</dl>
+<p>list of str</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">pyfinance</span> <span class="kn">import</span> <span class="n">utils</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">utils</span><span class="o">.</span><span class="n">random_tickers</span><span class="p">(</span><span class="n">length</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">n_tickers</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">endswith</span><span class="o">=</span><span class="s1">&#39;X&#39;</span><span class="p">)</span>
+<span class="go">[&#39;UZTFX&#39;, &#39;ROYAX&#39;, &#39;ZBVIX&#39;, &#39;IUWYX&#39;]</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">utils</span><span class="o">.</span><span class="n">random_tickers</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">8</span><span class="p">)</span>
+<span class="go">[&#39;SBW&#39;, &#39;GDF&#39;, &#39;FOG&#39;, &#39;PWO&#39;, &#39;QDH&#39;, &#39;MJJ&#39;, &#39;YZD&#39;, &#39;QST&#39;]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt id="utils.random_weights">
+<code class="sig-prename descclassname"><span class="pre">utils.</span></code><code class="sig-name descname"><span class="pre">random_weights</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sumto</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils.html#random_weights"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.random_weights" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate an array of random weights that sum to <cite>sumto</cite>.</p>
+<p>The result may be of arbitrary dimensions.  <cite>size</cite> is passed to
+the <cite>size</cite> parameter of <cite>np.random.random</cite>, which acts as a shape
+parameter in this case.</p>
+<p>Note that <cite>sumto</cite> is subject to typical Python floating point limitations.
+This function does not implement a softmax check.</p>
+<dl class="simple">
+<dt>size: int or tuple of ints, optional</dt><dd><p>Output shape.  If the given shape is, e.g., <code class="docutils literal notranslate"><span class="pre">(m,</span> <span class="pre">n,</span> <span class="pre">k)</span></code>, then
+<code class="docutils literal notranslate"><span class="pre">m</span> <span class="pre">*</span> <span class="pre">n</span> <span class="pre">*</span> <span class="pre">k</span></code> samples are drawn.</p>
+</dd>
+<dt>sumto: float, default 1.</dt><dd><p>Each vector of weights should sum to this in decimal terms.</p>
+</dd>
+</dl>
+<p>np.ndarray</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="utils.rolling_windows">
+<code class="sig-prename descclassname"><span class="pre">utils.</span></code><code class="sig-name descname"><span class="pre">rolling_windows</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">window</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils.html#rolling_windows"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.rolling_windows" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates rolling-window ‘blocks’ of length <cite>window</cite> from <cite>a</cite>.</p>
+<p>Note that the orientation of rows/columns follows that of pandas.</p>
+<p>import numpy as np
+onedim = np.arange(20)
+twodim = onedim.reshape((5,4))</p>
+<p>print(twodim)
+[[ 0  1  2  3]</p>
+<blockquote>
+<div><p>[ 4  5  6  7]
+[ 8  9 10 11]
+[12 13 14 15]
+[16 17 18 19]]</p>
+</div></blockquote>
+<p>print(rwindows(onedim, 3)[:5])
+[[0 1 2]</p>
+<blockquote>
+<div><p>[1 2 3]
+[2 3 4]
+[3 4 5]
+[4 5 6]]</p>
+</div></blockquote>
+<p>print(rwindows(twodim, 3)[:5])
+[[[ 0  1  2  3]</p>
+<blockquote>
+<div><blockquote>
+<div><p>[ 4  5  6  7]
+[ 8  9 10 11]]</p>
+</div></blockquote>
+<dl class="simple">
+<dt>[[ 4  5  6  7]</dt><dd><p>[ 8  9 10 11]
+[12 13 14 15]]</p>
+</dd>
+<dt>[[ 8  9 10 11]</dt><dd><p>[12 13 14 15]
+[16 17 18 19]]]</p>
+</dd>
+</dl>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py function">
+<dt id="utils.uniqify">
+<code class="sig-prename descclassname"><span class="pre">utils.</span></code><code class="sig-name descname"><span class="pre">uniqify</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">seq</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils.html#uniqify"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.uniqify" title="Permalink to this definition">¶</a></dt>
+<dd><p><cite>Uniqify</cite> a sequence, preserving order.</p>
+<p>A plain-vanilla version of itertools’ <cite>unique_everseen</cite>.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">s</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="s1">&#39;zyxabccabxyz&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">uniqify</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+<span class="go">[&#39;z&#39;, &#39;y&#39;, &#39;x&#39;, &#39;a&#39;, &#39;b&#39;, &#39;c&#39;</span>
+</pre></div>
+</div>
+<p>list</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="utils.unique_everseen">
+<code class="sig-prename descclassname"><span class="pre">utils.</span></code><code class="sig-name descname"><span class="pre">unique_everseen</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="pre">iterable</span></em>, <em class="sig-param"><span class="pre">filterfalse_=&lt;class</span> <span class="pre">'itertools.filterfalse'&gt;</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils.html#unique_everseen"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.unique_everseen" title="Permalink to this definition">¶</a></dt>
+<dd><p>Unique elements, preserving order.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="utils.view">
+<code class="sig-prename descclassname"><span class="pre">utils.</span></code><code class="sig-name descname"><span class="pre">view</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">row</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">col</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils.html#view"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.view" title="Permalink to this definition">¶</a></dt>
+<dd><p>Abbreviated view like <cite>.head()</cite>, but limit both rows &amp; columns.</p>
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="05_options.html" class="btn btn-neutral float-left" title="options模块" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, chenlin.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

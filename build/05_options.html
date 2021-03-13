@@ -1,0 +1,564 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>options模块 &mdash; finance 1.3 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="utils模块" href="06_utils.html" />
+    <link rel="prev" title="ols模块" href="04_ols.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> finance
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="01_returns.html"><strong>returns模块</strong></a></li>
+<li class="toctree-l1"><a class="reference internal" href="02_general.html"><strong>general模块</strong></a></li>
+<li class="toctree-l1"><a class="reference internal" href="03_datasets.html"><strong>datasets模块</strong></a></li>
+<li class="toctree-l1"><a class="reference internal" href="04_ols.html"><strong>ols模块</strong></a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#"><strong>options模块</strong></a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#descriptions">Descriptions</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="06_utils.html"><strong>utils模块</strong></a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">finance</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li><strong>options模块</strong></li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/05_options.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-options">
+<span id="options"></span><h1><strong>options模块</strong><a class="headerlink" href="#module-options" title="Permalink to this headline">¶</a></h1>
+<p>Vectorized options calculations.</p>
+<div class="section" id="descriptions">
+<h2>Descriptions<a class="headerlink" href="#descriptions" title="Permalink to this headline">¶</a></h2>
+<dl class="simple">
+<dt>BSM</dt><dd><p>Black-Scholes Merton European option valuation, Greeks, and implied vol.</p>
+</dd>
+</dl>
+<p>Option strategies inheritance hierarchy:
+- Option</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Call</p></li>
+<li><p>Put</p></li>
+</ul>
+</div></blockquote>
+<ul class="simple">
+<li><dl class="simple">
+<dt>OpStrat</dt><dd><ul>
+<li><dl class="simple">
+<dt>Straddle</dt><dd><ul>
+<li><p>Strip</p></li>
+<li><p>Strap</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><p>ShortStraddle</p></li>
+<li><p>Strangle</p></li>
+<li><p>ShortStrangle</p></li>
+<li><p>BullSpread</p></li>
+<li><dl class="simple">
+<dt>BearSpread</dt><dd><ul>
+<li><p>LongPutLadder</p></li>
+<li><p>ShortPutLadder</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>_Butterfly</dt><dd><ul>
+<li><p>LongButterfly</p></li>
+<li><p>ShortButterfly</p></li>
+<li><p>LongIronButterfly</p></li>
+<li><p>ShortIronButterfly</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>_Condor</dt><dd><ul>
+<li><p>LongCondor</p></li>
+<li><p>ShortCondor</p></li>
+<li><p>LongIronCondor</p></li>
+<li><p>ShortIronCondor</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+<dl class="py class">
+<dt id="options.BSM">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">options.</span></code><code class="sig-name descname"><span class="pre">BSM</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">S0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">K</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">T</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sigma</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kind</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'call'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/options.html#BSM"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#options.BSM" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute European option value, Greeks, and implied vol, using BSM.</p>
+<p>This class supports vectorized calculations from array inputs.</p>
+<dl class="simple">
+<dt>S0<span class="classifier">int, float, or array-like</span></dt><dd><p>Initial asset value.</p>
+</dd>
+<dt>K<span class="classifier">int, float, or array-like</span></dt><dd><p>Strike.</p>
+</dd>
+<dt>T<span class="classifier">int, float, or array-like</span></dt><dd><p>Time to expiration as a fraction of one year.</p>
+</dd>
+<dt>r<span class="classifier">int, float, or array-like</span></dt><dd><p>Continuously compounded risk free rate, annualized.</p>
+</dd>
+<dt>sigma<span class="classifier">int, float, or array-like</span></dt><dd><p>Continuously compounded standard deviation of returns, annualized.</p>
+</dd>
+<dt>kind<span class="classifier">{‘call’, ‘put’}</span></dt><dd><p>Type of option.</p>
+</dd>
+</dl>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">pyfinance.options</span> <span class="kn">import</span> <span class="n">BSM</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">op</span> <span class="o">=</span> <span class="n">BSM</span><span class="p">(</span><span class="n">S0</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">K</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">T</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">r</span><span class="o">=.</span><span class="mi">04</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=.</span><span class="mi">2</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">op</span><span class="o">.</span><span class="n">summary</span><span class="p">()</span>
+<span class="go">OrderedDict([(&#39;Value&#39;, 9.925053717274437),</span>
+<span class="go">             (&#39;d1&#39;, 0.3),</span>
+<span class="go">             (&#39;d2&#39;, 0.09999999999999998),</span>
+<span class="go">             (&#39;Delta&#39;, 0.6179114221889526),</span>
+<span class="go">             (&#39;Gamma&#39;, 0.019069390773026208),</span>
+<span class="go">             (&#39;Vega&#39;, 38.138781546052414),</span>
+<span class="go">             (&#39;Theta&#39;, -5.888521694670074),</span>
+<span class="go">             (&#39;Rho&#39;, 51.86608850162082),</span>
+<span class="go">             (&#39;Omega&#39;, 6.225774084360724)])</span>
+</pre></div>
+</div>
+<p># What is the implied annualized volatility at P=10?
+&gt;&gt;&gt; op.implied_vol(value=10)
+0.20196480875586834</p>
+<p># Vectorized - pass an array of strikes.
+&gt;&gt;&gt; import numpy as np
+&gt;&gt;&gt; ops = BSM(S0=100, K=np.arange(100, 110), T=1, r=.04, sigma=.2)</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ops</span><span class="o">.</span><span class="n">value</span><span class="p">()</span>
+<span class="go">array([9.9251, 9.4159, 8.9257, 8.4543, 8.0015, 7.567 , 7.1506, 6.7519,</span>
+<span class="go">       6.3706, 6.0064])</span>
+</pre></div>
+</div>
+<p># Multiple array inputs are evaluated elementwise/zipped.
+&gt;&gt;&gt; ops2 = BSM(S0=np.arange(100, 110), K=np.arange(100, 110),
+…            T=1, r=.04, sigma=.2)</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ops2</span>
+<span class="go">BSM(kind=call,</span>
+<span class="go">    S0=[100 101 102 103 104 105 106 107 108 109],</span>
+<span class="go">    K=[100 101 102 103 104 105 106 107 108 109],</span>
+<span class="go">    T=1,</span>
+<span class="go">    r=0.04,</span>
+<span class="go">    sigma=0.2)</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ops2</span><span class="o">.</span><span class="n">value</span><span class="p">()</span>
+<span class="go">array([ 9.9251, 10.0243, 10.1236, 10.2228, 10.3221, 10.4213, 10.5206,</span>
+<span class="go">       10.6198, 10.7191, 10.8183])</span>
+</pre></div>
+</div>
+<dl class="py method">
+<dt id="options.BSM.implied_vol">
+<code class="sig-name descname"><span class="pre">implied_vol</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">precision</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-05</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">iters</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/options.html#BSM.implied_vol"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#options.BSM.implied_vol" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get implied vol at the specified price using an iterative approach.</p>
+<p>There is no closed-form inverse of BSM-value as a function of sigma,
+so start at an anchoring volatility level from Brenner &amp; Subrahmanyam
+(1988) and work iteratively from there.</p>
+<dl class="simple">
+<dt>Brenner &amp; Subrahmanyan, A Simple Formula to Compute the Implied</dt><dd><p>Standard Deviation, 1988.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="options.BSM.value">
+<code class="sig-name descname"><span class="pre">value</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/options.html#BSM.value"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#options.BSM.value" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute option value according to BSM model.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="options.BearSpread">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">options.</span></code><code class="sig-name descname"><span class="pre">BearSpread</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">St</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">K1</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">K2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">price1</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">price2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kind</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'put'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/options.html#BearSpread"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#options.BearSpread" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bearish strategy but with limited loss and limited gain.</p>
+<p>Combination of 2 puts or 2 calls.</p>
+<ul class="simple">
+<li><p>Short K1 (put or call)</p></li>
+<li><p>Long K2 (put or call)</p></li>
+</ul>
+</dd></dl>
+
+<dl class="py class">
+<dt id="options.BullSpread">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">options.</span></code><code class="sig-name descname"><span class="pre">BullSpread</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">St</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">K1</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">K2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">price1</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">price2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kind</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'call'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/options.html#BullSpread"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#options.BullSpread" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bullish strategy but with limited gain and limited loss.</p>
+<p>Combination of 2 puts or 2 calls.</p>
+<ul class="simple">
+<li><p>Long K1 (put or call)</p></li>
+<li><p>Short K2 (put or call)</p></li>
+</ul>
+</dd></dl>
+
+<dl class="py class">
+<dt id="options.LongButterfly">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">options.</span></code><code class="sig-name descname"><span class="pre">LongButterfly</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">St</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">K1</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">K2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">K3</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">price1</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">price2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">price3</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kind</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'call'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/options.html#LongButterfly"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#options.LongButterfly" title="Permalink to this definition">¶</a></dt>
+<dd><p>Combination of 4 calls or 4 puts.  Short volatility exposure.</p>
+<ul class="simple">
+<li><p>Long K1 (put or call)</p></li>
+<li><p>Short 2x K2 (put or call)</p></li>
+<li><p>Long K3 (put or call)</p></li>
+</ul>
+</dd></dl>
+
+<dl class="py class">
+<dt id="options.LongCondor">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">options.</span></code><code class="sig-name descname"><span class="pre">LongCondor</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">St</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">K1</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">K2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">K3</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">K4</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">price1</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">price2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">price3</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">price4</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kind</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'call'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/options.html#LongCondor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#options.LongCondor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Combination of 4 calls or 4 puts.  Short volatility exposure.</p>
+<ul class="simple">
+<li><p>Long K1 (put or call)</p></li>
+<li><p>Short K2 != K3 (put or call)</p></li>
+<li><p>Long K4 (put or call)</p></li>
+</ul>
+</dd></dl>
+
+<dl class="py class">
+<dt id="options.LongIronButterfly">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">options.</span></code><code class="sig-name descname"><span class="pre">LongIronButterfly</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">St</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">K1</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">K2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">K3</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">price1</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">price2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">price3</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/options.html#LongIronButterfly"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#options.LongIronButterfly" title="Permalink to this definition">¶</a></dt>
+<dd><p>Combination of 2 puts and 2 calls.  Long volatility exposure.</p>
+<ul class="simple">
+<li><p>Short K1 (put)</p></li>
+<li><p>Long 2x K2 (1 put, 1 call)</p></li>
+<li><p>Short K3 (call)</p></li>
+</ul>
+</dd></dl>
+
+<dl class="py class">
+<dt id="options.LongIronCondor">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">options.</span></code><code class="sig-name descname"><span class="pre">LongIronCondor</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">St</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">K1</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">K2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">K3</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">K4</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">price1</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">price2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">price3</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">price4</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/options.html#LongIronCondor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#options.LongIronCondor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Combination of 2 puts and 2 calls.  Long volatility exposure.</p>
+<ul class="simple">
+<li><p>Short K1 (put)</p></li>
+<li><p>Long K2 (put)</p></li>
+<li><p>Long K3 (call)</p></li>
+<li><p>Short K4 (call)</p></li>
+</ul>
+</dd></dl>
+
+<dl class="py class">
+<dt id="options.LongPutLadder">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">options.</span></code><code class="sig-name descname"><span class="pre">LongPutLadder</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">St</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">K1</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">K2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">K3</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">price1</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">price2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">price3</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/options.html#LongPutLadder"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#options.LongPutLadder" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bear put spread combined with selling another lower-strike put.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt id="options.OpStrat">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">options.</span></code><code class="sig-name descname"><span class="pre">OpStrat</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">St</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/options.html#OpStrat"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#options.OpStrat" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generic option strategy construction.</p>
+<dl class="py method">
+<dt id="options.OpStrat.add_option">
+<code class="sig-name descname"><span class="pre">add_option</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">K</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">price</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">St</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kind</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'call'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pos</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'long'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/options.html#OpStrat.add_option"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#options.OpStrat.add_option" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add an option to the object’s <cite>options</cite> container.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="options.OpStrat.grid">
+<code class="sig-name descname"><span class="pre">grid</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">start</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stop</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">St</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/options.html#OpStrat.grid"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#options.OpStrat.grid" title="Permalink to this definition">¶</a></dt>
+<dd><p>Grid-like representation of payoff &amp; profit structure.</p>
+<dl class="simple">
+<dt>tuple</dt><dd><p>Tuple of <cite>St</cite> (price at expiry), <cite>payoffs</cite>, <cite>profits</cite>.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="options.OpStrat.summary">
+<code class="sig-name descname"><span class="pre">summary</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">St</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/options.html#OpStrat.summary"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#options.OpStrat.summary" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tabular summary of strategy composition, broken out by option.</p>
+<dl class="simple">
+<dt>pd.DataFrame</dt><dd><p>Columns: kind, position, strike, price, St, payoff, profit.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="options.ShortButterfly">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">options.</span></code><code class="sig-name descname"><span class="pre">ShortButterfly</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">St</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">K1</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">K2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">K3</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">price1</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">price2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">price3</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kind</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'call'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/options.html#ShortButterfly"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#options.ShortButterfly" title="Permalink to this definition">¶</a></dt>
+<dd><p>Combination of 4 calls or 4 puts.  Long volatility exposure.</p>
+<ul class="simple">
+<li><p>Short K1 (put or call)</p></li>
+<li><p>Long 2x K2 (put or call)</p></li>
+<li><p>Short K3 (put or call)</p></li>
+</ul>
+</dd></dl>
+
+<dl class="py class">
+<dt id="options.ShortCondor">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">options.</span></code><code class="sig-name descname"><span class="pre">ShortCondor</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">St</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">K1</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">K2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">K3</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">K4</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">price1</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">price2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">price3</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">price4</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kind</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'call'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/options.html#ShortCondor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#options.ShortCondor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Combination of 4 calls or 4 puts.  Long volatility exposure.</p>
+<ul class="simple">
+<li><p>Short K1 (put or call)</p></li>
+<li><p>Long K2 != K3 (put or call)</p></li>
+<li><p>Short K4 (put or call)</p></li>
+</ul>
+</dd></dl>
+
+<dl class="py class">
+<dt id="options.ShortIronButterfly">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">options.</span></code><code class="sig-name descname"><span class="pre">ShortIronButterfly</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">St</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">K1</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">K2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">K3</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">price1</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">price2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">price3</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/options.html#ShortIronButterfly"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#options.ShortIronButterfly" title="Permalink to this definition">¶</a></dt>
+<dd><p>Combination of 2 puts and 2 calls.  Long volatility exposure.</p>
+<ul class="simple">
+<li><p>Long K1 (put)</p></li>
+<li><p>Short 2x K2 (1 put, 1 call)</p></li>
+<li><p>Long K3 (call)</p></li>
+</ul>
+</dd></dl>
+
+<dl class="py class">
+<dt id="options.ShortIronCondor">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">options.</span></code><code class="sig-name descname"><span class="pre">ShortIronCondor</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">St</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">K1</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">K2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">K3</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">K4</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">price1</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">price2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">price3</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">price4</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/options.html#ShortIronCondor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#options.ShortIronCondor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Combination of 2 puts and 2 calls.  Short volatility exposure.</p>
+<ul class="simple">
+<li><p>Long K1 (put)</p></li>
+<li><p>Short K2 (put)</p></li>
+<li><p>Short K3 (call)</p></li>
+<li><p>Long K4 (call)</p></li>
+</ul>
+</dd></dl>
+
+<dl class="py class">
+<dt id="options.ShortPutLadder">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">options.</span></code><code class="sig-name descname"><span class="pre">ShortPutLadder</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">St</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">K1</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">K2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">K3</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">price1</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">price2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">price3</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/options.html#ShortPutLadder"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#options.ShortPutLadder" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bull put spread combined with buying another lower-strike put.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt id="options.ShortStraddle">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">options.</span></code><code class="sig-name descname"><span class="pre">ShortStraddle</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">St</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">K</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">price</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/options.html#ShortStraddle"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#options.ShortStraddle" title="Permalink to this definition">¶</a></dt>
+<dd><p>Short-volatility exposure.  Short a put and call, both at K.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt id="options.ShortStrangle">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">options.</span></code><code class="sig-name descname"><span class="pre">ShortStrangle</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">St</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">K1</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">K2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">callprice</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">putprice</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/options.html#ShortStrangle"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#options.ShortStrangle" title="Permalink to this definition">¶</a></dt>
+<dd><p>Short straddle in which the put and call have different strikes.</p>
+<ul class="simple">
+<li><p>Short K1 (call)</p></li>
+<li><p>Long K2 (put)</p></li>
+</ul>
+</dd></dl>
+
+<dl class="py class">
+<dt id="options.Straddle">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">options.</span></code><code class="sig-name descname"><span class="pre">Straddle</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">St</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">K</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">callprice</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">putprice</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/options.html#Straddle"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#options.Straddle" title="Permalink to this definition">¶</a></dt>
+<dd><p>Long-volatility exposure.  Long a put and call, both at K.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt id="options.Strangle">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">options.</span></code><code class="sig-name descname"><span class="pre">Strangle</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">St</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">K1</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">K2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">callprice</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">putprice</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/options.html#Strangle"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#options.Strangle" title="Permalink to this definition">¶</a></dt>
+<dd><p>Straddle in which the put and call have different strikes.</p>
+<ul class="simple">
+<li><p>Long K1 (call)</p></li>
+<li><p>Long K2 (put)</p></li>
+</ul>
+</dd></dl>
+
+<dl class="py class">
+<dt id="options.Strap">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">options.</span></code><code class="sig-name descname"><span class="pre">Strap</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">St</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">K</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">price</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/options.html#Strap"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#options.Strap" title="Permalink to this definition">¶</a></dt>
+<dd><p>Combination of a straddle with a call.  Long 2 calls &amp; 1 put at K.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt id="options.Strip">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">options.</span></code><code class="sig-name descname"><span class="pre">Strip</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">St</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">K</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">callprice</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">putprice</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/options.html#Strip"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#options.Strip" title="Permalink to this definition">¶</a></dt>
+<dd><p>Combination of a straddle with a put.  Long 1 call &amp; 2 puts at K.</p>
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="06_utils.html" class="btn btn-neutral float-right" title="utils模块" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="04_ols.html" class="btn btn-neutral float-left" title="ols模块" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, chenlin.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

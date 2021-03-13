@@ -1,0 +1,1582 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>returns &mdash; finance 1.3 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> finance
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../01_returns.html"><strong>returns模块</strong></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../02_general.html"><strong>general模块</strong></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../03_datasets.html"><strong>datasets模块</strong></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../04_ols.html"><strong>ols模块</strong></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../05_options.html"><strong>options模块</strong></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../06_utils.html"><strong>utils模块</strong></a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">finance</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="index.html">Module code</a> &raquo;</li>
+        
+      <li>returns</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for returns</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Statistical analysis of security returns time series.</span>
+
+<span class="sd">Intended to mimic functionality of commercial software such as FactSet,</span>
+<span class="sd">Axioma, &amp; Zephyr and open-source software such as Pyfolio and ffn.</span>
+
+<span class="sd">The main classes of this module are</span>
+
+<span class="sd">- TSeries, a subclassed Pandas Series, and</span>
+<span class="sd">- TFrame, a subclassed Pandas DataFrame.</span>
+
+<span class="sd">They implement a collection of new methods that pertain specifically to</span>
+<span class="sd">investment management and the study of security returns and asset</span>
+<span class="sd">performance, such cumulative return indices and drawdown.</span>
+
+<span class="sd">Note</span>
+<span class="sd">----</span>
+<span class="sd">Subclassing Pandas objects is a delicate operation, but in this case</span>
+<span class="sd">is strictly preferrable to composition or piping.</span>
+
+<span class="sd">.. _Subclassing Pandas Data Structures:</span>
+<span class="sd">    https://pandas.pydata.org/pandas-docs/stable/internals.html</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;TSeries&quot;</span><span class="p">,</span> <span class="s2">&quot;TFrame&quot;</span><span class="p">]</span>
+<span class="n">__author__</span> <span class="o">=</span> <span class="s2">&quot;Brad Solomon &lt;brad.solomon.1124@gmail.com&gt;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">copy</span>
+<span class="kn">from</span> <span class="nn">numbers</span> <span class="kn">import</span> <span class="n">Number</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">numpy.lib.nanfunctions</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">nanmin</span><span class="p">,</span>
+    <span class="n">nansum</span><span class="p">,</span>
+    <span class="n">nanprod</span><span class="p">,</span>
+    <span class="n">nancumsum</span><span class="p">,</span>
+    <span class="n">nancumprod</span><span class="p">,</span>
+    <span class="n">nanmean</span><span class="p">,</span>
+    <span class="n">nanstd</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+<span class="kn">from</span> <span class="nn">pyfinance</span> <span class="kn">import</span> <span class="n">ols</span><span class="p">,</span> <span class="n">utils</span>
+
+<span class="n">SECS_PER_CAL_YEAR</span> <span class="o">=</span> <span class="mf">365.25</span> <span class="o">*</span> <span class="mi">24</span> <span class="o">*</span> <span class="mi">60</span> <span class="o">*</span> <span class="mi">60</span>
+
+
+<div class="viewcode-block" id="TSeries"><a class="viewcode-back" href="../01_returns.html#returns.TSeries">[docs]</a><span class="k">class</span> <span class="nc">TSeries</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">):</span>
+    <span class="c1"># __doc__ is set after class definition.</span>
+    <span class="c1"># See bottom of this file or `help(TSeries)`.</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">args</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span> <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">args</span><span class="p">)</span>
+        <span class="n">freq</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;freq&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">freq</span> <span class="o">=</span> <span class="n">freq</span>
+
+        <span class="c1"># Hold off on inferring a frequency until method calls.</span>
+        <span class="c1"># Otherwise, this routine is run unncessarily because</span>
+        <span class="c1"># __init__ gets called somewhat frequently</span>
+        <span class="c1"># (with __repr__, for instance).</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">is_monotonic_increasing</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">FrequencyError</span><span class="p">(</span><span class="s2">&quot;Input Index should be sorted.&quot;</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">_constructor</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">TSeries</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">_constructor_expanddim</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">TFrame</span>
+
+    <span class="c1"># We don&#39;t need _constructor_sliced.</span>
+    <span class="c1"># It raises NotImplementedError by default.</span>
+
+    <span class="c1"># &quot;New&quot; public methods</span>
+    <span class="c1"># -----------------------------------------------------------------</span>
+
+    <span class="c1"># Prefer operators to their corresponding Pandas methods</span>
+    <span class="c1"># so that we can handle NumPy arrays within transformations.</span>
+    <span class="c1"># &quot;/&quot; is better than x.div(y).</span>
+
+<div class="viewcode-block" id="TSeries.alpha"><a class="viewcode-back" href="../01_returns.html#returns.TSeries.alpha">[docs]</a>    <span class="k">def</span> <span class="nf">alpha</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">benchmark</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;CAPM alpha.</span>
+
+<span class="sd">        The return on an asset in excess of the asset’s required rate</span>
+<span class="sd">        of return; the risk-adjusted return.</span>
+<span class="sd">        [Source: CFA Institute]</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        benchmark : {pd.Series, TSeries, pd.DataFrame, np.ndarray}</span>
+<span class="sd">            The benchmark securitie(s) to which `self` is compared.</span>
+<span class="sd">        **kwargs</span>
+<span class="sd">            Passed to pyfinance.ols.OLS().</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        float</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">CAPM</span><span class="p">(</span><span class="n">benchmark</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span><span class="o">.</span><span class="n">alpha</span></div>
+
+<div class="viewcode-block" id="TSeries.anlzd_ret"><a class="viewcode-back" href="../01_returns.html#returns.TSeries.anlzd_ret">[docs]</a>    <span class="k">def</span> <span class="nf">anlzd_ret</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">freq</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Annualized (geometric) return.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        freq : str or None, default None</span>
+<span class="sd">            A frequency string used to create an annualization factor.</span>
+<span class="sd">            If None, `self.freq` will be used.  If that is also None,</span>
+<span class="sd">            a frequency will be inferred.  If none can be inferred,</span>
+<span class="sd">            an exception is raised.</span>
+
+<span class="sd">            It may be any frequency string or anchored offset string</span>
+<span class="sd">            recognized by Pandas, such as &#39;D&#39;, &#39;5D&#39;, &#39;Q&#39;, &#39;Q-DEC&#39;, or</span>
+<span class="sd">            &#39;BQS-APR&#39;.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        float</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">is_all_dates</span><span class="p">:</span>
+            <span class="c1"># TODO: Could be more granular here,</span>
+            <span class="c1">#       for cases with &lt; day frequency.</span>
+            <span class="n">td</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">n</span> <span class="o">=</span> <span class="n">td</span><span class="o">.</span><span class="n">total_seconds</span><span class="p">()</span> <span class="o">/</span> <span class="n">SECS_PER_CAL_YEAR</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># We don&#39;t have a datetime-like Index, so assume</span>
+            <span class="c1"># periods/dates are consecutive and simply count them.</span>
+            <span class="c1"># We do, however, need an explicit frequency.</span>
+            <span class="n">freq</span> <span class="o">=</span> <span class="n">freq</span> <span class="k">if</span> <span class="n">freq</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">freq</span>
+            <span class="k">if</span> <span class="n">freq</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">FrequencyError</span><span class="p">(</span>
+                    <span class="s2">&quot;Must specify a `freq` when a&quot;</span>
+                    <span class="s2">&quot; datetime-like index is not used.&quot;</span>
+                <span class="p">)</span>
+
+            <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">/</span> <span class="n">utils</span><span class="o">.</span><span class="n">get_anlz_factor</span><span class="p">(</span><span class="n">freq</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">nanprod</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ret_rels</span><span class="p">())</span> <span class="o">**</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">/</span> <span class="n">n</span><span class="p">)</span> <span class="o">-</span> <span class="mf">1.0</span></div>
+
+<div class="viewcode-block" id="TSeries.anlzd_stdev"><a class="viewcode-back" href="../01_returns.html#returns.TSeries.anlzd_stdev">[docs]</a>    <span class="k">def</span> <span class="nf">anlzd_stdev</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ddof</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">freq</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Annualized standard deviation with `ddof` degrees of freedom.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        ddof : int, default 0</span>
+<span class="sd">            Degrees of freedom, passed to pd.Series.std().</span>
+<span class="sd">        freq : str or None, default None</span>
+<span class="sd">            A frequency string used to create an annualization factor.</span>
+<span class="sd">            If None, `self.freq` will be used.  If that is also None,</span>
+<span class="sd">            a frequency will be inferred.  If none can be inferred,</span>
+<span class="sd">            an exception is raised.</span>
+
+<span class="sd">            It may be any frequency string or anchored offset string</span>
+<span class="sd">            recognized by Pandas, such as &#39;D&#39;, &#39;5D&#39;, &#39;Q&#39;, &#39;Q-DEC&#39;, or</span>
+<span class="sd">            &#39;BQS-APR&#39;.</span>
+<span class="sd">        **kwargs</span>
+<span class="sd">            Passed to pd.Series.std().</span>
+<span class="sd">        TODO: freq</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        float</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">freq</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">freq</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_try_get_freq</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">freq</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">FrequencyError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">nanstd</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ddof</span><span class="o">=</span><span class="n">ddof</span><span class="p">)</span> <span class="o">*</span> <span class="n">freq</span> <span class="o">**</span> <span class="mf">0.5</span></div>
+
+<div class="viewcode-block" id="TSeries.batting_avg"><a class="viewcode-back" href="../01_returns.html#returns.TSeries.batting_avg">[docs]</a>    <span class="k">def</span> <span class="nf">batting_avg</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">benchmark</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Percentage of periods when `self` outperformed `benchmark`.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        benchmark : {pd.Series, TSeries, 1d np.ndarray}</span>
+<span class="sd">            The benchmark security to which `self` is compared.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        float</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">diff</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">excess_ret</span><span class="p">(</span><span class="n">benchmark</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">count_nonzero</span><span class="p">(</span><span class="n">diff</span> <span class="o">&gt;</span> <span class="mf">0.0</span><span class="p">)</span> <span class="o">/</span> <span class="n">diff</span><span class="o">.</span><span class="n">count</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="TSeries.beta"><a class="viewcode-back" href="../01_returns.html#returns.TSeries.beta">[docs]</a>    <span class="k">def</span> <span class="nf">beta</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">benchmark</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;CAPM beta.</span>
+
+<span class="sd">        A measure of systematic risk that is based on the covariance</span>
+<span class="sd">        of an asset&#39;s or portfolio&#39;s return with the return of the</span>
+<span class="sd">        overall market; a measure of the sensitivity of a given</span>
+<span class="sd">        investment or portfolio to movements in the overall market.</span>
+<span class="sd">        [Source: CFA Institute]</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        benchmark : {pd.Series, TSeries, pd.DataFrame, np.ndarray}</span>
+<span class="sd">            The benchmark securitie(s) to which `self` is compared.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        float or np.ndarray</span>
+<span class="sd">            If `benchmark` is 1d, returns a scalar.</span>
+<span class="sd">            If `benchmark` is 2d, returns a 1d ndarray.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">CAPM</span><span class="p">(</span><span class="n">benchmark</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span><span class="o">.</span><span class="n">beta</span></div>
+
+<div class="viewcode-block" id="TSeries.beta_adj"><a class="viewcode-back" href="../01_returns.html#returns.TSeries.beta_adj">[docs]</a>    <span class="k">def</span> <span class="nf">beta_adj</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">benchmark</span><span class="p">,</span> <span class="n">adj_factor</span><span class="o">=</span><span class="mi">2</span> <span class="o">/</span> <span class="mi">3</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Adjusted beta.</span>
+
+<span class="sd">        Beta that is adjusted to reflect the tendency of beta to</span>
+<span class="sd">        be mean reverting.</span>
+<span class="sd">        [Source: CFA Institute]</span>
+
+<span class="sd">        Formula:</span>
+<span class="sd">        adj_factor * raw_beta + (1 - adj_factor)</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        benchmark : {pd.Series, TSeries, pd.DataFrame, np.ndarray}</span>
+<span class="sd">            The benchmark securitie(s) to which `self` is compared.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        float or np.ndarray</span>
+<span class="sd">            If `benchmark` is 1d, returns a scalar.</span>
+<span class="sd">            If `benchmark` is 2d, returns a 1d ndarray.</span>
+
+<span class="sd">        Reference</span>
+<span class="sd">        ---------</span>
+<span class="sd">        .. _Blume, Marshall.  &quot;Betas and Their Regression Tendencies.&quot;</span>
+<span class="sd">            http://www.stat.ucla.edu/~nchristo/statistics417/blume_betas.pdf</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">beta</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">beta</span><span class="p">(</span><span class="n">benchmark</span><span class="o">=</span><span class="n">benchmark</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">adj_factor</span> <span class="o">*</span> <span class="n">beta</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">adj_factor</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TSeries.calmar_ratio"><a class="viewcode-back" href="../01_returns.html#returns.TSeries.calmar_ratio">[docs]</a>    <span class="k">def</span> <span class="nf">calmar_ratio</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Calmar ratio--return per unit of drawdown.</span>
+
+<span class="sd">        The compound annualized rate of return over a specified</span>
+<span class="sd">        time period divided by the absolute value of maximum</span>
+<span class="sd">        drawdown over the same time period.</span>
+<span class="sd">        [Source: CFA Institute]</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        float</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">anlzd_ret</span><span class="p">()</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">max_drawdown</span><span class="p">())</span></div>
+
+<div class="viewcode-block" id="TSeries.capture_ratio"><a class="viewcode-back" href="../01_returns.html#returns.TSeries.capture_ratio">[docs]</a>    <span class="k">def</span> <span class="nf">capture_ratio</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">benchmark</span><span class="p">,</span> <span class="n">threshold</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">compare_op</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;ge&quot;</span><span class="p">,</span> <span class="s2">&quot;lt&quot;</span><span class="p">)):</span>
+        <span class="sd">&quot;&quot;&quot;Capture ratio--ratio of upside to downside capture.</span>
+
+<span class="sd">        Upside capture ratio divided by the downside capture ratio.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        benchmark : {pd.Series, TSeries, 1d np.ndarray}</span>
+<span class="sd">            The benchmark security to which `self` is compared.</span>
+<span class="sd">        threshold : float, default 0.</span>
+<span class="sd">            The threshold at which the comparison should be done.</span>
+<span class="sd">            `self` and `benchmark` are &quot;filtered&quot; to periods where</span>
+<span class="sd">            `benchmark` is greater than/less than `threshold`.</span>
+<span class="sd">        compare_op : {tuple, str, list}, default (&#39;ge&#39;, &#39;lt&#39;)</span>
+<span class="sd">            Comparison operator used to compare to `threshold`.</span>
+<span class="sd">            If a sequence, the two elements are passed to</span>
+<span class="sd">            `self.up_capture()` and `self.down_capture()`, respectively.</span>
+<span class="sd">            If `str`, indicates the comparison operater used in</span>
+<span class="sd">            both method calls.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        float</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">compare_op</span><span class="p">(</span><span class="nb">tuple</span><span class="p">,</span> <span class="nb">list</span><span class="p">)):</span>
+            <span class="n">op1</span><span class="p">,</span> <span class="n">op2</span> <span class="o">=</span> <span class="n">compare_op</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">op1</span><span class="p">,</span> <span class="n">op2</span> <span class="o">=</span> <span class="n">compare_op</span><span class="p">,</span> <span class="n">compare_op</span>
+        <span class="n">uc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">up_capture</span><span class="p">(</span>
+            <span class="n">benchmark</span><span class="o">=</span><span class="n">benchmark</span><span class="p">,</span> <span class="n">threshold</span><span class="o">=</span><span class="n">threshold</span><span class="p">,</span> <span class="n">compare_op</span><span class="o">=</span><span class="n">op1</span>
+        <span class="p">)</span>
+        <span class="n">dc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">down_capture</span><span class="p">(</span>
+            <span class="n">benchmark</span><span class="o">=</span><span class="n">benchmark</span><span class="p">,</span> <span class="n">threshold</span><span class="o">=</span><span class="n">threshold</span><span class="p">,</span> <span class="n">compare_op</span><span class="o">=</span><span class="n">op2</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">uc</span> <span class="o">/</span> <span class="n">dc</span></div>
+
+<div class="viewcode-block" id="TSeries.cuml_ret"><a class="viewcode-back" href="../01_returns.html#returns.TSeries.cuml_ret">[docs]</a>    <span class="k">def</span> <span class="nf">cuml_ret</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Cumulative return--a scalar ending percentage return.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        float</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">growth_of_x</span><span class="p">()</span> <span class="o">-</span> <span class="mf">1.0</span></div>
+
+<div class="viewcode-block" id="TSeries.cuml_idx"><a class="viewcode-back" href="../01_returns.html#returns.TSeries.cuml_idx">[docs]</a>    <span class="k">def</span> <span class="nf">cuml_idx</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Cumulative return index--a TSeries of cumulative returns.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        TSeries</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">ret_idx</span><span class="p">()</span> <span class="o">-</span> <span class="mf">1.0</span></div>
+
+<div class="viewcode-block" id="TSeries.down_capture"><a class="viewcode-back" href="../01_returns.html#returns.TSeries.down_capture">[docs]</a>    <span class="k">def</span> <span class="nf">down_capture</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">benchmark</span><span class="p">,</span> <span class="n">threshold</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">compare_op</span><span class="o">=</span><span class="s2">&quot;lt&quot;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Downside capture ratio.</span>
+
+<span class="sd">        Measures the performance of `self` relative to benchmark</span>
+<span class="sd">        conditioned on periods where `benchmark` is lt or le to</span>
+<span class="sd">        `threshold`.</span>
+
+<span class="sd">        Downside capture ratios are calculated by taking the fund&#39;s</span>
+<span class="sd">        monthly return during the periods of negative benchmark</span>
+<span class="sd">        performance and dividing it by the benchmark return.</span>
+<span class="sd">        [Source: CFA Institute]</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        benchmark : {pd.Series, TSeries, 1d np.ndarray}</span>
+<span class="sd">            The benchmark security to which `self` is compared.</span>
+<span class="sd">        threshold : float, default 0.</span>
+<span class="sd">            The threshold at which the comparison should be done.</span>
+<span class="sd">            `self` and `benchmark` are &quot;filtered&quot; to periods where</span>
+<span class="sd">            `benchmark` is lt/le `threshold`.</span>
+<span class="sd">        compare_op : {&#39;lt&#39;, &#39;le&#39;}</span>
+<span class="sd">            Comparison operator used to compare to `threshold`.</span>
+<span class="sd">            &#39;lt&#39; is less-than; &#39;le&#39; is less-than-or-equal.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        float</span>
+
+<span class="sd">        Note</span>
+<span class="sd">        ----</span>
+<span class="sd">        This metric uses geometric, not arithmetic, mean return.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">slf</span><span class="p">,</span> <span class="n">bm</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">downmarket_filter</span><span class="p">(</span>
+            <span class="n">benchmark</span><span class="o">=</span><span class="n">benchmark</span><span class="p">,</span>
+            <span class="n">threshold</span><span class="o">=</span><span class="n">threshold</span><span class="p">,</span>
+            <span class="n">compare_op</span><span class="o">=</span><span class="n">compare_op</span><span class="p">,</span>
+            <span class="n">include_benchmark</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">slf</span><span class="o">.</span><span class="n">geomean</span><span class="p">()</span> <span class="o">/</span> <span class="n">bm</span><span class="o">.</span><span class="n">geomean</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="TSeries.downmarket_filter"><a class="viewcode-back" href="../01_returns.html#returns.TSeries.downmarket_filter">[docs]</a>    <span class="k">def</span> <span class="nf">downmarket_filter</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">benchmark</span><span class="p">,</span>
+        <span class="n">threshold</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
+        <span class="n">compare_op</span><span class="o">=</span><span class="s2">&quot;lt&quot;</span><span class="p">,</span>
+        <span class="n">include_benchmark</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Drop elementwise samples where `benchmark` &gt; `threshold`.</span>
+
+<span class="sd">        Filters `self` (and optionally, `benchmark`) to periods</span>
+<span class="sd">        where `benchmark` &lt; `threshold`.  (Or &lt;= `threshold`.)</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        benchmark : {pd.Series, TSeries, 1d np.ndarray}</span>
+<span class="sd">            The benchmark security to which `self` is compared.</span>
+<span class="sd">        threshold : float, default 0.0</span>
+<span class="sd">            The threshold at which the comparison should be done.</span>
+<span class="sd">            `self` and `benchmark` are &quot;filtered&quot; to periods where</span>
+<span class="sd">            `benchmark` is lt/le `threshold`.</span>
+<span class="sd">        compare_op : {&#39;lt&#39;, &#39;le&#39;}</span>
+<span class="sd">            Comparison operator used to compare to `threshold`.</span>
+<span class="sd">            &#39;lt&#39; is less-than; &#39;le&#39; is less-than-or-equal.</span>
+<span class="sd">        include_benchmark : bool, default False</span>
+<span class="sd">            If True, return tuple of (`self`, `benchmark`) both</span>
+<span class="sd">            filtered.  If False, return only `self` filtered.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        TSeries or tuple of TSeries</span>
+<span class="sd">            TSeries if `include_benchmark=False`, otherwise, tuple.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mkt_filter</span><span class="p">(</span>
+            <span class="n">benchmark</span><span class="o">=</span><span class="n">benchmark</span><span class="p">,</span>
+            <span class="n">threshold</span><span class="o">=</span><span class="n">threshold</span><span class="p">,</span>
+            <span class="n">compare_op</span><span class="o">=</span><span class="n">compare_op</span><span class="p">,</span>
+            <span class="n">include_benchmark</span><span class="o">=</span><span class="n">include_benchmark</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+<div class="viewcode-block" id="TSeries.drawdown_end"><a class="viewcode-back" href="../01_returns.html#returns.TSeries.drawdown_end">[docs]</a>    <span class="k">def</span> <span class="nf">drawdown_end</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">return_date</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;The date of the drawdown trough.</span>
+
+<span class="sd">        Date at which the drawdown was most negative.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        return_date : bool, default False</span>
+<span class="sd">            If True, return a `datetime.date` object.</span>
+<span class="sd">            If False, return a Pandas Timestamp object.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        datetime.date or pandas._libs.tslib.Timestamp</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">end</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">drawdown_idx</span><span class="p">()</span><span class="o">.</span><span class="n">idxmin</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">return_date</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">end</span><span class="o">.</span><span class="n">date</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">end</span></div>
+
+<div class="viewcode-block" id="TSeries.drawdown_idx"><a class="viewcode-back" href="../01_returns.html#returns.TSeries.drawdown_idx">[docs]</a>    <span class="k">def</span> <span class="nf">drawdown_idx</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Drawdown index; TSeries of drawdown from running HWM.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        TSeries</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">ri</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ret_idx</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">ri</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="n">ri</span><span class="o">.</span><span class="n">cummax</span><span class="p">(),</span> <span class="mf">1.0</span><span class="p">)</span> <span class="o">-</span> <span class="mf">1.0</span></div>
+
+<div class="viewcode-block" id="TSeries.drawdown_length"><a class="viewcode-back" href="../01_returns.html#returns.TSeries.drawdown_length">[docs]</a>    <span class="k">def</span> <span class="nf">drawdown_length</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">return_int</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Length of drawdown in days.</span>
+
+<span class="sd">        This is the duration from peak to trough.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        return_int : bool, default False</span>
+<span class="sd">            If True, return the number of days as an int.</span>
+<span class="sd">            If False, return a Pandas Timedelta object.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        int or pandas._libs.tslib.Timedelta</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">td</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">drawdown_end</span><span class="p">()</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">drawdown_start</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">return_int</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">td</span><span class="o">.</span><span class="n">days</span>
+        <span class="k">return</span> <span class="n">td</span></div>
+
+<div class="viewcode-block" id="TSeries.drawdown_recov"><a class="viewcode-back" href="../01_returns.html#returns.TSeries.drawdown_recov">[docs]</a>    <span class="k">def</span> <span class="nf">drawdown_recov</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">return_int</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Length of drawdown recovery in days.</span>
+
+<span class="sd">        This is the duration from trough to recovery date.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        return_int : bool, default False</span>
+<span class="sd">            If True, return the number of days as an int.</span>
+<span class="sd">            If False, return a Pandas Timedelta object.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        int or pandas._libs.tslib.Timedelta</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">td</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">recov_date</span><span class="p">()</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">drawdown_end</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">return_int</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">td</span><span class="o">.</span><span class="n">days</span>
+        <span class="k">return</span> <span class="n">td</span></div>
+
+<div class="viewcode-block" id="TSeries.drawdown_start"><a class="viewcode-back" href="../01_returns.html#returns.TSeries.drawdown_start">[docs]</a>    <span class="k">def</span> <span class="nf">drawdown_start</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">return_date</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;The date of the peak at which most severe drawdown began.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        return_date : bool, default False</span>
+<span class="sd">            If True, return a `datetime.date` object.</span>
+<span class="sd">            If False, return a Pandas Timestamp object.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        datetime.date or pandas._libs.tslib.Timestamp</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Thank you @cᴏʟᴅsᴘᴇᴇᴅ</span>
+        <span class="c1"># https://stackoverflow.com/a/47892766/7954504</span>
+        <span class="n">dd</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">drawdown_idx</span><span class="p">()</span>
+        <span class="n">mask</span> <span class="o">=</span> <span class="n">nancumsum</span><span class="p">(</span><span class="n">dd</span> <span class="o">==</span> <span class="n">nanmin</span><span class="p">(</span><span class="n">dd</span><span class="o">.</span><span class="n">min</span><span class="p">))</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">bool</span><span class="p">)</span>
+        <span class="n">start</span> <span class="o">=</span> <span class="n">dd</span><span class="o">.</span><span class="n">mask</span><span class="p">(</span><span class="n">mask</span><span class="p">)[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">idxmax</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">return_date</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">start</span><span class="o">.</span><span class="n">date</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">start</span></div>
+
+<div class="viewcode-block" id="TSeries.excess_drawdown_idx"><a class="viewcode-back" href="../01_returns.html#returns.TSeries.excess_drawdown_idx">[docs]</a>    <span class="k">def</span> <span class="nf">excess_drawdown_idx</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">benchmark</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;caer&quot;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Excess drawdown index; TSeries of excess drawdowns.</span>
+
+<span class="sd">        There are several ways of computing this metric.  For highly</span>
+<span class="sd">        volatile returns, the `method` specified will have a</span>
+<span class="sd">        non-negligible effect on the result.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        benchmark : {pd.Series, TSeries, 1d np.ndarray}</span>
+<span class="sd">            The benchmark security to which `self` is compared.</span>
+<span class="sd">        method : {&#39;caer&#39; (0), &#39;cger&#39; (1), &#39;ecr&#39; (2), &#39;ecrr&#39; (3)}</span>
+<span class="sd">            Indicates the methodology used.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># TODO: plot these (compared) in docs.</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">method</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">)):</span>
+            <span class="n">method</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;caer&quot;</span><span class="p">,</span> <span class="s2">&quot;cger&quot;</span><span class="p">,</span> <span class="s2">&quot;ecr&quot;</span><span class="p">,</span> <span class="s2">&quot;ecrr&quot;</span><span class="p">][</span><span class="n">method</span><span class="p">]</span>
+        <span class="n">method</span> <span class="o">=</span> <span class="n">method</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;caer&quot;</span><span class="p">:</span>
+            <span class="n">er</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">excess_ret</span><span class="p">(</span><span class="n">benchmark</span><span class="o">=</span><span class="n">benchmark</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;arithmetic&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">er</span><span class="o">.</span><span class="n">drawdown_idx</span><span class="p">()</span>
+
+        <span class="k">elif</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;cger&quot;</span><span class="p">:</span>
+            <span class="n">er</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">excess_ret</span><span class="p">(</span><span class="n">benchmark</span><span class="o">=</span><span class="n">benchmark</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;geometric&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">er</span><span class="o">.</span><span class="n">drawdown_idx</span><span class="p">()</span>
+
+        <span class="k">elif</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;ecr&quot;</span><span class="p">:</span>
+            <span class="n">er</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ret_idx</span><span class="p">()</span> <span class="o">-</span> <span class="n">benchmark</span><span class="o">.</span><span class="n">ret_idx</span><span class="p">()</span> <span class="o">+</span> <span class="mi">1</span>
+            <span class="k">if</span> <span class="n">er</span><span class="o">.</span><span class="n">isnull</span><span class="p">()</span><span class="o">.</span><span class="n">any</span><span class="p">():</span>
+                <span class="k">return</span> <span class="n">er</span> <span class="o">/</span> <span class="n">er</span><span class="o">.</span><span class="n">cummax</span><span class="p">()</span> <span class="o">-</span> <span class="mf">1.0</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">er</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="o">.</span><span class="n">accumulate</span><span class="p">(</span><span class="n">er</span><span class="p">)</span> <span class="o">-</span> <span class="mf">1.0</span>
+
+        <span class="k">elif</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;ecrr&quot;</span><span class="p">:</span>
+            <span class="c1"># Credit to: SO @piRSquared</span>
+            <span class="c1"># https://stackoverflow.com/a/36848867/7954504</span>
+            <span class="n">p</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ret_idx</span><span class="p">()</span><span class="o">.</span><span class="n">values</span>
+            <span class="n">b</span> <span class="o">=</span> <span class="n">benchmark</span><span class="o">.</span><span class="n">ret_idx</span><span class="p">()</span><span class="o">.</span><span class="n">values</span>
+            <span class="n">er</span> <span class="o">=</span> <span class="n">p</span> <span class="o">-</span> <span class="n">b</span>
+            <span class="k">if</span> <span class="n">er</span><span class="o">.</span><span class="n">isnull</span><span class="p">()</span><span class="o">.</span><span class="n">any</span><span class="p">():</span>
+                <span class="c1"># The slower route but NaN-friendly.</span>
+                <span class="n">cam</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">expanding</span><span class="p">(</span><span class="n">min_periods</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">argmax</span><span class="p">())</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">cam</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">cumargmax</span><span class="p">(</span><span class="n">er</span><span class="p">)</span>
+            <span class="n">p0</span> <span class="o">=</span> <span class="n">p</span><span class="p">[</span><span class="n">cam</span><span class="p">]</span>
+            <span class="n">b0</span> <span class="o">=</span> <span class="n">b</span><span class="p">[</span><span class="n">cam</span><span class="p">]</span>
+            <span class="k">return</span> <span class="p">(</span><span class="n">p</span> <span class="o">*</span> <span class="n">b0</span> <span class="o">-</span> <span class="n">b</span> <span class="o">*</span> <span class="n">p0</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">p0</span> <span class="o">*</span> <span class="n">b0</span><span class="p">)</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;`method` must be one of&quot;</span>
+                <span class="s2">&quot; (&#39;caer&#39;, &#39;cger&#39;, &#39;ecr&#39;, &#39;ecrr&#39;),&quot;</span>
+                <span class="s2">&quot; case-insensitive, or&quot;</span>
+                <span class="s2">&quot; an integer mapping to these methods&quot;</span>
+                <span class="s2">&quot; (1 thru 4).&quot;</span>
+            <span class="p">)</span></div>
+
+<div class="viewcode-block" id="TSeries.excess_ret"><a class="viewcode-back" href="../01_returns.html#returns.TSeries.excess_ret">[docs]</a>    <span class="k">def</span> <span class="nf">excess_ret</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">benchmark</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;arithmetic&quot;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Excess return.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        benchmark : {pd.Series, TSeries, 1d np.ndarray}</span>
+<span class="sd">            The benchmark security to which `self` is compared.</span>
+<span class="sd">        method : {{&#39;arith&#39;, &#39;arithmetic&#39;}, {&#39;geo&#39;, &#39;geometric&#39;}}</span>
+<span class="sd">            The methodology used.  An arithmetic excess return is a</span>
+<span class="sd">            straightforward subtraction.  A geometric excess return</span>
+<span class="sd">            is the ratio of return-relatives of `self` to `benchmark`,</span>
+<span class="sd">            minus one.</span>
+
+<span class="sd">        Also known as: active return.</span>
+
+<span class="sd">        Reference</span>
+<span class="sd">        ---------</span>
+<span class="sd">        .. _Essex River Analytics - A Case for Arithmetic Attribution</span>
+<span class="sd">            http://www.northinfo.com/documents/563.pdf</span>
+
+<span class="sd">        .. _Bacon, Carl.  Excess Returns - Arithmetic or Geometric?</span>
+<span class="sd">            https://www.cfapubs.org/doi/full/10.2469/dig.v33.n1.1235</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">method</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;arith&quot;</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">self</span> <span class="o">-</span> <span class="n">_try_to_squeeze</span><span class="p">(</span><span class="n">benchmark</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">method</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;geo&quot;</span><span class="p">):</span>
+            <span class="c1"># Geometric excess return,</span>
+            <span class="c1"># (1 + `self`) / (1 + `benchmark`) - 1.</span>
+            <span class="k">return</span> <span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">ret_rels</span><span class="p">()</span> <span class="o">/</span> <span class="n">_try_to_squeeze</span><span class="p">(</span><span class="n">benchmark</span><span class="p">)</span><span class="o">.</span><span class="n">ret_rels</span><span class="p">()</span> <span class="o">-</span> <span class="mf">1.0</span>
+            <span class="p">)</span></div>
+
+<div class="viewcode-block" id="TSeries.gain_to_loss_ratio"><a class="viewcode-back" href="../01_returns.html#returns.TSeries.gain_to_loss_ratio">[docs]</a>    <span class="k">def</span> <span class="nf">gain_to_loss_ratio</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Gain-to-loss ratio, ratio of positive to negative returns.</span>
+
+<span class="sd">        Formula:</span>
+<span class="sd">        (n pos. / n neg.) * (avg. up-month return / avg. down-month return)</span>
+<span class="sd">        [Source: CFA Institute]</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        float</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">gt</span> <span class="o">=</span> <span class="bp">self</span> <span class="o">&gt;</span> <span class="mi">0</span>
+        <span class="n">lt</span> <span class="o">=</span> <span class="bp">self</span> <span class="o">&lt;</span> <span class="mi">0</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">nansum</span><span class="p">(</span><span class="n">gt</span><span class="p">)</span> <span class="o">/</span> <span class="n">nansum</span><span class="p">(</span><span class="n">lt</span><span class="p">))</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="p">[</span><span class="n">gt</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="o">/</span> <span class="bp">self</span><span class="p">[</span><span class="n">lt</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span></div>
+
+<div class="viewcode-block" id="TSeries.geomean"><a class="viewcode-back" href="../01_returns.html#returns.TSeries.geomean">[docs]</a>    <span class="k">def</span> <span class="nf">geomean</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Geometric mean return over the entire sample.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        float</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="n">nanprod</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ret_rels</span><span class="p">())</span> <span class="o">**</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">count</span><span class="p">())</span> <span class="o">-</span> <span class="mf">1.0</span></div>
+
+<div class="viewcode-block" id="TSeries.growth_of_x"><a class="viewcode-back" href="../01_returns.html#returns.TSeries.growth_of_x">[docs]</a>    <span class="k">def</span> <span class="nf">growth_of_x</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="mf">1.0</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Ending value from growth of `x`, a scalar.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        float</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="n">nanprod</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ret_rels</span><span class="p">())</span> <span class="o">*</span> <span class="n">x</span></div>
+
+<div class="viewcode-block" id="TSeries.info_ratio"><a class="viewcode-back" href="../01_returns.html#returns.TSeries.info_ratio">[docs]</a>    <span class="k">def</span> <span class="nf">info_ratio</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">benchmark</span><span class="p">,</span> <span class="n">ddof</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Information ratio--return per unit of active risk.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        benchmark : {pd.Series, TSeries, 1d np.ndarray}</span>
+<span class="sd">            The benchmark security to which `self` is compared.</span>
+<span class="sd">        ddof : int, default 0</span>
+<span class="sd">            Degrees of freedom, passed to pd.Series.std().</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        float</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">diff</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">excess_ret</span><span class="p">(</span><span class="n">benchmark</span><span class="p">)</span><span class="o">.</span><span class="n">anlzd_ret</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">diff</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">tracking_error</span><span class="p">(</span><span class="n">benchmark</span><span class="p">,</span> <span class="n">ddof</span><span class="o">=</span><span class="n">ddof</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TSeries.max_drawdown"><a class="viewcode-back" href="../01_returns.html#returns.TSeries.max_drawdown">[docs]</a>    <span class="k">def</span> <span class="nf">max_drawdown</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Most negative drawdown derived from drawdown index.</span>
+
+<span class="sd">        The largest difference between a high-water point and a</span>
+<span class="sd">        subsequent low.  A portfolio may also be said to be in a</span>
+<span class="sd">        position of drawdown from a decline from a high-water mark</span>
+<span class="sd">        until a new high-water mark is reached.</span>
+<span class="sd">        [Source: CFA Institute]</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        float</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="n">nanmin</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">drawdown_idx</span><span class="p">())</span></div>
+
+<div class="viewcode-block" id="TSeries.msquared"><a class="viewcode-back" href="../01_returns.html#returns.TSeries.msquared">[docs]</a>    <span class="k">def</span> <span class="nf">msquared</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">benchmark</span><span class="p">,</span> <span class="n">rf</span><span class="o">=</span><span class="mf">0.02</span><span class="p">,</span> <span class="n">ddof</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;M-squared, return scaled by relative total risk.</span>
+
+<span class="sd">        A measure of what a portfolio would have returned if it had</span>
+<span class="sd">        taken on the same *total* risk as the market index.</span>
+<span class="sd">        [Source: CFA Institute]</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        benchmark : {pd.Series, TSeries, 1d np.ndarray}</span>
+<span class="sd">            The benchmark security to which `self` is compared.</span>
+<span class="sd">        rf : {float, TSeries, pd.Series}, default 0.02</span>
+<span class="sd">            If float, this represents an *compounded annualized*</span>
+<span class="sd">            risk-free rate; 2.0% is the default.</span>
+<span class="sd">            If a TSeries or pd.Series, this represents a time series</span>
+<span class="sd">            of periodic returns to a risk-free security.</span>
+
+<span class="sd">            To download a risk-free rate return series using</span>
+<span class="sd">            3-month US T-bill yields, see:`pyfinance.datasets.load_rf`.</span>
+<span class="sd">        ddof : int, default 0</span>
+<span class="sd">            Degrees of freedom, passed to pd.Series.std().</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        float</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">rf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_validate_rf</span><span class="p">(</span><span class="n">rf</span><span class="p">)</span>
+        <span class="n">scaling</span> <span class="o">=</span> <span class="n">benchmark</span><span class="o">.</span><span class="n">anlzd_stdev</span><span class="p">(</span><span class="n">ddof</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">anlzd_stdev</span><span class="p">(</span><span class="n">ddof</span><span class="p">)</span>
+        <span class="n">diff</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">anlzd_ret</span><span class="p">()</span> <span class="o">-</span> <span class="n">rf</span>
+        <span class="k">return</span> <span class="n">rf</span> <span class="o">+</span> <span class="n">diff</span> <span class="o">*</span> <span class="n">scaling</span></div>
+
+<div class="viewcode-block" id="TSeries.pct_negative"><a class="viewcode-back" href="../01_returns.html#returns.TSeries.pct_negative">[docs]</a>    <span class="k">def</span> <span class="nf">pct_negative</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">threshold</span><span class="o">=</span><span class="mf">0.0</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Pct. of periods in which `self` is less than `threshold.`</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        threshold : {float, TSeries, pd.Series}, default 0.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        float</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">count_nonzero</span><span class="p">(</span><span class="bp">self</span><span class="p">[</span><span class="bp">self</span> <span class="o">&lt;</span> <span class="n">threshold</span><span class="p">])</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">count</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="TSeries.pct_positive"><a class="viewcode-back" href="../01_returns.html#returns.TSeries.pct_positive">[docs]</a>    <span class="k">def</span> <span class="nf">pct_positive</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">threshold</span><span class="o">=</span><span class="mf">0.0</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Pct. of periods in which `self` is greater than `threshold.`</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        threshold : {float, TSeries, pd.Series}, default 0.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        float</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">count_nonzero</span><span class="p">(</span><span class="bp">self</span><span class="p">[</span><span class="bp">self</span> <span class="o">&gt;</span> <span class="n">threshold</span><span class="p">])</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">count</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="TSeries.recov_date"><a class="viewcode-back" href="../01_returns.html#returns.TSeries.recov_date">[docs]</a>    <span class="k">def</span> <span class="nf">recov_date</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">return_date</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Drawdown recovery date.</span>
+
+<span class="sd">        Date at which `self` recovered to previous high-water mark.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        return_date : bool, default False</span>
+<span class="sd">            If True, return a `datetime.date` object.</span>
+<span class="sd">            If False, return a Pandas Timestamp object.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        {datetime.date, pandas._libs.tslib.Timestamp, pd.NaT}</span>
+<span class="sd">            Returns NaT if recovery has not occured.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">dd</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">drawdown_idx</span><span class="p">()</span>
+        <span class="c1"># False beginning on trough date and all later dates.</span>
+        <span class="n">mask</span> <span class="o">=</span> <span class="n">nancumprod</span><span class="p">(</span><span class="n">dd</span> <span class="o">!=</span> <span class="n">nanmin</span><span class="p">(</span><span class="n">dd</span><span class="p">))</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">bool</span><span class="p">)</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="n">dd</span><span class="o">.</span><span class="n">mask</span><span class="p">(</span><span class="n">mask</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span>
+
+        <span class="c1"># If `res` is all False (recovery has not occured),</span>
+        <span class="c1"># .idxmax() will return `res.index[0]`.</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">res</span><span class="o">.</span><span class="n">any</span><span class="p">():</span>
+            <span class="n">recov</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">NaT</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">recov</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">idxmax</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">return_date</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">recov</span><span class="o">.</span><span class="n">date</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">recov</span></div>
+
+<div class="viewcode-block" id="TSeries.ret_idx"><a class="viewcode-back" href="../01_returns.html#returns.TSeries.ret_idx">[docs]</a>    <span class="k">def</span> <span class="nf">ret_idx</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">base</span><span class="o">=</span><span class="mf">1.0</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return index, a time series starting at `base`.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        base : float, default 1.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        float</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">ret_rels</span><span class="p">()</span><span class="o">.</span><span class="n">cumprod</span><span class="p">()</span> <span class="o">*</span> <span class="n">base</span></div>
+
+<div class="viewcode-block" id="TSeries.ret_rels"><a class="viewcode-back" href="../01_returns.html#returns.TSeries.ret_rels">[docs]</a>    <span class="k">def</span> <span class="nf">ret_rels</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return-relatives, `1 + self`.</span>
+
+<span class="sd">        A growth factor that is simply `1 + self`, elementwise.</span>
+<span class="sd">        This method exists purely for naming purposes.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        TSeries</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span> <span class="o">+</span> <span class="mf">1.0</span></div>
+
+<div class="viewcode-block" id="TSeries.rollup"><a class="viewcode-back" href="../01_returns.html#returns.TSeries.rollup">[docs]</a>    <span class="k">def</span> <span class="nf">rollup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">freq</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Downsample `self` through geometric linking.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        freq : {&#39;D&#39;, &#39;W&#39;, &#39;M&#39;, &#39;Q&#39;, &#39;A&#39;}</span>
+<span class="sd">            The frequency of the result.</span>
+<span class="sd">        **kwargs</span>
+<span class="sd">            Passed to `self.resample()`.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        TSeries</span>
+
+<span class="sd">        Example</span>
+<span class="sd">        -------</span>
+<span class="sd">        # Derive quarterly returns from monthly returns.</span>
+<span class="sd">        &gt;&gt;&gt; import numpy as np</span>
+<span class="sd">        &gt;&gt;&gt; from pyfinance import TSeries</span>
+<span class="sd">        &gt;&gt;&gt; np.random.seed(444)</span>
+<span class="sd">        &gt;&gt;&gt; ts = TSeries(np.random.randn(12) / 100 + 0.002,</span>
+<span class="sd">        ...              index=pd.date_range(&#39;2016&#39;, periods=12, freq=&#39;M&#39;))</span>
+<span class="sd">        &gt;&gt;&gt; ts.rollup(&#39;Q&#39;)</span>
+<span class="sd">        2016-03-31    0.0274</span>
+<span class="sd">        2016-06-30   -0.0032</span>
+<span class="sd">        2016-09-30   -0.0028</span>
+<span class="sd">        2016-12-31    0.0127</span>
+<span class="sd">        Freq: Q-DEC, dtype: float64</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">ret_rels</span><span class="p">()</span><span class="o">.</span><span class="n">resample</span><span class="p">(</span><span class="n">freq</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span><span class="o">.</span><span class="n">prod</span><span class="p">()</span> <span class="o">-</span> <span class="mf">1.0</span></div>
+
+<div class="viewcode-block" id="TSeries.rsq"><a class="viewcode-back" href="../01_returns.html#returns.TSeries.rsq">[docs]</a>    <span class="k">def</span> <span class="nf">rsq</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">benchmark</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;R-squared.</span>
+
+<span class="sd">        The fraction of the total variation that is explained</span>
+<span class="sd">        by the regression.</span>
+<span class="sd">        [Source: CFA Institute]</span>
+
+<span class="sd">        Also known as: coefficient of determination.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        benchmark : {pd.Series, TSeries, pd.DataFrame, np.ndarray}</span>
+<span class="sd">            The benchmark securitie(s) to which `self` is compared.</span>
+<span class="sd">        **kwargs</span>
+<span class="sd">            Passed to pyfinance.ols.OLS().</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        float</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">CAPM</span><span class="p">(</span><span class="n">benchmark</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span><span class="o">.</span><span class="n">rsq</span></div>
+
+<div class="viewcode-block" id="TSeries.rsq_adj"><a class="viewcode-back" href="../01_returns.html#returns.TSeries.rsq_adj">[docs]</a>    <span class="k">def</span> <span class="nf">rsq_adj</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">benchmark</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Adjusted R-squared.</span>
+
+<span class="sd">        Formula: 1. - ((1. - `self._rsq`) * (n - 1.) / (n - k - 1.))</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        benchmark : {pd.Series, TSeries, pd.DataFrame, np.ndarray}</span>
+<span class="sd">            The benchmark securitie(s) to which `self` is compared.</span>
+<span class="sd">        **kwargs</span>
+<span class="sd">            Passed to pyfinance.ols.OLS().</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        float</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">CAPM</span><span class="p">(</span><span class="n">benchmark</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span><span class="o">.</span><span class="n">rsq_adj</span></div>
+
+<div class="viewcode-block" id="TSeries.semi_stdev"><a class="viewcode-back" href="../01_returns.html#returns.TSeries.semi_stdev">[docs]</a>    <span class="k">def</span> <span class="nf">semi_stdev</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">threshold</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">ddof</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">freq</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Semi-standard deviation; stdev of downside returns.</span>
+
+<span class="sd">        It is designed to address that fact that plain standard</span>
+<span class="sd">        deviation penalizes &quot;upside volatility.&quot;&quot;</span>
+
+<span class="sd">        Formula: `sqrt( sum([min(self - thresh, 0] **2 ) / (n - ddof) )`</span>
+
+<span class="sd">        Also known as: downside deviation.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        threshold : {float, TSeries, pd.Series}, default 0.</span>
+<span class="sd">            While zero is the default, it is also customary to use</span>
+<span class="sd">            a &quot;minimum acceptable return&quot; (MAR) or a risk-free rate.</span>
+<span class="sd">            Note: this is assumed to be a *periodic*, not necessarily</span>
+<span class="sd">            annualized, return.</span>
+<span class="sd">        ddof : int, default 0</span>
+<span class="sd">            Degrees of freedom, passed to pd.Series.std().</span>
+<span class="sd">        freq : str or None, default None</span>
+<span class="sd">            A frequency string used to create an annualization factor.</span>
+<span class="sd">            If None, `self.freq` will be used.  If that is also None,</span>
+<span class="sd">            a frequency will be inferred.  If none can be inferred,</span>
+<span class="sd">            an exception is raised.</span>
+
+<span class="sd">            It may be any frequency string or anchored offset string</span>
+<span class="sd">            recognized by Pandas, such as &#39;D&#39;, &#39;5D&#39;, &#39;Q&#39;, &#39;Q-DEC&#39;, or</span>
+<span class="sd">            &#39;BQS-APR&#39;.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        float</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">freq</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">freq</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_try_get_freq</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">freq</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">FrequencyError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">count</span><span class="p">()</span> <span class="o">-</span> <span class="n">ddof</span>
+        <span class="n">ss</span> <span class="o">=</span> <span class="p">(</span><span class="n">nansum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">minimum</span><span class="p">(</span><span class="bp">self</span> <span class="o">-</span> <span class="n">threshold</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span> <span class="o">**</span> <span class="mf">0.5</span><span class="p">)</span> <span class="o">/</span> <span class="n">n</span>
+        <span class="k">return</span> <span class="n">ss</span> <span class="o">*</span> <span class="n">freq</span> <span class="o">**</span> <span class="mf">0.5</span></div>
+
+<div class="viewcode-block" id="TSeries.sharpe_ratio"><a class="viewcode-back" href="../01_returns.html#returns.TSeries.sharpe_ratio">[docs]</a>    <span class="k">def</span> <span class="nf">sharpe_ratio</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rf</span><span class="o">=</span><span class="mf">0.02</span><span class="p">,</span> <span class="n">ddof</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return over `rf` per unit of total risk.</span>
+
+<span class="sd">        The average return in excess of the risk-free rate divided</span>
+<span class="sd">        by the standard deviation of return; a measure of the average</span>
+<span class="sd">        excess return earned per unit of standard deviation of return.</span>
+<span class="sd">        [Source: CFA Institute]</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        rf : {float, TSeries, pd.Series}, default 0.02</span>
+<span class="sd">            If float, this represents an *compounded annualized*</span>
+<span class="sd">            risk-free rate; 2.0% is the default.</span>
+<span class="sd">            If a TSeries or pd.Series, this represents a time series</span>
+<span class="sd">            of periodic returns to a risk-free security.</span>
+
+<span class="sd">            To download a risk-free rate return series using</span>
+<span class="sd">            3-month US T-bill yields, see:`pyfinance.datasets.load_rf`.</span>
+<span class="sd">        ddof : int, default 0</span>
+<span class="sd">            Degrees of freedom, passed to pd.Series.std().</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        float</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">rf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_validate_rf</span><span class="p">(</span><span class="n">rf</span><span class="p">)</span>
+        <span class="n">stdev</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">anlzd_stdev</span><span class="p">(</span><span class="n">ddof</span><span class="o">=</span><span class="n">ddof</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">anlzd_ret</span><span class="p">()</span> <span class="o">-</span> <span class="n">rf</span><span class="p">)</span> <span class="o">/</span> <span class="n">stdev</span></div>
+
+<div class="viewcode-block" id="TSeries.sortino_ratio"><a class="viewcode-back" href="../01_returns.html#returns.TSeries.sortino_ratio">[docs]</a>    <span class="k">def</span> <span class="nf">sortino_ratio</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">threshold</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">ddof</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">freq</span><span class="o">=</span><span class="mi">250</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return over a threshold per unit of downside deviation.</span>
+
+<span class="sd">        A performance appraisal ratio that replaces standard deviation</span>
+<span class="sd">        in the Sharpe ratio with downside deviation.</span>
+<span class="sd">        [Source: CFA Institute]</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        threshold : {float, TSeries, pd.Series}, default 0.</span>
+<span class="sd">            While zero is the default, it is also customary to use</span>
+<span class="sd">            a &quot;minimum acceptable return&quot; (MAR) or a risk-free rate.</span>
+<span class="sd">            Note: this is assumed to be a *periodic*, not necessarily</span>
+<span class="sd">            annualized, return.</span>
+<span class="sd">        ddof : int, default 0</span>
+<span class="sd">            Degrees of freedom, passed to pd.Series.std().</span>
+<span class="sd">        freq : str or None, default None</span>
+<span class="sd">            A frequency string used to create an annualization factor.</span>
+<span class="sd">            If None, `self.freq` will be used.  If that is also None,</span>
+<span class="sd">            a frequency will be inferred.  If none can be inferred,</span>
+<span class="sd">            an exception is raised.</span>
+
+<span class="sd">            It may be any frequency string or anchored offset string</span>
+<span class="sd">            recognized by Pandas, such as &#39;D&#39;, &#39;5D&#39;, &#39;Q&#39;, &#39;Q-DEC&#39;, or</span>
+<span class="sd">            &#39;BQS-APR&#39;.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        float</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">stdev</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">semi_stdev</span><span class="p">(</span><span class="n">threshold</span><span class="o">=</span><span class="n">threshold</span><span class="p">,</span> <span class="n">ddof</span><span class="o">=</span><span class="n">ddof</span><span class="p">,</span> <span class="n">freq</span><span class="o">=</span><span class="n">freq</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">anlzd_ret</span><span class="p">()</span> <span class="o">-</span> <span class="n">threshold</span><span class="p">)</span> <span class="o">/</span> <span class="n">stdev</span></div>
+
+<div class="viewcode-block" id="TSeries.tracking_error"><a class="viewcode-back" href="../01_returns.html#returns.TSeries.tracking_error">[docs]</a>    <span class="k">def</span> <span class="nf">tracking_error</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">benchmark</span><span class="p">,</span> <span class="n">ddof</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Standard deviation of excess returns.</span>
+
+<span class="sd">        The standard deviation of the differences between</span>
+<span class="sd">        a portfolio&#39;s returns and its benchmark&#39;s returns.</span>
+<span class="sd">        [Source: CFA Institute]</span>
+
+<span class="sd">        Also known as: tracking risk; active risk</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        benchmark : {pd.Series, TSeries, 1d np.ndarray}</span>
+<span class="sd">            The benchmark security to which `self` is compared.</span>
+<span class="sd">        ddof : int, default 0</span>
+<span class="sd">            Degrees of freedom, passed to pd.Series.std().</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        float</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">er</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">excess_ret</span><span class="p">(</span><span class="n">benchmark</span><span class="o">=</span><span class="n">benchmark</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">er</span><span class="o">.</span><span class="n">anlzd_stdev</span><span class="p">(</span><span class="n">ddof</span><span class="o">=</span><span class="n">ddof</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TSeries.treynor_ratio"><a class="viewcode-back" href="../01_returns.html#returns.TSeries.treynor_ratio">[docs]</a>    <span class="k">def</span> <span class="nf">treynor_ratio</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">benchmark</span><span class="p">,</span> <span class="n">rf</span><span class="o">=</span><span class="mf">0.02</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return over `rf` per unit of systematic risk.</span>
+
+<span class="sd">        A measure of risk-adjusted performance that relates a</span>
+<span class="sd">        portfolio&#39;s excess returns to the portfolio&#39;s beta.</span>
+<span class="sd">        [Source: CFA Institute]</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        benchmark : {pd.Series, TSeries, 1d np.ndarray}</span>
+<span class="sd">            The benchmark security to which `self` is compared.</span>
+<span class="sd">        rf : {float, TSeries, pd.Series}, default 0.02</span>
+<span class="sd">            If float, this represents an *compounded annualized*</span>
+<span class="sd">            risk-free rate; 2.0% is the default.</span>
+<span class="sd">            If a TSeries or pd.Series, this represents a time series</span>
+<span class="sd">            of periodic returns to a risk-free security.</span>
+
+<span class="sd">            To download a risk-free rate return series using</span>
+<span class="sd">            3-month US T-bill yields, see:`pyfinance.datasets.load_rf`.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        float</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">benchmark</span> <span class="o">=</span> <span class="n">_try_to_squeeze</span><span class="p">(</span><span class="n">benchmark</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">benchmark</span><span class="o">.</span><span class="n">ndim</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Treynor ratio requires a single benchmark&quot;</span><span class="p">)</span>
+        <span class="n">rf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_validate_rf</span><span class="p">(</span><span class="n">rf</span><span class="p">)</span>
+        <span class="n">beta</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">beta</span><span class="p">(</span><span class="n">benchmark</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">anlzd_ret</span><span class="p">()</span> <span class="o">-</span> <span class="n">rf</span><span class="p">)</span> <span class="o">/</span> <span class="n">beta</span></div>
+
+<div class="viewcode-block" id="TSeries.tstat_alpha"><a class="viewcode-back" href="../01_returns.html#returns.TSeries.tstat_alpha">[docs]</a>    <span class="k">def</span> <span class="nf">tstat_alpha</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">benchmark</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;The t-statistic of CAPM alpha.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        benchmark : {pd.Series, TSeries, pd.DataFrame, np.ndarray}</span>
+<span class="sd">            The benchmark securitie(s) to which `self` is compared.</span>
+<span class="sd">        **kwargs</span>
+<span class="sd">            Passed to pyfinance.ols.OLS().</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        float</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">CAPM</span><span class="p">(</span><span class="n">benchmark</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span><span class="o">.</span><span class="n">tstat_alpha</span></div>
+
+<div class="viewcode-block" id="TSeries.tstat_beta"><a class="viewcode-back" href="../01_returns.html#returns.TSeries.tstat_beta">[docs]</a>    <span class="k">def</span> <span class="nf">tstat_beta</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">benchmark</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;The t-statistic of CAPM beta.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        benchmark : {pd.Series, TSeries, pd.DataFrame, np.ndarray}</span>
+<span class="sd">            The benchmark securitie(s) to which `self` is compared.</span>
+<span class="sd">        **kwargs</span>
+<span class="sd">            Passed to pyfinance.ols.OLS().</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        float or np.ndarray</span>
+<span class="sd">            If `benchmark` is 1d, returns a scalar.</span>
+<span class="sd">            If `benchmark` is 2d, returns a 1d ndarray.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">CAPM</span><span class="p">(</span><span class="n">benchmark</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span><span class="o">.</span><span class="n">tstat_beta</span></div>
+
+<div class="viewcode-block" id="TSeries.ulcer_idx"><a class="viewcode-back" href="../01_returns.html#returns.TSeries.ulcer_idx">[docs]</a>    <span class="k">def</span> <span class="nf">ulcer_idx</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Ulcer Index, a composite measure of drawdown severity.</span>
+
+<span class="sd">        A measure of the depth and duration of drawdowns in prices</span>
+<span class="sd">        from earlier highs.  It is the square root of the mean of</span>
+<span class="sd">        the squared percentage drawdowns in value.</span>
+<span class="sd">        [Source: Peter G. Martin]</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        float</span>
+
+<span class="sd">        References</span>
+<span class="sd">        ----------</span>
+<span class="sd">        .. _Peter G. Martin: Ulcer Index</span>
+<span class="sd">            http://www.tangotools.com/ui/ui.htm</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="n">nanmean</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">drawdown_idx</span><span class="p">()</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span> <span class="o">**</span> <span class="mf">0.5</span></div>
+
+<div class="viewcode-block" id="TSeries.up_capture"><a class="viewcode-back" href="../01_returns.html#returns.TSeries.up_capture">[docs]</a>    <span class="k">def</span> <span class="nf">up_capture</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">benchmark</span><span class="p">,</span> <span class="n">threshold</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">compare_op</span><span class="o">=</span><span class="s2">&quot;ge&quot;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Upside capture ratio.</span>
+
+<span class="sd">        Measures the performance of `self` relative to benchmark</span>
+<span class="sd">        conditioned on periods where `benchmark` is gt or ge to</span>
+<span class="sd">        `threshold`.</span>
+
+<span class="sd">        Upside capture ratios are calculated by taking the fund&#39;s</span>
+<span class="sd">        monthly return during the periods of positive benchmark</span>
+<span class="sd">        performance and dividing it by the benchmark return.</span>
+<span class="sd">        [Source: CFA Institute]</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        benchmark : {pd.Series, TSeries, 1d np.ndarray}</span>
+<span class="sd">            The benchmark security to which `self` is compared.</span>
+<span class="sd">        threshold : float, default 0.</span>
+<span class="sd">            The threshold at which the comparison should be done.</span>
+<span class="sd">            `self` and `benchmark` are &quot;filtered&quot; to periods where</span>
+<span class="sd">            `benchmark` is gt/ge `threshold`.</span>
+<span class="sd">        compare_op : {&#39;ge&#39;, &#39;gt&#39;}</span>
+<span class="sd">            Comparison operator used to compare to `threshold`.</span>
+<span class="sd">            &#39;gt&#39; is greater-than; &#39;ge&#39; is greater-than-or-equal.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        float</span>
+
+<span class="sd">        Note</span>
+<span class="sd">        ----</span>
+<span class="sd">        This metric uses geometric, not arithmetic, mean return.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">slf</span><span class="p">,</span> <span class="n">bm</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">upmarket_filter</span><span class="p">(</span>
+            <span class="n">benchmark</span><span class="o">=</span><span class="n">benchmark</span><span class="p">,</span>
+            <span class="n">threshold</span><span class="o">=</span><span class="n">threshold</span><span class="p">,</span>
+            <span class="n">compare_op</span><span class="o">=</span><span class="n">compare_op</span><span class="p">,</span>
+            <span class="n">include_benchmark</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">slf</span><span class="o">.</span><span class="n">geomean</span><span class="p">()</span> <span class="o">/</span> <span class="n">bm</span><span class="o">.</span><span class="n">geomean</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="TSeries.upmarket_filter"><a class="viewcode-back" href="../01_returns.html#returns.TSeries.upmarket_filter">[docs]</a>    <span class="k">def</span> <span class="nf">upmarket_filter</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">benchmark</span><span class="p">,</span>
+        <span class="n">threshold</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
+        <span class="n">compare_op</span><span class="o">=</span><span class="s2">&quot;ge&quot;</span><span class="p">,</span>
+        <span class="n">include_benchmark</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Drop elementwise samples where `benchmark` &lt; `threshold`.</span>
+
+<span class="sd">        Filters `self` (and optionally, `benchmark`) to periods</span>
+<span class="sd">        where `benchmark` &gt; `threshold`.  (Or &gt;= `threshold`.)</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        benchmark : {pd.Series, TSeries, 1d np.ndarray}</span>
+<span class="sd">            The benchmark security to which `self` is compared.</span>
+<span class="sd">        threshold : float, default 0.0</span>
+<span class="sd">            The threshold at which the comparison should be done.</span>
+<span class="sd">            `self` and `benchmark` are &quot;filtered&quot; to periods where</span>
+<span class="sd">            `benchmark` is gt/ge `threshold`.</span>
+<span class="sd">        compare_op : {&#39;ge&#39;, &#39;gt&#39;}</span>
+<span class="sd">            Comparison operator used to compare to `threshold`.</span>
+<span class="sd">            &#39;gt&#39; is greater-than; &#39;ge&#39; is greater-than-or-equal.</span>
+<span class="sd">        include_benchmark : bool, default False</span>
+<span class="sd">            If True, return tuple of (`self`, `benchmark`) both</span>
+<span class="sd">            filtered.  If False, return only `self` filtered.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        TSeries or tuple of TSeries</span>
+<span class="sd">            TSeries if `include_benchmark=False`, otherwise, tuple.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mkt_filter</span><span class="p">(</span>
+            <span class="n">benchmark</span><span class="o">=</span><span class="n">benchmark</span><span class="p">,</span>
+            <span class="n">threshold</span><span class="o">=</span><span class="n">threshold</span><span class="p">,</span>
+            <span class="n">compare_op</span><span class="o">=</span><span class="n">compare_op</span><span class="p">,</span>
+            <span class="n">include_benchmark</span><span class="o">=</span><span class="n">include_benchmark</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+    <span class="c1"># Unfortunately, we can&#39;t cache this result because the input</span>
+    <span class="c1">#     (benchmark) is mutable and not hashable.  And we don&#39;t want to</span>
+    <span class="c1">#     sneak around that, in the off-chance that the input actually</span>
+    <span class="c1">#     would be altered between calls.</span>
+    <span class="c1"># One alternative: specify the benchmark at instantiation,</span>
+    <span class="c1">#     and &quot;bind&quot; self to that.</span>
+    <span class="c1"># The nice thing is that some properties of the resulting OLS</span>
+    <span class="c1">#     object *are* cached, so repeated calls are pretty fast.</span>
+
+<div class="viewcode-block" id="TSeries.CAPM"><a class="viewcode-back" href="../01_returns.html#returns.TSeries.CAPM">[docs]</a>    <span class="k">def</span> <span class="nf">CAPM</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">benchmark</span><span class="p">,</span> <span class="n">has_const</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">use_const</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Interface to OLS regression against `benchmark`.</span>
+
+<span class="sd">        `self.alpha()`, `self.beta()` and several other methods</span>
+<span class="sd">        stem from here.  For the full method set, see</span>
+<span class="sd">        `pyfinance.ols.OLS`.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        benchmark : {pd.Series, TSeries, pd.DataFrame, np.ndarray}</span>
+<span class="sd">            The benchmark securitie(s) to which `self` is compared.</span>
+<span class="sd">        has_const : bool, default False</span>
+<span class="sd">            Specifies whether `benchmark` includes a user-supplied constant</span>
+<span class="sd">            (a column vector).  If False, it is added at instantiation.</span>
+<span class="sd">        use_const : bool, default True</span>
+<span class="sd">            Whether to include an intercept term in the model output.  Note the</span>
+<span class="sd">            difference between `has_const` and `use_const`: the former</span>
+<span class="sd">            specifies whether a column vector of 1s is included in the</span>
+<span class="sd">            input; the latter specifies whether the model itself</span>
+<span class="sd">            should include a constant (intercept) term.  Exogenous</span>
+<span class="sd">            data that is ~N(0,1) would have a constant equal to zero;</span>
+<span class="sd">            specify use_const=False in this situation.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        pyfinance.ols.OLS</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="n">ols</span><span class="o">.</span><span class="n">OLS</span><span class="p">(</span>
+            <span class="n">y</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="n">benchmark</span><span class="p">,</span> <span class="n">has_const</span><span class="o">=</span><span class="n">has_const</span><span class="p">,</span> <span class="n">use_const</span><span class="o">=</span><span class="n">use_const</span>
+        <span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">_mkt_filter</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">benchmark</span><span class="p">,</span> <span class="n">threshold</span><span class="p">,</span> <span class="n">compare_op</span><span class="p">,</span> <span class="n">include_benchmark</span><span class="o">=</span><span class="kc">False</span>
+    <span class="p">):</span>
+        <span class="n">benchmark</span> <span class="o">=</span> <span class="n">_try_to_squeeze</span><span class="p">(</span><span class="n">benchmark</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">benchmark</span><span class="p">,</span> <span class="p">(</span><span class="n">TFrame</span><span class="p">,</span> <span class="n">TSeries</span><span class="p">)):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;`benchmark` must be TFrame or TSeries.&quot;</span><span class="p">)</span>
+        <span class="c1"># Use the dunder method to be NumPy-compatible.</span>
+        <span class="n">compare_op</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">benchmark</span><span class="p">,</span> <span class="s2">&quot;</span><span class="si">{0}{1}{0}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;__&quot;</span><span class="p">,</span> <span class="n">compare_op</span><span class="p">))</span>
+        <span class="n">mask</span> <span class="o">=</span> <span class="n">compare_op</span><span class="p">(</span><span class="n">threshold</span><span class="p">)</span><span class="o">.</span><span class="n">values</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">include_benchmark</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">mask</span><span class="p">],</span> <span class="n">benchmark</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">_validate_rf</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rf</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">rf</span><span class="p">,</span> <span class="n">Number</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">rf</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">rf</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                        <span class="s2">&quot;When passed as a NumPy array,&quot;</span>
+                        <span class="s2">&quot;`rf` must be of equal length&quot;</span>
+                        <span class="s2">&quot; as `self`. to enable alignment.&quot;</span>
+                    <span class="p">)</span>
+                    <span class="n">rf</span> <span class="o">=</span> <span class="n">TSeries</span><span class="p">(</span><span class="n">rf</span><span class="p">,</span> <span class="n">freq</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">freq</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">rf</span> <span class="o">=</span> <span class="n">rf</span><span class="o">.</span><span class="n">reindex</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">rf</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">):</span>
+                    <span class="n">rf</span> <span class="o">=</span> <span class="n">TSeries</span><span class="p">(</span><span class="n">rf</span><span class="p">,</span> <span class="n">freq</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">freq</span><span class="p">)</span>
+                <span class="n">rf</span> <span class="o">=</span> <span class="n">rf</span><span class="o">.</span><span class="n">anlzd_ret</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">rf</span>
+
+    <span class="k">def</span> <span class="nf">_try_get_freq</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">freq</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">freq</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">infer_freq</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">freq</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">FrequencyError</span><span class="p">(</span>
+                    <span class="s2">&quot;No frequency was passed at&quot;</span>
+                    <span class="s2">&quot; instantiation, and one cannot&quot;</span>
+                    <span class="s2">&quot; be inferred.&quot;</span>
+                <span class="p">)</span>
+            <span class="n">freq</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">get_anlz_factor</span><span class="p">(</span><span class="n">freq</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">freq</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">get_anlz_factor</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">freq</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">freq</span></div>
+
+
+<span class="k">def</span> <span class="nf">_try_to_squeeze</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">raise_</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Attempt to squeeze to 1d Series.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    obj : {pd.Series, pd.DataFrame}</span>
+<span class="sd">    raise_ : bool, default False</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">obj</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="ow">and</span> <span class="n">obj</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">obj</span><span class="o">.</span><span class="n">squeeze</span><span class="p">()</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">raise_</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Input cannot be squeezed.&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">obj</span>
+
+
+<span class="k">class</span> <span class="nc">FrequencyError</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Index frequency misspecified, missing, or not inferrable.&quot;&quot;&quot;</span>
+
+    <span class="k">pass</span>
+
+
+<div class="viewcode-block" id="TFrame"><a class="viewcode-back" href="../01_returns.html#returns.TFrame">[docs]</a><span class="k">class</span> <span class="nc">TFrame</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+
+
+<span class="c1"># Default</span>
+<span class="n">msg</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="s2">&quot;A frequency was not passed to the method or at&quot;</span>
+    <span class="s2">&quot; instantiation, and could not otherwise be inferred from the&quot;</span>
+    <span class="s2">&quot; Index.&quot;</span>
+<span class="p">)</span>
+
+
+<span class="c1"># ---------------------------------------------------------------------</span>
+<span class="c1"># Long-form docstring shared between TSeries &amp; TFrame.</span>
+
+<span class="n">doc</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">Time series of periodic returns for </span><span class="si">{securities}</span><span class="s2">.</span>
+
+<span class="s2">Subclass of `pandas.</span><span class="si">{obj}</span><span class="s2">`, with an extended set of methods</span>
+<span class="s2">geared towards calculating common investment metrics.</span>
+
+<span class="s2">It attempts to optimize for speed, not adding much incremental overhead</span>
+<span class="s2">on top of the underlying NumPy and Pandas calls.</span>
+
+<span class="s2">Parameters</span>
+<span class="s2">----------</span>
+<span class="s2">freq : str or None, default None</span>
+<span class="s2">    `freq` may be passed by *keyword-argument only*.</span>
+
+
+<span class="s2">Methods</span>
+<span class="s2">-------</span>
+<span class="si">{methods}</span><span class="s2"></span>
+
+<span class="s2">Examples</span>
+<span class="s2">--------</span>
+<span class="si">{examples}</span><span class="s2"></span>
+<span class="s2">&quot;&quot;&quot;</span>
+
+<span class="n">param</span> <span class="o">=</span> <span class="s2">&quot;Parameters</span><span class="se">\n</span><span class="s2">        -------&quot;</span>
+<span class="n">ret</span> <span class="o">=</span> <span class="s2">&quot;Returns</span><span class="se">\n</span><span class="s2">        -------&quot;</span>
+
+
+<span class="k">def</span> <span class="nf">_truncate_method_docstring</span><span class="p">(</span><span class="n">doc</span><span class="p">):</span>
+    <span class="n">p</span><span class="p">,</span> <span class="n">r</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">param</span><span class="p">),</span> <span class="n">doc</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">ret</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">p</span> <span class="o">==</span> <span class="n">r</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">doc</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">m</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">p</span> <span class="k">if</span> <span class="n">p</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span> <span class="k">else</span> <span class="n">r</span><span class="p">,</span> <span class="n">r</span> <span class="k">if</span> <span class="n">r</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span> <span class="k">else</span> <span class="n">p</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">doc</span><span class="p">[:</span><span class="n">m</span><span class="p">]</span>
+
+
+<span class="n">methods</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="s2">&quot;alpha&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;anlzd_ret&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;anlzd_stdev&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;batting_avg&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;beta&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;beta_adj&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;calmar_ratio&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;capture_ratio&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;cuml_ret&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;cuml_idx&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;down_capture&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;downmarket_filter&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;drawdown_end&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;drawdown_idx&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;drawdown_length&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;drawdown_recov&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;drawdown_start&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;excess_drawdown_idx&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;excess_ret&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;gain_to_loss_ratio&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;geomean&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;growth_of_x&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;info_ratio&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;max_drawdown&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;msquared&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;pct_negative&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;pct_positive&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;recov_date&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;ret_idx&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;ret_rels&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;rollup&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;rsq&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;rsq_adj&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;semi_stdev&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;sharpe_ratio&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;sortino_ratio&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;tracking_error&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;treynor_ratio&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;tstat_alpha&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;tstat_beta&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;ulcer_idx&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;up_capture&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;upmarket_filter&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;CAPM&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">tseries_method_doc</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+<span class="k">for</span> <span class="n">method</span> <span class="ow">in</span> <span class="n">methods</span><span class="p">:</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">mdoc</span> <span class="o">=</span> <span class="n">_truncate_method_docstring</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">TSeries</span><span class="p">,</span> <span class="n">method</span><span class="p">)</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">)</span>
+        <span class="n">tseries_method_doc</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2"> : </span><span class="si">{}</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">method</span><span class="p">,</span> <span class="n">mdoc</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
+    <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+        <span class="c1"># No docstring (yet).</span>
+        <span class="k">pass</span>
+
+<span class="n">TSeries</span><span class="o">.</span><span class="vm">__doc__</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+    <span class="n">securities</span><span class="o">=</span><span class="s2">&quot;a single security&quot;</span><span class="p">,</span>
+    <span class="n">obj</span><span class="o">=</span><span class="s2">&quot;Series&quot;</span><span class="p">,</span>
+    <span class="n">methods</span><span class="o">=</span><span class="n">tseries_method_doc</span><span class="o">.</span><span class="n">strip</span><span class="p">(),</span>
+    <span class="n">examples</span><span class="o">=</span><span class="s2">&quot;TODO&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">TFrame</span><span class="o">.</span><span class="vm">__doc__</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+    <span class="n">securities</span><span class="o">=</span><span class="s2">&quot;multiple securities&quot;</span><span class="p">,</span>
+    <span class="n">obj</span><span class="o">=</span><span class="s2">&quot;DataFrame&quot;</span><span class="p">,</span>
+    <span class="n">methods</span><span class="o">=</span><span class="s2">&quot;TODO&quot;</span><span class="p">,</span>
+    <span class="n">examples</span><span class="o">=</span><span class="s2">&quot;TODO&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, chenlin.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

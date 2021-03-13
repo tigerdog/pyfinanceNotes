@@ -1,0 +1,1017 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>utils &mdash; finance 1.3 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> finance
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../01_returns.html">returns模块</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../02_general.html">general模块</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../03_datasets.html">datasets模块</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../04_ols.html">ols模块</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../05_options.html">options模块</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../06_utils.html">utils模块</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">finance</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="index.html">Module code</a> &raquo;</li>
+        
+      <li>utils</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for utils</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;pyfinance utility functions.</span>
+
+<span class="sd">Descriptions</span>
+<span class="sd">------------</span>
+
+<span class="sd">appender</span>
+<span class="sd">    Decorator for appending commonly used parameter definitions.</span>
+<span class="sd">avail</span>
+<span class="sd">    Return start &amp; end availability for each column in a DataFrame.</span>
+<span class="sd">can_broadcast</span>
+<span class="sd">    Logic test: can input NumPy arrays be broadcast?</span>
+<span class="sd">constrain</span>
+<span class="sd">    Constrain group of DataFrames &amp; Series to intersection of indices.</span>
+<span class="sd">constrain_horizon</span>
+<span class="sd">    Constrain a Series/DataFrame to a specified lookback period.</span>
+<span class="sd">dropcols</span>
+<span class="sd">    Drop columns that contain NaN within [start, end] inclusive.</span>
+<span class="sd">encode</span>
+<span class="sd">    One-hot encode the given input strings.</span>
+<span class="sd">equal_weights</span>
+<span class="sd">    Generate `n` equal weights (decimals) summing to `sumto`.</span>
+<span class="sd">expanding_stdize</span>
+<span class="sd">    Standardize a pandas object column-wise on expanding window.</span>
+<span class="sd">flatten</span>
+<span class="sd">    Flatten a nested iterable.  Returns a generator object.</span>
+<span class="sd">get_anlz_factor</span>
+<span class="sd">    Find the number of periods per year given a frequency.</span>
+<span class="sd">isiterable</span>
+<span class="sd">    Test whether `obj` is iterable.</span>
+<span class="sd">public_dir</span>
+<span class="sd">    List of attributes except those starting with specified underscores.</span>
+<span class="sd">random_tickers</span>
+<span class="sd">    Generate a size `n` list of random ticker symbols, each len `length`.</span>
+<span class="sd">random_weights</span>
+<span class="sd">    Generate a np.array of `n` random weights that sum to `sumto`.</span>
+<span class="sd">rolling_windows</span>
+<span class="sd">    Creates rolling-window &#39;blocks&#39; of length `window` from `a`.</span>
+<span class="sd">view</span>
+<span class="sd">    Abbreviated view similar to .head, but limit both rows &amp; columns.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="n">__author__</span> <span class="o">=</span> <span class="s2">&quot;Brad Solomon &lt;brad.solomon.1124@gmail.com&gt;&quot;</span>
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">&quot;appender&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;avail&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;can_broadcast&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;constrain&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;constrain_horizon&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;dropcols&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;encode&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;equal_weights&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;expanding_stdize&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;isiterable&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;public_dir&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;random_tickers&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;random_weights&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;rolling_windows&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;view&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;unique_everseen&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;uniqify&quot;</span><span class="p">,</span>
+<span class="p">]</span>
+
+<span class="kn">from</span> <span class="nn">collections.abc</span> <span class="kn">import</span> <span class="n">Callable</span>
+<span class="kn">import</span> <span class="nn">inspect</span>
+<span class="kn">import</span> <span class="nn">itertools</span>
+<span class="kn">import</span> <span class="nn">random</span>
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">import</span> <span class="nn">string</span>
+<span class="kn">import</span> <span class="nn">textwrap</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">pandas</span> <span class="kn">import</span> <span class="n">Series</span><span class="p">,</span> <span class="n">DataFrame</span>
+<span class="kn">from</span> <span class="nn">pandas.tseries</span> <span class="kn">import</span> <span class="n">offsets</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">pandas.tseries.frequencies</span> <span class="kn">import</span> <span class="n">FreqGroup</span><span class="p">,</span> <span class="n">get_freq_code</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">pandas._libs.tslibs</span> <span class="kn">import</span> <span class="n">to_offset</span>
+    <span class="kn">from</span> <span class="nn">pandas._libs.tslibs.dtypes</span> <span class="kn">import</span> <span class="n">FreqGroup</span>
+
+    <span class="k">def</span> <span class="nf">get_freq_code</span><span class="p">(</span><span class="n">freqstr</span><span class="p">):</span>
+        <span class="n">off</span> <span class="o">=</span> <span class="n">to_offset</span><span class="p">(</span><span class="n">freqstr</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">off</span><span class="o">.</span><span class="n">_period_dtype_code</span><span class="p">,</span> <span class="n">off</span><span class="o">.</span><span class="n">n</span>
+
+
+<span class="n">PY37</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">version_info</span><span class="o">.</span><span class="n">major</span> <span class="o">==</span> <span class="mi">3</span> <span class="ow">and</span> <span class="n">sys</span><span class="o">.</span><span class="n">version_info</span><span class="o">.</span><span class="n">minor</span> <span class="o">&gt;=</span> <span class="mi">7</span>
+
+
+<div class="viewcode-block" id="appender"><a class="viewcode-back" href="../06_utils.html#utils.appender">[docs]</a><span class="k">def</span> <span class="nf">appender</span><span class="p">(</span><span class="n">defaultdocs</span><span class="p">,</span> <span class="n">passed_to</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Decorator for appending commonly used parameter definitions.</span>
+
+<span class="sd">    Useful in cases where functions repeatedly use the same parameters.  (But</span>
+<span class="sd">    where a class implementation is not appropriate.)</span>
+
+<span class="sd">    `defaultdocs` -&gt; dict, format as shown in Example below, with keys being</span>
+<span class="sd">    parameters and values being descriptions.</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    ddocs = {</span>
+
+<span class="sd">        &#39;a&#39; :</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+<span class="sd">        a : int, default 0</span>
+<span class="sd">            the first parameter</span>
+<span class="sd">        &#39;&#39;&#39;,</span>
+
+<span class="sd">        &#39;b&#39; :</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+<span class="sd">        b : int, default 1</span>
+<span class="sd">            the second parameter</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+<span class="sd">        }</span>
+
+<span class="sd">    @appender(ddocs)</span>
+<span class="sd">    def f(a, b):</span>
+<span class="sd">        &#39;&#39;&#39;Title doc.&#39;&#39;&#39;</span>
+<span class="sd">        # Params here</span>
+<span class="sd">        pass</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">_doc</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
+        <span class="n">params</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">signature</span><span class="p">(</span><span class="n">func</span><span class="p">)</span><span class="o">.</span><span class="n">parameters</span>
+        <span class="n">params</span> <span class="o">=</span> <span class="p">[</span><span class="n">param</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">values</span><span class="p">()]</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">**kwargs : passed to `</span><span class="si">%s</span><span class="s2">`&quot;</span>
+        <span class="n">params</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+            <span class="p">[</span>
+                <span class="n">textwrap</span><span class="o">.</span><span class="n">dedent</span><span class="p">(</span><span class="n">defaultdocs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">param</span><span class="p">,</span> <span class="n">msg</span> <span class="o">%</span> <span class="n">passed_to</span><span class="p">))</span>
+                <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">params</span>
+            <span class="p">]</span>
+        <span class="p">)</span>
+        <span class="n">func</span><span class="o">.</span><span class="vm">__doc__</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">Parameters</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="mi">10</span> <span class="o">*</span> <span class="s2">&quot;=&quot;</span> <span class="o">+</span> <span class="n">params</span>
+        <span class="k">return</span> <span class="n">func</span>
+
+    <span class="k">return</span> <span class="n">_doc</span></div>
+
+
+<div class="viewcode-block" id="avail"><a class="viewcode-back" href="../06_utils.html#utils.avail">[docs]</a><span class="k">def</span> <span class="nf">avail</span><span class="p">(</span><span class="n">df</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Return start &amp; end availability for each column in a DataFrame.&quot;&quot;&quot;</span>
+    <span class="n">avail</span> <span class="o">=</span> <span class="n">DataFrame</span><span class="p">(</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;start&quot;</span><span class="p">:</span> <span class="n">df</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">col</span><span class="p">:</span> <span class="n">col</span><span class="o">.</span><span class="n">first_valid_index</span><span class="p">()),</span>
+            <span class="s2">&quot;end&quot;</span><span class="p">:</span> <span class="n">df</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">col</span><span class="p">:</span> <span class="n">col</span><span class="o">.</span><span class="n">last_valid_index</span><span class="p">()),</span>
+        <span class="p">}</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">avail</span><span class="p">[[</span><span class="s2">&quot;start&quot;</span><span class="p">,</span> <span class="s2">&quot;end&quot;</span><span class="p">]]</span></div>
+
+
+<div class="viewcode-block" id="can_broadcast"><a class="viewcode-back" href="../06_utils.html#utils.can_broadcast">[docs]</a><span class="k">def</span> <span class="nf">can_broadcast</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Logic test: can input arrays be broadcast?&quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">broadcast</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">True</span>
+    <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">False</span></div>
+
+
+<div class="viewcode-block" id="constrain"><a class="viewcode-back" href="../06_utils.html#utils.constrain">[docs]</a><span class="k">def</span> <span class="nf">constrain</span><span class="p">(</span><span class="o">*</span><span class="n">objs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Constrain group of DataFrames &amp; Series to intersection of indices.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    objs : iterable</span>
+<span class="sd">        DataFrames and/or Series to constrain</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    new_dfs : list of DataFrames, copied rather than inplace</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># TODO: build in the options to first dropna on each index before finding</span>
+    <span class="c1">#     intersection, AND to use `dropcol` from this module.  Note that this</span>
+    <span class="c1">#     would require filtering out Series to which dropcol isn&#39;t applicable.</span>
+
+    <span class="c1"># A little bit of set magic below.</span>
+    <span class="c1"># Note that pd.Index.intersection only applies to 2 Index objects</span>
+    <span class="n">common_idx</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Index</span><span class="p">(</span><span class="nb">set</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="o">*</span><span class="p">[</span><span class="nb">set</span><span class="p">(</span><span class="n">o</span><span class="o">.</span><span class="n">index</span><span class="p">)</span> <span class="k">for</span> <span class="n">o</span> <span class="ow">in</span> <span class="n">objs</span><span class="p">]))</span>
+    <span class="n">new_dfs</span> <span class="o">=</span> <span class="p">(</span><span class="n">o</span><span class="o">.</span><span class="n">reindex</span><span class="p">(</span><span class="n">common_idx</span><span class="p">)</span> <span class="k">for</span> <span class="n">o</span> <span class="ow">in</span> <span class="n">objs</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">new_dfs</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="constrain_horizon"><a class="viewcode-back" href="../06_utils.html#utils.constrain_horizon">[docs]</a><span class="k">def</span> <span class="nf">constrain_horizon</span><span class="p">(</span>
+    <span class="n">r</span><span class="p">,</span>
+    <span class="n">strict</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">cust</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">years</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+    <span class="n">quarters</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+    <span class="n">months</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+    <span class="n">days</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+    <span class="n">weeks</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+    <span class="n">year</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">month</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">day</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<span class="p">):</span>
+
+    <span class="sd">&quot;&quot;&quot;Constrain a Series/DataFrame to a specified lookback period.</span>
+
+<span class="sd">    See the documentation for dateutil.relativedelta:</span>
+<span class="sd">    dateutil.readthedocs.io/en/stable/relativedelta.html</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    r : DataFrame or Series</span>
+<span class="sd">        The target pandas object to constrain</span>
+<span class="sd">    strict : bool, default False</span>
+<span class="sd">        If True, raise Error if the implied start date on the horizon predates</span>
+<span class="sd">        the actual start date of `r`.  If False, just return `r` in this</span>
+<span class="sd">        situation</span>
+<span class="sd">    years, months, weeks, days : int, default 0</span>
+<span class="sd">        Relative information; specify as positive to subtract periods.  Adding</span>
+<span class="sd">        or subtracting a relativedelta with relative information performs</span>
+<span class="sd">        the corresponding aritmetic operation on the original datetime value</span>
+<span class="sd">        with the information in the relativedelta</span>
+<span class="sd">    quarters : int, default 0</span>
+<span class="sd">        Similar to the other plural relative info periods above, but note that</span>
+<span class="sd">        this param is custom here.  (It is not a standard relativedelta param)</span>
+<span class="sd">    year, month, day : int, default None</span>
+<span class="sd">        Absolute information; specify as positive to subtract periods.  Adding</span>
+<span class="sd">        relativedelta with absolute information does not perform an aritmetic</span>
+<span class="sd">        operation, but rather REPLACES the corresponding value in the</span>
+<span class="sd">        original datetime with the value(s) in relativedelta</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">textnum</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;zero&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="s2">&quot;one&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="s2">&quot;two&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+        <span class="s2">&quot;three&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+        <span class="s2">&quot;four&quot;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
+        <span class="s2">&quot;five&quot;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
+        <span class="s2">&quot;six&quot;</span><span class="p">:</span> <span class="mi">6</span><span class="p">,</span>
+        <span class="s2">&quot;seven&quot;</span><span class="p">:</span> <span class="mi">7</span><span class="p">,</span>
+        <span class="s2">&quot;eight&quot;</span><span class="p">:</span> <span class="mi">8</span><span class="p">,</span>
+        <span class="s2">&quot;nine&quot;</span><span class="p">:</span> <span class="mi">9</span><span class="p">,</span>
+        <span class="s2">&quot;ten&quot;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
+        <span class="s2">&quot;eleven&quot;</span><span class="p">:</span> <span class="mi">11</span><span class="p">,</span>
+        <span class="s2">&quot;twelve&quot;</span><span class="p">:</span> <span class="mi">12</span><span class="p">,</span>
+        <span class="s2">&quot;thirteen&quot;</span><span class="p">:</span> <span class="mi">13</span><span class="p">,</span>
+        <span class="s2">&quot;fourteen&quot;</span><span class="p">:</span> <span class="mi">14</span><span class="p">,</span>
+        <span class="s2">&quot;fifteen&quot;</span><span class="p">:</span> <span class="mi">15</span><span class="p">,</span>
+        <span class="s2">&quot;sixteen&quot;</span><span class="p">:</span> <span class="mi">16</span><span class="p">,</span>
+        <span class="s2">&quot;seventeen&quot;</span><span class="p">:</span> <span class="mi">17</span><span class="p">,</span>
+        <span class="s2">&quot;eighteen&quot;</span><span class="p">:</span> <span class="mi">18</span><span class="p">,</span>
+        <span class="s2">&quot;nineteen&quot;</span><span class="p">:</span> <span class="mi">19</span><span class="p">,</span>
+        <span class="s2">&quot;twenty&quot;</span><span class="p">:</span> <span class="mi">20</span><span class="p">,</span>
+        <span class="s2">&quot;twenty four&quot;</span><span class="p">:</span> <span class="mi">24</span><span class="p">,</span>
+        <span class="s2">&quot;thirty six&quot;</span><span class="p">:</span> <span class="mi">36</span><span class="p">,</span>
+    <span class="p">}</span>
+
+    <span class="n">relativedeltas</span> <span class="o">=</span> <span class="n">years</span><span class="p">,</span> <span class="n">quarters</span><span class="p">,</span> <span class="n">months</span><span class="p">,</span> <span class="n">days</span><span class="p">,</span> <span class="n">weeks</span><span class="p">,</span> <span class="n">year</span><span class="p">,</span> <span class="n">month</span><span class="p">,</span> <span class="n">day</span>
+    <span class="k">if</span> <span class="n">cust</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">any</span><span class="p">(</span><span class="n">relativedeltas</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="s2">&quot;Cannot specify competing (nonzero) values for both&quot;</span>
+            <span class="s2">&quot; `cust` and other parameters.&quot;</span>
+        <span class="p">)</span>
+    <span class="k">if</span> <span class="n">cust</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">cust</span> <span class="o">=</span> <span class="n">cust</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">cust</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;y&quot;</span><span class="p">):</span>
+            <span class="n">years</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;\d+&quot;</span><span class="p">,</span> <span class="n">cust</span><span class="p">)</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+
+        <span class="k">elif</span> <span class="n">cust</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;m&quot;</span><span class="p">):</span>
+            <span class="n">months</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;\d+&quot;</span><span class="p">,</span> <span class="n">cust</span><span class="p">)</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+
+        <span class="k">elif</span> <span class="n">cust</span><span class="o">.</span><span class="n">endswith</span><span class="p">((</span><span class="s2">&quot;years ago&quot;</span><span class="p">,</span> <span class="s2">&quot;year ago&quot;</span><span class="p">,</span> <span class="s2">&quot;year&quot;</span><span class="p">,</span> <span class="s2">&quot;years&quot;</span><span class="p">)):</span>
+            <span class="n">pos</span> <span class="o">=</span> <span class="n">cust</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot; year&quot;</span><span class="p">)</span>
+            <span class="n">years</span> <span class="o">=</span> <span class="n">textnum</span><span class="p">[</span><span class="n">cust</span><span class="p">[:</span><span class="n">pos</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)]</span>
+
+        <span class="k">elif</span> <span class="n">cust</span><span class="o">.</span><span class="n">endswith</span><span class="p">((</span><span class="s2">&quot;months ago&quot;</span><span class="p">,</span> <span class="s2">&quot;month ago&quot;</span><span class="p">,</span> <span class="s2">&quot;month&quot;</span><span class="p">,</span> <span class="s2">&quot;months&quot;</span><span class="p">)):</span>
+            <span class="n">pos</span> <span class="o">=</span> <span class="n">cust</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot; month&quot;</span><span class="p">)</span>
+            <span class="n">months</span> <span class="o">=</span> <span class="n">textnum</span><span class="p">[</span><span class="n">cust</span><span class="p">[:</span><span class="n">pos</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)]</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;`cust` not recognized.&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Convert quarters to months &amp; combine for MonthOffset</span>
+    <span class="n">months</span> <span class="o">+=</span> <span class="n">quarters</span> <span class="o">*</span> <span class="mi">3</span>
+
+    <span class="c1"># Start date will be computed relative to `end`</span>
+    <span class="n">end</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+    <span class="c1"># Establish some funky date conventions assumed in finance.  If the end</span>
+    <span class="c1"># date is 6/30, the date *3 months prior* is 3/31, not 3/30 as would be</span>
+    <span class="c1"># produced by dateutil.relativedelta.</span>
+
+    <span class="k">if</span> <span class="n">end</span><span class="o">.</span><span class="n">is_month_end</span> <span class="ow">and</span> <span class="n">days</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">weeks</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">years</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">years</span> <span class="o">*=</span> <span class="mi">12</span>
+            <span class="n">months</span> <span class="o">+=</span> <span class="n">years</span>
+        <span class="n">start</span> <span class="o">=</span> <span class="n">end</span> <span class="o">-</span> <span class="n">offsets</span><span class="o">.</span><span class="n">MonthBegin</span><span class="p">(</span><span class="n">months</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">start</span> <span class="o">=</span> <span class="n">end</span> <span class="o">-</span> <span class="n">offsets</span><span class="o">.</span><span class="n">DateOffset</span><span class="p">(</span>
+            <span class="n">years</span><span class="o">=</span><span class="n">years</span><span class="p">,</span>
+            <span class="n">months</span><span class="o">=</span><span class="n">months</span><span class="p">,</span>
+            <span class="n">days</span><span class="o">=</span><span class="n">days</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span>
+            <span class="n">weeks</span><span class="o">=</span><span class="n">weeks</span><span class="p">,</span>
+            <span class="n">year</span><span class="o">=</span><span class="n">year</span><span class="p">,</span>
+            <span class="n">month</span><span class="o">=</span><span class="n">month</span><span class="p">,</span>
+            <span class="n">day</span><span class="o">=</span><span class="n">day</span><span class="p">,</span>
+        <span class="p">)</span>
+    <span class="k">if</span> <span class="n">strict</span> <span class="ow">and</span> <span class="n">start</span> <span class="o">&lt;</span> <span class="n">r</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="s2">&quot;`start` pre-dates first element of the Index, </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">r</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="p">)</span>
+    <span class="k">return</span> <span class="n">r</span><span class="p">[</span><span class="n">start</span><span class="p">:</span><span class="n">end</span><span class="p">]</span></div>
+
+
+<span class="k">def</span> <span class="nf">cumargmax</span><span class="p">(</span><span class="n">a</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Cumulative argmax.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    a : np.ndarray</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    np.ndarray</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Thank you @Alex Riley</span>
+    <span class="c1"># https://stackoverflow.com/a/40675969/7954504</span>
+
+    <span class="n">m</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="o">.</span><span class="n">accumulate</span><span class="p">(</span><span class="n">a</span><span class="p">))</span>
+    <span class="k">if</span> <span class="n">a</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])[:,</span> <span class="kc">None</span><span class="p">],</span> <span class="n">a</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="o">*=</span> <span class="n">m</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">m</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="o">.</span><span class="n">accumulate</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="n">x</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">x</span>
+
+
+<div class="viewcode-block" id="dropcols"><a class="viewcode-back" href="../06_utils.html#utils.dropcols">[docs]</a><span class="k">def</span> <span class="nf">dropcols</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Drop columns that contain NaN within [start, end] inclusive.</span>
+
+<span class="sd">    A wrapper around DataFrame.dropna() that builds an easier *subset*</span>
+<span class="sd">    syntax for tseries-indexed DataFrames.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    df : DataFrame</span>
+<span class="sd">    start : str or datetime, default None</span>
+<span class="sd">        start cutoff date, inclusive</span>
+<span class="sd">    end : str or datetime, default None</span>
+<span class="sd">        end cutoff date, inclusive</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    df = DataFrame(np.random.randn(10,3),</span>
+<span class="sd">                   index=pd.date_range(&#39;2017&#39;, periods=10))</span>
+
+<span class="sd">    # Drop in some NaN</span>
+<span class="sd">    df.set_value(&#39;2017-01-04&#39;, 0, np.nan)</span>
+<span class="sd">    df.set_value(&#39;2017-01-02&#39;, 2, np.nan)</span>
+<span class="sd">    df.loc[&#39;2017-01-05&#39;:, 1] = np.nan</span>
+
+<span class="sd">    # only col2 will be kept--its NaN value falls before `start`</span>
+<span class="sd">    print(dropcols(df, start=&#39;2017-01-03&#39;))</span>
+<span class="sd">                      2</span>
+<span class="sd">    2017-01-01  0.12939</span>
+<span class="sd">    2017-01-02      NaN</span>
+<span class="sd">    2017-01-03  0.16596</span>
+<span class="sd">    2017-01-04  1.06442</span>
+<span class="sd">    2017-01-05 -1.87040</span>
+<span class="sd">    2017-01-06 -0.17160</span>
+<span class="sd">    2017-01-07  0.94588</span>
+<span class="sd">    2017-01-08  1.49246</span>
+<span class="sd">    2017-01-09  0.02042</span>
+<span class="sd">    2017-01-10  0.75094</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">Series</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;func only applies to `pd.DataFrame`&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">start</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">start</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">end</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">end</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">subset</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="p">[(</span><span class="n">df</span><span class="o">.</span><span class="n">index</span> <span class="o">&gt;=</span> <span class="n">start</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">index</span> <span class="o">&lt;=</span> <span class="n">end</span><span class="p">)]</span>
+    <span class="k">return</span> <span class="n">df</span><span class="o">.</span><span class="n">dropna</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">subset</span><span class="o">=</span><span class="n">subset</span><span class="p">)</span></div>
+
+
+<span class="k">def</span> <span class="nf">dropout</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Randomly set elements from `a` equal to zero, with proportion `p`.</span>
+
+<span class="sd">    Similar in concept to the dropout technique employed within</span>
+<span class="sd">    neural networks.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    a: numpy.ndarray</span>
+<span class="sd">        Array to be modified.</span>
+<span class="sd">    p: float in [0, 1]</span>
+<span class="sd">        Expected proportion of elements in the result that will equal 0.</span>
+<span class="sd">    inplace: bool</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    &gt;&gt;&gt; x = np.arange(10, 20, 2, dtype=np.uint8)</span>
+<span class="sd">    &gt;&gt;&gt; z = dropout(x, p=0.6)</span>
+<span class="sd">    &gt;&gt;&gt; z</span>
+<span class="sd">    array([10, 12,  0,  0,  0], dtype=uint8)</span>
+<span class="sd">    &gt;&gt;&gt; x.dtype == z.dtype</span>
+<span class="sd">    True</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">dt</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="n">dtype</span>
+    <span class="k">if</span> <span class="n">p</span> <span class="o">==</span> <span class="mf">0.5</span><span class="p">:</span>
+        <span class="c1"># Can&#39;t pass float dtype to `randint` directly.</span>
+        <span class="n">rand</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">high</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">a</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">dtype</span><span class="o">=</span><span class="n">dt</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">rand</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">p</span><span class="o">=</span><span class="p">[</span><span class="n">p</span><span class="p">,</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">p</span><span class="p">],</span> <span class="n">size</span><span class="o">=</span><span class="n">a</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">dt</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">inplace</span><span class="p">:</span>
+        <span class="n">a</span> <span class="o">*=</span> <span class="n">rand</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">a</span> <span class="o">*</span> <span class="n">rand</span>
+
+
+<span class="k">def</span> <span class="nf">_uniquewords</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Dictionary of words to their indices.  Helper function to `encode.`&quot;&quot;&quot;</span>
+    <span class="n">words</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">itertools</span><span class="o">.</span><span class="n">chain</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">word</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">words</span><span class="p">:</span>
+            <span class="n">words</span><span class="p">[</span><span class="n">word</span><span class="p">]</span> <span class="o">=</span> <span class="n">n</span>
+            <span class="n">n</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="k">return</span> <span class="n">words</span>
+
+
+<div class="viewcode-block" id="encode"><a class="viewcode-back" href="../06_utils.html#utils.encode">[docs]</a><span class="k">def</span> <span class="nf">encode</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;One-hot encode the given input strings.&quot;&quot;&quot;</span>
+    <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="n">arg</span><span class="o">.</span><span class="n">split</span><span class="p">()</span> <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">args</span><span class="p">]</span>
+    <span class="n">unique</span> <span class="o">=</span> <span class="n">_uniquewords</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span>
+    <span class="n">feature_vectors</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">unique</span><span class="p">)))</span>
+    <span class="k">for</span> <span class="n">vec</span><span class="p">,</span> <span class="n">s</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">feature_vectors</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">s</span><span class="p">:</span>
+            <span class="n">vec</span><span class="p">[</span><span class="n">unique</span><span class="p">[</span><span class="n">word</span><span class="p">]]</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="k">return</span> <span class="n">feature_vectors</span></div>
+
+
+<div class="viewcode-block" id="equal_weights"><a class="viewcode-back" href="../06_utils.html#utils.equal_weights">[docs]</a><span class="k">def</span> <span class="nf">equal_weights</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">sumto</span><span class="o">=</span><span class="mf">1.0</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Generate `n` equal weights (decimals) summing to `sumto`.</span>
+
+<span class="sd">    Note that sum is subject to typical Python floating point limitations.</span>
+
+<span class="sd">    n -&gt; int or float; the number of weights, summing to `sumto`</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    &gt;&gt;&gt; equal_weights(5)</span>
+<span class="sd">    [ 0.2  0.2  0.2  0.2  0.2]</span>
+
+<span class="sd">    &gt;&gt;&gt; equal_weights(5, sumto=1.2)</span>
+<span class="sd">    [ 0.24  0.24  0.24  0.24  0.24]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">return</span> <span class="n">sumto</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">n</span> <span class="o">*</span> <span class="p">[</span><span class="mi">1</span> <span class="o">/</span> <span class="n">n</span><span class="p">])</span></div>
+
+
+<div class="viewcode-block" id="expanding_stdize"><a class="viewcode-back" href="../06_utils.html#utils.expanding_stdize">[docs]</a><span class="k">def</span> <span class="nf">expanding_stdize</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Standardize a pandas object column-wise on expanding window.</span>
+
+<span class="sd">    **kwargs -&gt; passed to `obj.expanding`</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    df = pd.DataFrame(np.random.randn(10, 3))</span>
+<span class="sd">    print(expanding_stdize(df, min_periods=5))</span>
+<span class="sd">             0        1        2</span>
+<span class="sd">    0      NaN      NaN      NaN</span>
+<span class="sd">    1      NaN      NaN      NaN</span>
+<span class="sd">    2      NaN      NaN      NaN</span>
+<span class="sd">    3      NaN      NaN      NaN</span>
+<span class="sd">    4  0.67639 -1.03507  0.96610</span>
+<span class="sd">    5  0.95008 -0.26067  0.27761</span>
+<span class="sd">    6  1.67793 -0.50816  0.19293</span>
+<span class="sd">    7  1.50364 -1.10035 -0.87859</span>
+<span class="sd">    8 -0.64949  0.08028 -0.51354</span>
+<span class="sd">    9  0.15280 -0.73283 -0.84907</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">return</span> <span class="p">(</span><span class="n">obj</span> <span class="o">-</span> <span class="n">obj</span><span class="o">.</span><span class="n">expanding</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span> <span class="o">/</span> <span class="p">(</span>
+        <span class="n">obj</span><span class="o">.</span><span class="n">expanding</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span><span class="o">.</span><span class="n">std</span><span class="p">()</span>
+    <span class="p">)</span></div>
+
+
+<span class="c1"># Annualization factors.  The keys are multiples of 1000</span>
+<span class="c1"># representing Pandas frequency groups.</span>
+<span class="c1"># Technically, all of these are just an approximation.  For example,</span>
+<span class="c1"># there are 251 NYSE trading days in 2017, 252 in 2016 &amp; 2018.</span>
+
+<span class="n">PERIODS_PER_YEAR</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="n">FreqGroup</span><span class="o">.</span><span class="n">FR_ANN</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
+    <span class="n">FreqGroup</span><span class="o">.</span><span class="n">FR_QTR</span><span class="p">:</span> <span class="mf">4.0</span><span class="p">,</span>
+    <span class="n">FreqGroup</span><span class="o">.</span><span class="n">FR_MTH</span><span class="p">:</span> <span class="mf">12.0</span><span class="p">,</span>
+    <span class="n">FreqGroup</span><span class="o">.</span><span class="n">FR_WK</span><span class="p">:</span> <span class="mf">52.0</span><span class="p">,</span>
+    <span class="n">FreqGroup</span><span class="o">.</span><span class="n">FR_BUS</span><span class="p">:</span> <span class="mf">252.0</span><span class="p">,</span>
+    <span class="n">FreqGroup</span><span class="o">.</span><span class="n">FR_DAY</span><span class="p">:</span> <span class="mf">252.0</span><span class="p">,</span>  <span class="c1"># All days are business days</span>
+    <span class="n">FreqGroup</span><span class="o">.</span><span class="n">FR_HR</span><span class="p">:</span> <span class="mf">252.0</span> <span class="o">*</span> <span class="mf">6.5</span><span class="p">,</span>
+    <span class="n">FreqGroup</span><span class="o">.</span><span class="n">FR_MIN</span><span class="p">:</span> <span class="mf">252.0</span> <span class="o">*</span> <span class="mf">6.5</span> <span class="o">*</span> <span class="mi">60</span><span class="p">,</span>
+    <span class="n">FreqGroup</span><span class="o">.</span><span class="n">FR_SEC</span><span class="p">:</span> <span class="mf">252.0</span> <span class="o">*</span> <span class="mf">6.5</span> <span class="o">*</span> <span class="mi">60</span> <span class="o">*</span> <span class="mi">60</span><span class="p">,</span>
+    <span class="n">FreqGroup</span><span class="o">.</span><span class="n">FR_MS</span><span class="p">:</span> <span class="mf">252.0</span> <span class="o">*</span> <span class="mf">6.5</span> <span class="o">*</span> <span class="mi">60</span> <span class="o">*</span> <span class="mi">60</span><span class="p">,</span>
+    <span class="n">FreqGroup</span><span class="o">.</span><span class="n">FR_US</span><span class="p">:</span> <span class="mf">252.0</span> <span class="o">*</span> <span class="mf">6.5</span> <span class="o">*</span> <span class="mi">60</span> <span class="o">*</span> <span class="mi">60</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">,</span>
+    <span class="n">FreqGroup</span><span class="o">.</span><span class="n">FR_NS</span><span class="p">:</span> <span class="mf">252.0</span> <span class="o">*</span> <span class="mf">6.5</span> <span class="o">*</span> <span class="mi">60</span> <span class="o">*</span> <span class="mi">60</span> <span class="o">*</span> <span class="mi">1000</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">,</span>  <span class="c1"># someday...</span>
+<span class="p">}</span>
+
+
+<span class="k">def</span> <span class="nf">get_anlz_factor</span><span class="p">(</span><span class="n">freq</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Find the number of periods per year given a frequency.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    freq : str</span>
+<span class="sd">        Any frequency str or anchored offset str recognized by Pandas.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    float</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    &gt;&gt;&gt; get_anlz_factor(&#39;D&#39;)</span>
+<span class="sd">    252.0</span>
+<span class="sd">    &gt;&gt;&gt; get_anlz_factor(&#39;5D&#39;)  # 5-business-day periods per year</span>
+<span class="sd">    50.4</span>
+
+<span class="sd">    &gt;&gt;&gt; get_anlz_factor(&#39;Q&#39;)</span>
+<span class="sd">    4.0</span>
+<span class="sd">    &gt;&gt;&gt; get_anlz_factor(&#39;Q-DEC&#39;)</span>
+<span class="sd">    4.0</span>
+<span class="sd">    &gt;&gt;&gt; get_anlz_factor(&#39;BQS-APR&#39;)</span>
+<span class="sd">    4.0</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># &#39;Q-NOV&#39; would give us (2001, 1); we just want (2000, 1).</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">base</span><span class="p">,</span> <span class="n">mult</span> <span class="o">=</span> <span class="n">get_freq_code</span><span class="p">(</span><span class="n">freq</span><span class="p">)</span>
+    <span class="k">except</span> <span class="p">(</span><span class="ne">ValueError</span><span class="p">,</span> <span class="ne">AttributeError</span><span class="p">):</span>
+        <span class="c1"># The above will fail for a bunch of irregular frequencies, such</span>
+        <span class="c1"># as &#39;Q-NOV&#39; or &#39;BQS-APR&#39;</span>
+        <span class="n">freq</span> <span class="o">=</span> <span class="n">freq</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">freq</span><span class="o">.</span><span class="n">startswith</span><span class="p">((</span><span class="s2">&quot;A-&quot;</span><span class="p">,</span> <span class="s2">&quot;BA-&quot;</span><span class="p">,</span> <span class="s2">&quot;AS-&quot;</span><span class="p">,</span> <span class="s2">&quot;BAS-&quot;</span><span class="p">)):</span>
+            <span class="n">freq</span> <span class="o">=</span> <span class="s2">&quot;A&quot;</span>
+        <span class="k">elif</span> <span class="n">freq</span><span class="o">.</span><span class="n">startswith</span><span class="p">((</span><span class="s2">&quot;Q-&quot;</span><span class="p">,</span> <span class="s2">&quot;BQ-&quot;</span><span class="p">,</span> <span class="s2">&quot;QS-&quot;</span><span class="p">,</span> <span class="s2">&quot;BQS-&quot;</span><span class="p">)):</span>
+            <span class="n">freq</span> <span class="o">=</span> <span class="s2">&quot;Q&quot;</span>
+        <span class="k">elif</span> <span class="n">freq</span> <span class="ow">in</span> <span class="p">{</span><span class="s2">&quot;MS&quot;</span><span class="p">,</span> <span class="s2">&quot;BMS&quot;</span><span class="p">}:</span>
+            <span class="n">freq</span> <span class="o">=</span> <span class="s2">&quot;M&quot;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Invalid frequency: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">freq</span><span class="p">)</span>
+        <span class="n">base</span><span class="p">,</span> <span class="n">mult</span> <span class="o">=</span> <span class="n">get_freq_code</span><span class="p">(</span><span class="n">freq</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">PERIODS_PER_YEAR</span><span class="p">[(</span><span class="n">base</span> <span class="o">//</span> <span class="mi">1000</span><span class="p">)</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">]</span> <span class="o">/</span> <span class="n">mult</span>
+
+
+<span class="k">def</span> <span class="nf">isiterable</span><span class="p">(</span><span class="n">obj</span><span class="p">):</span>
+    <span class="c1"># Or: collections.Iterable</span>
+    <span class="c1"># Notice this will return True for strings even though they &quot;look&quot;</span>
+    <span class="c1"># different than other Python sequence objects.</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">obj</span><span class="o">.</span><span class="fm">__iter__</span><span class="p">()</span>
+        <span class="k">return</span> <span class="kc">True</span>
+    <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">False</span>
+
+
+<div class="viewcode-block" id="public_dir"><a class="viewcode-back" href="../06_utils.html#utils.public_dir">[docs]</a><span class="k">def</span> <span class="nf">public_dir</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">max_underscores</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">type_</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Like `dir()` with additional options for object inspection.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    obj: object</span>
+<span class="sd">        Any object that could be passed to `dir()`</span>
+<span class="sd">    max_underscores: int, default 0</span>
+<span class="sd">        If &gt; 0, names that begin with underscores repeated n or more</span>
+<span class="sd">        times will be excluded.</span>
+<span class="sd">    type_: None, sequence, str, or type</span>
+<span class="sd">        Filter to objects of these type(s) only.  if &#39;callable&#39; or</span>
+<span class="sd">        &#39;func&#39; is passed, gets mapped to collections.Callable.  if the</span>
+<span class="sd">        string-version of a type (i.e. &#39;str&#39;) is passed, it gets</span>
+<span class="sd">        eval&#39;d to its type.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; import os</span>
+<span class="sd">    &gt;&gt;&gt; # Get all public string constants from os.path</span>
+<span class="sd">        public_dir(os.path, max_underscores=1, type_=str)</span>
+<span class="sd">    [&#39;curdir&#39;, &#39;defpath&#39;, &#39;devnull&#39;, &#39;extsep&#39;, &#39;pardir&#39;, &#39;pathsep&#39;, &#39;sep&#39;]</span>
+<span class="sd">    &gt;&gt;&gt; # Get integer constants</span>
+<span class="sd">        public_dir(os.path, max_underscores=1, type_=&#39;int&#39;)</span>
+<span class="sd">    [&#39;supports_unicode_filenames&#39;]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="n">max_underscores</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">cond1</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">i</span><span class="p">:</span> <span class="ow">not</span> <span class="n">i</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;_&quot;</span> <span class="o">*</span> <span class="n">max_underscores</span><span class="p">)</span>  <span class="c1"># noqa</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">cond1</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">i</span><span class="p">:</span> <span class="kc">True</span>  <span class="c1"># noqa</span>
+    <span class="k">if</span> <span class="n">type_</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">type_</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">type_</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;callable&quot;</span><span class="p">,</span> <span class="s2">&quot;func&quot;</span><span class="p">,</span> <span class="s2">&quot;function&quot;</span><span class="p">]:</span>
+                <span class="n">type_</span> <span class="o">=</span> <span class="n">Callable</span>
+            <span class="k">elif</span> <span class="s2">&quot;callable&quot;</span> <span class="ow">in</span> <span class="n">type_</span> <span class="ow">or</span> <span class="s2">&quot;func&quot;</span> <span class="ow">in</span> <span class="n">type_</span><span class="p">:</span>
+                <span class="n">type_</span> <span class="o">=</span> <span class="p">[</span>
+                    <span class="n">i</span>
+                    <span class="k">if</span> <span class="n">i</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;callable&quot;</span><span class="p">,</span> <span class="s2">&quot;func&quot;</span><span class="p">,</span> <span class="s2">&quot;function&quot;</span><span class="p">]</span>
+                    <span class="k">else</span> <span class="n">Callable</span>
+                    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">type_</span>
+                <span class="p">]</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">type_</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="c1"># &#39;str&#39; --&gt; str (class `type`)</span>
+            <span class="n">type_</span> <span class="o">=</span> <span class="nb">eval</span><span class="p">(</span><span class="n">type_</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">type_</span><span class="p">,</span> <span class="nb">type</span><span class="p">):</span>
+            <span class="n">type_</span> <span class="o">=</span> <span class="p">[</span><span class="nb">eval</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="k">else</span> <span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">type_</span><span class="p">]</span>
+        <span class="c1"># else: we have isinstance(type_, type)</span>
+        <span class="n">cond2</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">i</span><span class="p">:</span> <span class="nb">isinstance</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">i</span><span class="p">),</span> <span class="n">type_</span><span class="p">)</span>  <span class="c1"># noqa</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">cond2</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">i</span><span class="p">:</span> <span class="kc">True</span>  <span class="c1"># noqa</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">dir</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span> <span class="k">if</span> <span class="n">cond1</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="ow">and</span> <span class="n">cond2</span><span class="p">(</span><span class="n">i</span><span class="p">)]</span></div>
+
+
+<div class="viewcode-block" id="random_tickers"><a class="viewcode-back" href="../06_utils.html#utils.random_tickers">[docs]</a><span class="k">def</span> <span class="nf">random_tickers</span><span class="p">(</span>
+    <span class="n">length</span><span class="p">,</span> <span class="n">n_tickers</span><span class="p">,</span> <span class="n">endswith</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">letters</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">slicer</span><span class="o">=</span><span class="n">itertools</span><span class="o">.</span><span class="n">islice</span>
+<span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Generate a length-n_tickers list of unique random ticker symbols.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    length : int</span>
+<span class="sd">        The length of each ticker string.</span>
+<span class="sd">    n_tickers : int</span>
+<span class="sd">        Number of tickers to generate.</span>
+<span class="sd">    endswith : str, default None</span>
+<span class="sd">        Specify the ending element(s) of each ticker (for example, &#39;X&#39;).</span>
+<span class="sd">    letters : sequence, default None</span>
+<span class="sd">        Sequence of possible letters to choose from.  If None, defaults to</span>
+<span class="sd">        `string.ascii_uppercase`.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    list of str</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; from pyfinance import utils</span>
+<span class="sd">    &gt;&gt;&gt; utils.random_tickers(length=5, n_tickers=4, endswith=&#39;X&#39;)</span>
+<span class="sd">    [&#39;UZTFX&#39;, &#39;ROYAX&#39;, &#39;ZBVIX&#39;, &#39;IUWYX&#39;]</span>
+
+<span class="sd">    &gt;&gt;&gt; utils.random_tickers(3, 8)</span>
+<span class="sd">    [&#39;SBW&#39;, &#39;GDF&#39;, &#39;FOG&#39;, &#39;PWO&#39;, &#39;QDH&#39;, &#39;MJJ&#39;, &#39;YZD&#39;, &#39;QST&#39;]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># The trick here is that we need uniqueness.  That defeats the</span>
+    <span class="c1">#     purpose of using NumPy because we need to generate 1x1.</span>
+    <span class="c1">#     (Although the alternative is just to generate a &quot;large</span>
+    <span class="c1">#     enough&quot; duplicated sequence and prune from it.)</span>
+
+    <span class="k">if</span> <span class="n">letters</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">letters</span> <span class="o">=</span> <span class="n">string</span><span class="o">.</span><span class="n">ascii_uppercase</span>
+    <span class="k">if</span> <span class="n">endswith</span><span class="p">:</span>
+        <span class="c1"># Only generate substrings up to `endswith`</span>
+        <span class="n">length</span> <span class="o">=</span> <span class="n">length</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">endswith</span><span class="p">)</span>
+    <span class="n">join</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span>
+
+    <span class="k">def</span> <span class="nf">yield_ticker</span><span class="p">(</span><span class="n">rand</span><span class="o">=</span><span class="n">random</span><span class="o">.</span><span class="n">choices</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">endswith</span><span class="p">:</span>
+            <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+                <span class="k">yield</span> <span class="n">join</span><span class="p">(</span><span class="n">rand</span><span class="p">(</span><span class="n">letters</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="n">length</span><span class="p">))</span> <span class="o">+</span> <span class="n">endswith</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+                <span class="k">yield</span> <span class="n">join</span><span class="p">(</span><span class="n">rand</span><span class="p">(</span><span class="n">letters</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="n">length</span><span class="p">))</span>
+
+    <span class="n">tickers</span> <span class="o">=</span> <span class="n">itertools</span><span class="o">.</span><span class="n">islice</span><span class="p">(</span><span class="n">unique_everseen</span><span class="p">(</span><span class="n">yield_ticker</span><span class="p">()),</span> <span class="n">n_tickers</span><span class="p">)</span>
+    <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">tickers</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="random_weights"><a class="viewcode-back" href="../06_utils.html#utils.random_weights">[docs]</a><span class="k">def</span> <span class="nf">random_weights</span><span class="p">(</span><span class="n">size</span><span class="p">,</span> <span class="n">sumto</span><span class="o">=</span><span class="mf">1.0</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Generate an array of random weights that sum to `sumto`.</span>
+
+<span class="sd">    The result may be of arbitrary dimensions.  `size` is passed to</span>
+<span class="sd">    the `size` parameter of `np.random.random`, which acts as a shape</span>
+<span class="sd">    parameter in this case.</span>
+
+<span class="sd">    Note that `sumto` is subject to typical Python floating point limitations.</span>
+<span class="sd">    This function does not implement a softmax check.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    size: int or tuple of ints, optional</span>
+<span class="sd">        Output shape.  If the given shape is, e.g., ``(m, n, k)``, then</span>
+<span class="sd">        ``m * n * k`` samples are drawn.</span>
+<span class="sd">    sumto: float, default 1.</span>
+<span class="sd">        Each vector of weights should sum to this in decimal terms.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    np.ndarray</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">w</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">(</span><span class="n">size</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">w</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">sumto</span><span class="p">,</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)):</span>
+            <span class="n">sumto</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">sumto</span><span class="p">)[:,</span> <span class="kc">None</span><span class="p">]</span>
+        <span class="n">w</span> <span class="o">=</span> <span class="n">sumto</span> <span class="o">*</span> <span class="n">w</span> <span class="o">/</span> <span class="n">w</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)[:,</span> <span class="kc">None</span><span class="p">]</span>
+    <span class="k">elif</span> <span class="n">w</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">w</span> <span class="o">=</span> <span class="n">sumto</span> <span class="o">*</span> <span class="n">w</span> <span class="o">/</span> <span class="n">w</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;`w.ndim` must be 1 or 2, not </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">w</span><span class="o">.</span><span class="n">ndim</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">w</span></div>
+
+
+<div class="viewcode-block" id="rolling_windows"><a class="viewcode-back" href="../06_utils.html#utils.rolling_windows">[docs]</a><span class="k">def</span> <span class="nf">rolling_windows</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">window</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Creates rolling-window &#39;blocks&#39; of length `window` from `a`.</span>
+
+<span class="sd">    Note that the orientation of rows/columns follows that of pandas.</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    import numpy as np</span>
+<span class="sd">    onedim = np.arange(20)</span>
+<span class="sd">    twodim = onedim.reshape((5,4))</span>
+
+<span class="sd">    print(twodim)</span>
+<span class="sd">    [[ 0  1  2  3]</span>
+<span class="sd">     [ 4  5  6  7]</span>
+<span class="sd">     [ 8  9 10 11]</span>
+<span class="sd">     [12 13 14 15]</span>
+<span class="sd">     [16 17 18 19]]</span>
+
+<span class="sd">    print(rwindows(onedim, 3)[:5])</span>
+<span class="sd">    [[0 1 2]</span>
+<span class="sd">     [1 2 3]</span>
+<span class="sd">     [2 3 4]</span>
+<span class="sd">     [3 4 5]</span>
+<span class="sd">     [4 5 6]]</span>
+
+<span class="sd">    print(rwindows(twodim, 3)[:5])</span>
+<span class="sd">    [[[ 0  1  2  3]</span>
+<span class="sd">      [ 4  5  6  7]</span>
+<span class="sd">      [ 8  9 10 11]]</span>
+
+<span class="sd">     [[ 4  5  6  7]</span>
+<span class="sd">      [ 8  9 10 11]</span>
+<span class="sd">      [12 13 14 15]]</span>
+
+<span class="sd">     [[ 8  9 10 11]</span>
+<span class="sd">      [12 13 14 15]</span>
+<span class="sd">      [16 17 18 19]]]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="n">window</span> <span class="o">&gt;</span> <span class="n">a</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="s2">&quot;Specified `window` length of </span><span class="si">{0}</span><span class="s2"> exceeds length of&quot;</span>
+            <span class="s2">&quot; `a`, </span><span class="si">{1}</span><span class="s2">.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">window</span><span class="p">,</span> <span class="n">a</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="p">)</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="p">(</span><span class="n">Series</span><span class="p">,</span> <span class="n">DataFrame</span><span class="p">)):</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="n">values</span>
+    <span class="k">if</span> <span class="n">a</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">shape</span> <span class="o">=</span> <span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">window</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">window</span><span class="p">)</span> <span class="o">+</span> <span class="n">a</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+    <span class="n">strides</span> <span class="o">=</span> <span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">strides</span><span class="p">[</span><span class="mi">0</span><span class="p">],)</span> <span class="o">+</span> <span class="n">a</span><span class="o">.</span><span class="n">strides</span>
+    <span class="n">windows</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">lib</span><span class="o">.</span><span class="n">stride_tricks</span><span class="o">.</span><span class="n">as_strided</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="n">shape</span><span class="p">,</span> <span class="n">strides</span><span class="o">=</span><span class="n">strides</span><span class="p">)</span>
+    <span class="p">)</span>
+    <span class="c1"># In cases where window == len(a), we actually want to &quot;unsqueeze&quot; to 2d.</span>
+    <span class="c1">#     I.e., we still want a &quot;windowed&quot; structure with 1 window.</span>
+    <span class="k">if</span> <span class="n">windows</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">windows</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">atleast_2d</span><span class="p">(</span><span class="n">windows</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">windows</span></div>
+
+
+<div class="viewcode-block" id="unique_everseen"><a class="viewcode-back" href="../06_utils.html#utils.unique_everseen">[docs]</a><span class="k">def</span> <span class="nf">unique_everseen</span><span class="p">(</span><span class="n">iterable</span><span class="p">,</span> <span class="n">filterfalse_</span><span class="o">=</span><span class="n">itertools</span><span class="o">.</span><span class="n">filterfalse</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Unique elements, preserving order.&quot;&quot;&quot;</span>
+    <span class="c1"># Itertools recipes:</span>
+    <span class="c1"># https://docs.python.org/3/library/itertools.html#itertools-recipes</span>
+    <span class="n">seen</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+    <span class="n">seen_add</span> <span class="o">=</span> <span class="n">seen</span><span class="o">.</span><span class="n">add</span>
+    <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">filterfalse_</span><span class="p">(</span><span class="n">seen</span><span class="o">.</span><span class="fm">__contains__</span><span class="p">,</span> <span class="n">iterable</span><span class="p">):</span>
+        <span class="n">seen_add</span><span class="p">(</span><span class="n">element</span><span class="p">)</span>
+        <span class="k">yield</span> <span class="n">element</span></div>
+
+
+<div class="viewcode-block" id="uniqify"><a class="viewcode-back" href="../06_utils.html#utils.uniqify">[docs]</a><span class="k">def</span> <span class="nf">uniqify</span><span class="p">(</span><span class="n">seq</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;`Uniqify` a sequence, preserving order.</span>
+
+<span class="sd">    A plain-vanilla version of itertools&#39; `unique_everseen`.</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    &gt;&gt;&gt; s = list(&#39;zyxabccabxyz&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; uniqify(s)</span>
+<span class="sd">    [&#39;z&#39;, &#39;y&#39;, &#39;x&#39;, &#39;a&#39;, &#39;b&#39;, &#39;c&#39;</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    list</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="n">PY37</span><span class="p">:</span>
+        <span class="c1"># Credit: Raymond Hettinger</span>
+        <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="nb">dict</span><span class="o">.</span><span class="n">fromkeys</span><span class="p">(</span><span class="n">seq</span><span class="p">))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># Credit: Dave Kirby</span>
+        <span class="c1"># https://www.peterbe.com/plog/uniqifiers-benchmark</span>
+        <span class="n">seen</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="c1"># We don&#39;t care about truth value of `not seen.add(x)`;</span>
+        <span class="c1"># just there to add to `seen` inplace.</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">seq</span> <span class="k">if</span> <span class="n">x</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">seen</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">seen</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">x</span><span class="p">)]</span></div>
+
+
+<div class="viewcode-block" id="view"><a class="viewcode-back" href="../06_utils.html#utils.view">[docs]</a><span class="k">def</span> <span class="nf">view</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">row</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">col</span><span class="o">=</span><span class="mi">5</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Abbreviated view like `.head()`, but limit both rows &amp; columns.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:</span><span class="n">row</span><span class="p">,</span> <span class="p">:</span><span class="n">col</span><span class="p">]</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, chenlin.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

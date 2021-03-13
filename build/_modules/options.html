@@ -1,0 +1,1111 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>options &mdash; finance 1.3 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> finance
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../01_returns.html">returns模块</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../02_general.html">general模块</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../03_datasets.html">datasets模块</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../04_ols.html">ols模块</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../05_options.html">options模块</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../06_utils.html">utils模块</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">finance</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="index.html">Module code</a> &raquo;</li>
+        
+      <li>options</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for options</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Vectorized options calculations.</span>
+
+<span class="sd">Descriptions</span>
+<span class="sd">------------</span>
+<span class="sd">BSM</span>
+<span class="sd">    Black-Scholes Merton European option valuation, Greeks, and implied vol.</span>
+
+<span class="sd">Option strategies inheritance hierarchy:</span>
+<span class="sd">- Option</span>
+<span class="sd">      - Call</span>
+<span class="sd">      - Put</span>
+<span class="sd">- OpStrat</span>
+<span class="sd">      - Straddle</span>
+<span class="sd">            - Strip</span>
+<span class="sd">            - Strap</span>
+<span class="sd">      - ShortStraddle</span>
+<span class="sd">      - Strangle</span>
+<span class="sd">      - ShortStrangle</span>
+<span class="sd">      - BullSpread</span>
+<span class="sd">      - BearSpread</span>
+<span class="sd">            - LongPutLadder</span>
+<span class="sd">            - ShortPutLadder</span>
+<span class="sd">      - _Butterfly</span>
+<span class="sd">            - LongButterfly</span>
+<span class="sd">            - ShortButterfly</span>
+<span class="sd">            - LongIronButterfly</span>
+<span class="sd">            - ShortIronButterfly</span>
+<span class="sd">      - _Condor</span>
+<span class="sd">            - LongCondor</span>
+<span class="sd">            - ShortCondor</span>
+<span class="sd">            - LongIronCondor</span>
+<span class="sd">            - ShortIronCondor</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="n">__author__</span> <span class="o">=</span> <span class="s2">&quot;Brad Solomon &lt;brad.solomon.1124@gmail.com&gt;&quot;</span>
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">&quot;BSM&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Call&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Put&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;OpStrat&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Straddle&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;ShortStraddle&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Strangle&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;ShortStrangle&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Strip&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Strap&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;BullSpread&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;BearSpread&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;LongPutLadder&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;ShortPutLadder&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;LongButterfly&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;ShortButterfly&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;LongIronButterfly&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;ShortIronButterfly&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;LongCondor&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;ShortCondor&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;LongIronCondor&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;ShortIronCondor&quot;</span><span class="p">,</span>
+<span class="p">]</span>
+
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">OrderedDict</span>
+<span class="kn">import</span> <span class="nn">itertools</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">pandas</span> <span class="kn">import</span> <span class="n">DataFrame</span>
+<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">norm</span>
+
+<span class="c1"># TODO: __repr__/__str__ for strategies</span>
+
+
+<div class="viewcode-block" id="BSM"><a class="viewcode-back" href="../05_options.html#options.BSM">[docs]</a><span class="k">class</span> <span class="nc">BSM</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Compute European option value, Greeks, and implied vol, using BSM.</span>
+
+<span class="sd">    This class supports vectorized calculations from array inputs.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    S0 : int, float, or array-like</span>
+<span class="sd">        Initial asset value.</span>
+<span class="sd">    K : int, float, or array-like</span>
+<span class="sd">        Strike.</span>
+<span class="sd">    T : int, float, or array-like</span>
+<span class="sd">        Time to expiration as a fraction of one year.</span>
+<span class="sd">    r : int, float, or array-like</span>
+<span class="sd">        Continuously compounded risk free rate, annualized.</span>
+<span class="sd">    sigma : int, float, or array-like</span>
+<span class="sd">        Continuously compounded standard deviation of returns, annualized.</span>
+<span class="sd">    kind : {&#39;call&#39;, &#39;put&#39;}</span>
+<span class="sd">        Type of option.</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    &gt;&gt;&gt; from pyfinance.options import BSM</span>
+<span class="sd">    &gt;&gt;&gt; op = BSM(S0=100, K=100, T=1, r=.04, sigma=.2)</span>
+
+<span class="sd">    &gt;&gt;&gt; op.summary()</span>
+<span class="sd">    OrderedDict([(&#39;Value&#39;, 9.925053717274437),</span>
+<span class="sd">                 (&#39;d1&#39;, 0.3),</span>
+<span class="sd">                 (&#39;d2&#39;, 0.09999999999999998),</span>
+<span class="sd">                 (&#39;Delta&#39;, 0.6179114221889526),</span>
+<span class="sd">                 (&#39;Gamma&#39;, 0.019069390773026208),</span>
+<span class="sd">                 (&#39;Vega&#39;, 38.138781546052414),</span>
+<span class="sd">                 (&#39;Theta&#39;, -5.888521694670074),</span>
+<span class="sd">                 (&#39;Rho&#39;, 51.86608850162082),</span>
+<span class="sd">                 (&#39;Omega&#39;, 6.225774084360724)])</span>
+
+<span class="sd">    # What is the implied annualized volatility at P=10?</span>
+<span class="sd">    &gt;&gt;&gt; op.implied_vol(value=10)</span>
+<span class="sd">    0.20196480875586834</span>
+
+<span class="sd">    # Vectorized - pass an array of strikes.</span>
+<span class="sd">    &gt;&gt;&gt; import numpy as np</span>
+<span class="sd">    &gt;&gt;&gt; ops = BSM(S0=100, K=np.arange(100, 110), T=1, r=.04, sigma=.2)</span>
+
+<span class="sd">    &gt;&gt;&gt; ops.value()</span>
+<span class="sd">    array([9.9251, 9.4159, 8.9257, 8.4543, 8.0015, 7.567 , 7.1506, 6.7519,</span>
+<span class="sd">           6.3706, 6.0064])</span>
+
+<span class="sd">    # Multiple array inputs are evaluated elementwise/zipped.</span>
+<span class="sd">    &gt;&gt;&gt; ops2 = BSM(S0=np.arange(100, 110), K=np.arange(100, 110),</span>
+<span class="sd">    ...            T=1, r=.04, sigma=.2)</span>
+
+<span class="sd">    &gt;&gt;&gt; ops2</span>
+<span class="sd">    BSM(kind=call,</span>
+<span class="sd">        S0=[100 101 102 103 104 105 106 107 108 109],</span>
+<span class="sd">        K=[100 101 102 103 104 105 106 107 108 109],</span>
+<span class="sd">        T=1,</span>
+<span class="sd">        r=0.04,</span>
+<span class="sd">        sigma=0.2)</span>
+
+<span class="sd">    &gt;&gt;&gt; ops2.value()</span>
+<span class="sd">    array([ 9.9251, 10.0243, 10.1236, 10.2228, 10.3221, 10.4213, 10.5206,</span>
+<span class="sd">           10.6198, 10.7191, 10.8183])</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">S0</span><span class="p">,</span> <span class="n">K</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">sigma</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s2">&quot;call&quot;</span><span class="p">):</span>
+        <span class="n">kind</span> <span class="o">=</span> <span class="n">kind</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">kind</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;call&quot;</span><span class="p">,</span> <span class="s2">&quot;put&quot;</span><span class="p">]:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;`kind` must be in (&#39;call&#39;, &#39;put&#39;)&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">kind</span> <span class="o">=</span> <span class="n">kind</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">S0</span> <span class="o">=</span> <span class="n">S0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">K</span> <span class="o">=</span> <span class="n">K</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">T</span> <span class="o">=</span> <span class="n">T</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">r</span> <span class="o">=</span> <span class="n">r</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sigma</span> <span class="o">=</span> <span class="n">sigma</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">d1</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">S0</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">K</span><span class="p">)</span>
+            <span class="o">+</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">r</span> <span class="o">+</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">sigma</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">T</span>
+        <span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sigma</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">T</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">d2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">d1</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">sigma</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
+
+        <span class="c1"># Several greeks use negated terms dependent on option type.</span>
+        <span class="c1"># For example, delta of call is N(d1) and delta put is N(d1) - 1</span>
+        <span class="c1">#     and theta may use N(d2) or N(-d2).  In these lists:</span>
+        <span class="c1">#     - element 0 (0, -1) is used in delta and omega</span>
+        <span class="c1">#     - element 1 (1, -1) is used in rho and theta</span>
+        <span class="c1">#     - negated 1 (-1, 1) is used in theta</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_sign</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;call&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="s2">&quot;put&quot;</span><span class="p">:</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_sign</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sign</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">kind</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># Careful with format strings here because we may have</span>
+        <span class="c1">#     scalars or arrays.</span>
+        <span class="k">return</span> <span class="s2">&quot;BSM(kind=</span><span class="si">{}</span><span class="s2">,</span><span class="se">\n\t</span><span class="s2">S0=</span><span class="si">{}</span><span class="s2">,</span><span class="se">\n\t</span><span class="s2">K=</span><span class="si">{}</span><span class="s2">,</span><span class="se">\n\t</span><span class="s2">T=</span><span class="si">{}</span><span class="s2">,</span><span class="se">\n\t</span><span class="s2">r=</span><span class="si">{}</span><span class="s2">,</span><span class="se">\n\t</span><span class="s2">sigma=</span><span class="si">{}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>  <span class="c1"># noqa</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">kind</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">S0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">K</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">r</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">sigma</span>
+        <span class="p">)</span>
+
+<div class="viewcode-block" id="BSM.value"><a class="viewcode-back" href="../05_options.html#options.BSM.value">[docs]</a>    <span class="k">def</span> <span class="nf">value</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Compute option value according to BSM model.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sign</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">S0</span> <span class="o">*</span> <span class="n">norm</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_sign</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">d1</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span>
+        <span class="p">)</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sign</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">K</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">r</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">T</span><span class="p">)</span> <span class="o">*</span> <span class="n">norm</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_sign</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">d2</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span>
+        <span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">delta</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">norm</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">d1</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sign</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">gamma</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">norm</span><span class="o">.</span><span class="n">pdf</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">d1</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">S0</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">sigma</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">vega</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">S0</span> <span class="o">*</span> <span class="n">norm</span><span class="o">.</span><span class="n">pdf</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">d1</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">theta</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="o">-</span><span class="mf">1.0</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">S0</span> <span class="o">*</span> <span class="n">norm</span><span class="o">.</span><span class="n">pdf</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">d1</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">sigma</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span>
+            <span class="mf">2.0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
+        <span class="p">)</span> <span class="o">-</span> <span class="mf">1.0</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sign</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">r</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">K</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span>
+            <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">r</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">T</span>
+        <span class="p">)</span> <span class="o">*</span> <span class="n">norm</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_sign</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">d2</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">rho</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_sign</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+            <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">K</span>
+            <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">T</span>
+            <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">r</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
+            <span class="o">*</span> <span class="n">norm</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_sign</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">d2</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">omega</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="p">(</span><span class="n">norm</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">d1</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sign</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">S0</span>
+            <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">()</span>
+        <span class="p">)</span>
+
+<div class="viewcode-block" id="BSM.implied_vol"><a class="viewcode-back" href="../05_options.html#options.BSM.implied_vol">[docs]</a>    <span class="k">def</span> <span class="nf">implied_vol</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">precision</span><span class="o">=</span><span class="mf">1.0e-5</span><span class="p">,</span> <span class="n">iters</span><span class="o">=</span><span class="mi">100</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get implied vol at the specified price using an iterative approach.</span>
+
+<span class="sd">        There is no closed-form inverse of BSM-value as a function of sigma,</span>
+<span class="sd">        so start at an anchoring volatility level from Brenner &amp; Subrahmanyam</span>
+<span class="sd">        (1988) and work iteratively from there.</span>
+
+<span class="sd">        Resources</span>
+<span class="sd">        ---------</span>
+<span class="sd">        Brenner &amp; Subrahmanyan, A Simple Formula to Compute the Implied</span>
+<span class="sd">            Standard Deviation, 1988.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">vol</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mf">2.0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">T</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">value</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">S0</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">itertools</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">iters</span><span class="p">):</span>  <span class="c1"># Faster than range</span>
+            <span class="n">opt</span> <span class="o">=</span> <span class="n">BSM</span><span class="p">(</span>
+                <span class="n">S0</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">S0</span><span class="p">,</span>
+                <span class="n">K</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">K</span><span class="p">,</span>
+                <span class="n">T</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">T</span><span class="p">,</span>
+                <span class="n">r</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">r</span><span class="p">,</span>
+                <span class="n">sigma</span><span class="o">=</span><span class="n">vol</span><span class="p">,</span>
+                <span class="n">kind</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">kind</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">diff</span> <span class="o">=</span> <span class="n">value</span> <span class="o">-</span> <span class="n">opt</span><span class="o">.</span><span class="n">value</span><span class="p">()</span>
+            <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">diff</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">precision</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">vol</span>
+            <span class="n">vol</span> <span class="o">=</span> <span class="n">vol</span> <span class="o">+</span> <span class="n">diff</span> <span class="o">/</span> <span class="n">opt</span><span class="o">.</span><span class="n">vega</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">vol</span></div>
+
+    <span class="k">def</span> <span class="nf">summary</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">(</span>
+            <span class="p">[</span>
+                <span class="p">(</span><span class="s2">&quot;Value&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">()),</span>
+                <span class="p">(</span><span class="s2">&quot;d1&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">d1</span><span class="p">),</span>
+                <span class="p">(</span><span class="s2">&quot;d2&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">d2</span><span class="p">),</span>
+                <span class="p">(</span><span class="s2">&quot;Delta&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">delta</span><span class="p">()),</span>
+                <span class="p">(</span><span class="s2">&quot;Gamma&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">gamma</span><span class="p">()),</span>
+                <span class="p">(</span><span class="s2">&quot;Vega&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">vega</span><span class="p">()),</span>
+                <span class="p">(</span><span class="s2">&quot;Theta&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">theta</span><span class="p">()),</span>
+                <span class="p">(</span><span class="s2">&quot;Rho&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">rho</span><span class="p">()),</span>
+                <span class="p">(</span><span class="s2">&quot;Omega&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">omega</span><span class="p">()),</span>
+            <span class="p">]</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">res</span></div>
+
+
+<span class="c1"># Put &amp; call: building blocks for more complex strategies</span>
+<span class="c1"># ---------------------------------------------------------------------</span>
+
+<span class="n">SIGN</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;long&quot;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
+    <span class="s2">&quot;Long&quot;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
+    <span class="s2">&quot;l&quot;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
+    <span class="s2">&quot;L&quot;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
+    <span class="s2">&quot;short&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mf">1.0</span><span class="p">,</span>
+    <span class="s2">&quot;Short&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mf">1.0</span><span class="p">,</span>
+    <span class="s2">&quot;s&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mf">1.0</span><span class="p">,</span>
+    <span class="s2">&quot;S&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mf">1.0</span><span class="p">,</span>
+<span class="p">}</span>
+
+
+<span class="k">class</span> <span class="nc">Option</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">K</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">price</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">St</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s2">&quot;call&quot;</span><span class="p">,</span> <span class="n">pos</span><span class="o">=</span><span class="s2">&quot;long&quot;</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">K</span> <span class="o">=</span> <span class="n">K</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">price</span> <span class="o">=</span> <span class="n">price</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">St</span> <span class="o">=</span> <span class="n">St</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">kind</span> <span class="o">=</span> <span class="n">kind</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pos</span> <span class="o">=</span> <span class="n">pos</span>
+
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">St</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s2">&quot;</span><span class="si">{0}</span><span class="s2">(K=</span><span class="si">{1:0.2f}</span><span class="s2">, price=</span><span class="si">{2:0.2f}</span><span class="s2">, St=None)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">kind</span><span class="o">.</span><span class="n">title</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">K</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">price</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s2">&quot;</span><span class="si">{0}</span><span class="s2">(K=</span><span class="si">{1:0.2f}</span><span class="s2">, price=</span><span class="si">{2:0.2f}</span><span class="s2">, St=</span><span class="si">{2:0.2f}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">kind</span><span class="o">.</span><span class="n">title</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">K</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">price</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">St</span>
+            <span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">Call</span><span class="p">(</span><span class="n">Option</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">K</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">price</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">St</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">pos</span><span class="o">=</span><span class="s2">&quot;long&quot;</span><span class="p">):</span>
+        <span class="n">Option</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">K</span><span class="o">=</span><span class="n">K</span><span class="p">,</span> <span class="n">price</span><span class="o">=</span><span class="n">price</span><span class="p">,</span> <span class="n">St</span><span class="o">=</span><span class="n">St</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s2">&quot;call&quot;</span><span class="p">,</span> <span class="n">pos</span><span class="o">=</span><span class="n">pos</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">payoff</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">St</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="n">St</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">St</span> <span class="k">if</span> <span class="n">St</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">St</span>
+        <span class="k">return</span> <span class="n">SIGN</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">pos</span><span class="p">]</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">St</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">K</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">profit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">St</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="n">St</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">St</span> <span class="k">if</span> <span class="n">St</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">St</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">payoff</span><span class="p">(</span><span class="n">St</span><span class="o">=</span><span class="n">St</span><span class="p">)</span> <span class="o">-</span> <span class="n">SIGN</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">pos</span><span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">price</span>
+
+
+<span class="k">class</span> <span class="nc">Put</span><span class="p">(</span><span class="n">Option</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">K</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">price</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">St</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">pos</span><span class="o">=</span><span class="s2">&quot;long&quot;</span><span class="p">):</span>
+        <span class="n">Option</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">K</span><span class="o">=</span><span class="n">K</span><span class="p">,</span> <span class="n">price</span><span class="o">=</span><span class="n">price</span><span class="p">,</span> <span class="n">St</span><span class="o">=</span><span class="n">St</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s2">&quot;put&quot;</span><span class="p">,</span> <span class="n">pos</span><span class="o">=</span><span class="n">pos</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">payoff</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">St</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="n">St</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">St</span> <span class="k">if</span> <span class="n">St</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">St</span>
+        <span class="k">return</span> <span class="n">SIGN</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">pos</span><span class="p">]</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">K</span> <span class="o">-</span> <span class="n">St</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">profit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">St</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="n">St</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">St</span> <span class="k">if</span> <span class="n">St</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">St</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">payoff</span><span class="p">(</span><span class="n">St</span><span class="o">=</span><span class="n">St</span><span class="p">)</span> <span class="o">-</span> <span class="n">SIGN</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">pos</span><span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">price</span>
+
+
+<span class="c1"># Options strategies: combinations of multiple options.  `OpStrat` is a</span>
+<span class="c1">#     generic options class from which other (specifically-named) options</span>
+<span class="c1">#     strategies inherit</span>
+<span class="c1"># ---------------------------------------------------------------------</span>
+
+
+<div class="viewcode-block" id="OpStrat"><a class="viewcode-back" href="../05_options.html#options.OpStrat">[docs]</a><span class="k">class</span> <span class="nc">OpStrat</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Generic option strategy construction.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">St</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">St</span> <span class="o">=</span> <span class="n">St</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">options</span> <span class="o">=</span> <span class="p">[]</span>
+
+<div class="viewcode-block" id="OpStrat.add_option"><a class="viewcode-back" href="../05_options.html#options.OpStrat.add_option">[docs]</a>    <span class="k">def</span> <span class="nf">add_option</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">K</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">price</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">St</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s2">&quot;call&quot;</span><span class="p">,</span> <span class="n">pos</span><span class="o">=</span><span class="s2">&quot;long&quot;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Add an option to the object&#39;s `options` container.&quot;&quot;&quot;</span>
+        <span class="n">kinds</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;call&quot;</span><span class="p">:</span> <span class="n">Call</span><span class="p">,</span>
+            <span class="s2">&quot;Call&quot;</span><span class="p">:</span> <span class="n">Call</span><span class="p">,</span>
+            <span class="s2">&quot;c&quot;</span><span class="p">:</span> <span class="n">Call</span><span class="p">,</span>
+            <span class="s2">&quot;C&quot;</span><span class="p">:</span> <span class="n">Call</span><span class="p">,</span>
+            <span class="s2">&quot;put&quot;</span><span class="p">:</span> <span class="n">Put</span><span class="p">,</span>
+            <span class="s2">&quot;Put&quot;</span><span class="p">:</span> <span class="n">Put</span><span class="p">,</span>
+            <span class="s2">&quot;p&quot;</span><span class="p">:</span> <span class="n">Put</span><span class="p">,</span>
+            <span class="s2">&quot;P&quot;</span><span class="p">:</span> <span class="n">Put</span><span class="p">,</span>
+        <span class="p">}</span>
+        <span class="n">St</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">St</span> <span class="k">if</span> <span class="n">St</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">St</span>
+        <span class="n">option</span> <span class="o">=</span> <span class="n">kinds</span><span class="p">[</span><span class="n">kind</span><span class="p">](</span><span class="n">St</span><span class="o">=</span><span class="n">St</span><span class="p">,</span> <span class="n">K</span><span class="o">=</span><span class="n">K</span><span class="p">,</span> <span class="n">price</span><span class="o">=</span><span class="n">price</span><span class="p">,</span> <span class="n">pos</span><span class="o">=</span><span class="n">pos</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">option</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="OpStrat.summary"><a class="viewcode-back" href="../05_options.html#options.OpStrat.summary">[docs]</a>    <span class="k">def</span> <span class="nf">summary</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">St</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Tabular summary of strategy composition, broken out by option.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        pd.DataFrame</span>
+<span class="sd">            Columns: kind, position, strike, price, St, payoff, profit.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">St</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">St</span> <span class="k">if</span> <span class="n">St</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">St</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="p">:</span>
+            <span class="n">payoffs</span> <span class="o">=</span> <span class="p">[</span><span class="n">op</span><span class="o">.</span><span class="n">payoff</span><span class="p">(</span><span class="n">St</span><span class="o">=</span><span class="n">St</span><span class="p">)</span> <span class="k">for</span> <span class="n">op</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="p">]</span>
+            <span class="n">profits</span> <span class="o">=</span> <span class="p">[</span><span class="n">op</span><span class="o">.</span><span class="n">profit</span><span class="p">(</span><span class="n">St</span><span class="o">=</span><span class="n">St</span><span class="p">)</span> <span class="k">for</span> <span class="n">op</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="p">]</span>
+            <span class="n">strikes</span> <span class="o">=</span> <span class="p">[</span><span class="n">op</span><span class="o">.</span><span class="n">K</span> <span class="k">for</span> <span class="n">op</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="p">]</span>
+            <span class="n">prices</span> <span class="o">=</span> <span class="p">[</span><span class="n">op</span><span class="o">.</span><span class="n">price</span> <span class="k">for</span> <span class="n">op</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="p">]</span>
+            <span class="n">exprs</span> <span class="o">=</span> <span class="p">[</span><span class="n">St</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="p">)</span>
+            <span class="n">kinds</span> <span class="o">=</span> <span class="p">[</span><span class="n">op</span><span class="o">.</span><span class="n">kind</span> <span class="k">for</span> <span class="n">op</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="p">]</span>
+            <span class="n">poss</span> <span class="o">=</span> <span class="p">[</span><span class="n">op</span><span class="o">.</span><span class="n">pos</span> <span class="k">for</span> <span class="n">op</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="p">]</span>
+            <span class="n">res</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">(</span>
+                <span class="p">[</span>
+                    <span class="p">(</span><span class="s2">&quot;kind&quot;</span><span class="p">,</span> <span class="n">kinds</span><span class="p">),</span>
+                    <span class="p">(</span><span class="s2">&quot;position&quot;</span><span class="p">,</span> <span class="n">poss</span><span class="p">),</span>
+                    <span class="p">(</span><span class="s2">&quot;strike&quot;</span><span class="p">,</span> <span class="n">strikes</span><span class="p">),</span>
+                    <span class="p">(</span><span class="s2">&quot;price&quot;</span><span class="p">,</span> <span class="n">prices</span><span class="p">),</span>
+                    <span class="p">(</span><span class="s2">&quot;St&quot;</span><span class="p">,</span> <span class="n">exprs</span><span class="p">),</span>
+                    <span class="p">(</span><span class="s2">&quot;payoff&quot;</span><span class="p">,</span> <span class="n">payoffs</span><span class="p">),</span>
+                    <span class="p">(</span><span class="s2">&quot;profit&quot;</span><span class="p">,</span> <span class="n">profits</span><span class="p">),</span>
+                <span class="p">]</span>
+            <span class="p">)</span>
+
+            <span class="k">return</span> <span class="n">DataFrame</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span></div>
+
+    <span class="k">def</span> <span class="nf">payoff</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">St</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">([</span><span class="n">op</span><span class="o">.</span><span class="n">payoff</span><span class="p">(</span><span class="n">St</span><span class="o">=</span><span class="n">St</span><span class="p">)</span> <span class="k">for</span> <span class="n">op</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">profit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">St</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">([</span><span class="n">op</span><span class="o">.</span><span class="n">profit</span><span class="p">(</span><span class="n">St</span><span class="o">=</span><span class="n">St</span><span class="p">)</span> <span class="k">for</span> <span class="n">op</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+<div class="viewcode-block" id="OpStrat.grid"><a class="viewcode-back" href="../05_options.html#options.OpStrat.grid">[docs]</a>    <span class="k">def</span> <span class="nf">grid</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">stop</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">St</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Grid-like representation of payoff &amp; profit structure.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        tuple</span>
+<span class="sd">            Tuple of `St` (price at expiry), `payoffs`, `profits`.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">lb</span> <span class="o">=</span> <span class="mf">0.75</span>
+        <span class="n">rb</span> <span class="o">=</span> <span class="mf">1.25</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">any</span><span class="p">((</span><span class="n">start</span><span class="p">,</span> <span class="n">stop</span><span class="p">,</span> <span class="n">St</span><span class="p">))</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">St</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">St</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">([</span><span class="n">op</span><span class="o">.</span><span class="n">K</span> <span class="k">for</span> <span class="n">op</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+            <span class="n">start</span> <span class="o">=</span> <span class="n">St</span> <span class="o">*</span> <span class="n">lb</span>
+            <span class="n">stop</span> <span class="o">=</span> <span class="n">St</span> <span class="o">*</span> <span class="n">rb</span>
+        <span class="k">elif</span> <span class="ow">not</span> <span class="nb">any</span><span class="p">((</span><span class="n">start</span><span class="p">,</span> <span class="n">stop</span><span class="p">)):</span>
+            <span class="n">St</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">St</span> <span class="k">if</span> <span class="n">St</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">St</span>
+            <span class="n">start</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">St</span><span class="p">)</span> <span class="o">*</span> <span class="n">lb</span>
+            <span class="n">stop</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">St</span><span class="p">)</span> <span class="o">*</span> <span class="n">rb</span>
+        <span class="n">St</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">stop</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="n">payoffs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">payoff</span><span class="p">(</span><span class="n">St</span><span class="o">=</span><span class="n">St</span><span class="p">)</span>
+        <span class="n">profits</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">profit</span><span class="p">(</span><span class="n">St</span><span class="o">=</span><span class="n">St</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">St</span><span class="p">,</span> <span class="n">payoffs</span><span class="p">,</span> <span class="n">profits</span></div></div>
+
+
+<div class="viewcode-block" id="Straddle"><a class="viewcode-back" href="../05_options.html#options.Straddle">[docs]</a><span class="k">class</span> <span class="nc">Straddle</span><span class="p">(</span><span class="n">OpStrat</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Long-volatility exposure.  Long a put and call, both at K.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">St</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">K</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">callprice</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">putprice</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">St</span><span class="o">=</span><span class="n">St</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">K</span> <span class="o">=</span> <span class="n">K</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_option</span><span class="p">(</span><span class="n">K</span><span class="o">=</span><span class="n">K</span><span class="p">,</span> <span class="n">price</span><span class="o">=</span><span class="n">callprice</span><span class="p">,</span> <span class="n">St</span><span class="o">=</span><span class="n">St</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s2">&quot;call&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_option</span><span class="p">(</span><span class="n">K</span><span class="o">=</span><span class="n">K</span><span class="p">,</span> <span class="n">price</span><span class="o">=</span><span class="n">putprice</span><span class="p">,</span> <span class="n">St</span><span class="o">=</span><span class="n">St</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s2">&quot;put&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Strip"><a class="viewcode-back" href="../05_options.html#options.Strip">[docs]</a><span class="k">class</span> <span class="nc">Strip</span><span class="p">(</span><span class="n">Straddle</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Combination of a straddle with a put.  Long 1 call &amp; 2 puts at K.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">St</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">K</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">callprice</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">putprice</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">St</span><span class="o">=</span><span class="n">St</span><span class="p">,</span> <span class="n">K</span><span class="o">=</span><span class="n">K</span><span class="p">,</span> <span class="n">callprice</span><span class="o">=</span><span class="n">callprice</span><span class="p">,</span> <span class="n">putprice</span><span class="o">=</span><span class="n">putprice</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_option</span><span class="p">(</span><span class="n">K</span><span class="o">=</span><span class="n">K</span><span class="p">,</span> <span class="n">price</span><span class="o">=</span><span class="n">putprice</span><span class="p">,</span> <span class="n">St</span><span class="o">=</span><span class="n">St</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s2">&quot;put&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Strap"><a class="viewcode-back" href="../05_options.html#options.Strap">[docs]</a><span class="k">class</span> <span class="nc">Strap</span><span class="p">(</span><span class="n">Straddle</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Combination of a straddle with a call.  Long 2 calls &amp; 1 put at K.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">St</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">K</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">price</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">St</span><span class="o">=</span><span class="n">St</span><span class="p">,</span> <span class="n">K</span><span class="o">=</span><span class="n">K</span><span class="p">,</span> <span class="n">price</span><span class="o">=</span><span class="n">price</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_option</span><span class="p">(</span><span class="n">K</span><span class="o">=</span><span class="n">K</span><span class="p">,</span> <span class="n">price</span><span class="o">=</span><span class="n">price</span><span class="p">,</span> <span class="n">St</span><span class="o">=</span><span class="n">St</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s2">&quot;call&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="ShortStraddle"><a class="viewcode-back" href="../05_options.html#options.ShortStraddle">[docs]</a><span class="k">class</span> <span class="nc">ShortStraddle</span><span class="p">(</span><span class="n">OpStrat</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Short-volatility exposure.  Short a put and call, both at K.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">St</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">K</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">price</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">St</span><span class="o">=</span><span class="n">St</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">K</span> <span class="o">=</span> <span class="n">K</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">price</span> <span class="o">=</span> <span class="n">price</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_option</span><span class="p">(</span><span class="n">K</span><span class="o">=</span><span class="n">K</span><span class="p">,</span> <span class="n">price</span><span class="o">=</span><span class="n">price</span><span class="p">,</span> <span class="n">St</span><span class="o">=</span><span class="n">St</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s2">&quot;call&quot;</span><span class="p">,</span> <span class="n">pos</span><span class="o">=</span><span class="s2">&quot;short&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_option</span><span class="p">(</span><span class="n">K</span><span class="o">=</span><span class="n">K</span><span class="p">,</span> <span class="n">price</span><span class="o">=</span><span class="n">price</span><span class="p">,</span> <span class="n">St</span><span class="o">=</span><span class="n">St</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s2">&quot;put&quot;</span><span class="p">,</span> <span class="n">pos</span><span class="o">=</span><span class="s2">&quot;short&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Strangle"><a class="viewcode-back" href="../05_options.html#options.Strangle">[docs]</a><span class="k">class</span> <span class="nc">Strangle</span><span class="p">(</span><span class="n">OpStrat</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Straddle in which the put and call have different strikes.</span>
+
+<span class="sd">    - Long K1 (call)</span>
+<span class="sd">    - Long K2 (put)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">St</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">K1</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">K2</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">callprice</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">putprice</span><span class="o">=</span><span class="kc">None</span>
+    <span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">St</span><span class="o">=</span><span class="n">St</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">K1</span> <span class="o">=</span> <span class="n">K1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">K2</span> <span class="o">=</span> <span class="n">K2</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">callprice</span> <span class="o">=</span> <span class="n">callprice</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">putprice</span> <span class="o">=</span> <span class="n">putprice</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_option</span><span class="p">(</span><span class="n">K</span><span class="o">=</span><span class="n">K1</span><span class="p">,</span> <span class="n">price</span><span class="o">=</span><span class="n">callprice</span><span class="p">,</span> <span class="n">St</span><span class="o">=</span><span class="n">St</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s2">&quot;call&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_option</span><span class="p">(</span><span class="n">K</span><span class="o">=</span><span class="n">K2</span><span class="p">,</span> <span class="n">price</span><span class="o">=</span><span class="n">putprice</span><span class="p">,</span> <span class="n">St</span><span class="o">=</span><span class="n">St</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s2">&quot;put&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="ShortStrangle"><a class="viewcode-back" href="../05_options.html#options.ShortStrangle">[docs]</a><span class="k">class</span> <span class="nc">ShortStrangle</span><span class="p">(</span><span class="n">OpStrat</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Short straddle in which the put and call have different strikes.</span>
+
+<span class="sd">    - Short K1 (call)</span>
+<span class="sd">    - Long K2 (put)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">St</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">K1</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">K2</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">callprice</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">putprice</span><span class="o">=</span><span class="kc">None</span>
+    <span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">St</span><span class="o">=</span><span class="n">St</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">K1</span> <span class="o">=</span> <span class="n">K1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">K2</span> <span class="o">=</span> <span class="n">K2</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">callprice</span> <span class="o">=</span> <span class="n">callprice</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">putprice</span> <span class="o">=</span> <span class="n">putprice</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_option</span><span class="p">(</span><span class="n">K</span><span class="o">=</span><span class="n">K1</span><span class="p">,</span> <span class="n">price</span><span class="o">=</span><span class="n">callprice</span><span class="p">,</span> <span class="n">St</span><span class="o">=</span><span class="n">St</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s2">&quot;call&quot;</span><span class="p">,</span> <span class="n">pos</span><span class="o">=</span><span class="s2">&quot;short&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_option</span><span class="p">(</span><span class="n">K</span><span class="o">=</span><span class="n">K2</span><span class="p">,</span> <span class="n">price</span><span class="o">=</span><span class="n">putprice</span><span class="p">,</span> <span class="n">St</span><span class="o">=</span><span class="n">St</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s2">&quot;put&quot;</span><span class="p">,</span> <span class="n">pos</span><span class="o">=</span><span class="s2">&quot;short&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="BullSpread"><a class="viewcode-back" href="../05_options.html#options.BullSpread">[docs]</a><span class="k">class</span> <span class="nc">BullSpread</span><span class="p">(</span><span class="n">OpStrat</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Bullish strategy but with limited gain and limited loss.</span>
+
+<span class="sd">    Combination of 2 puts or 2 calls.</span>
+
+<span class="sd">    - Long K1 (put or call)</span>
+<span class="sd">    - Short K2 (put or call)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">St</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">K1</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">K2</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">price1</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">price2</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s2">&quot;call&quot;</span>
+    <span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">St</span><span class="o">=</span><span class="n">St</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">K1</span> <span class="o">=</span> <span class="n">K1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">K2</span> <span class="o">=</span> <span class="n">K2</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">price1</span> <span class="o">=</span> <span class="n">price1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">price2</span> <span class="o">=</span> <span class="n">price2</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_option</span><span class="p">(</span><span class="n">K</span><span class="o">=</span><span class="n">K1</span><span class="p">,</span> <span class="n">price</span><span class="o">=</span><span class="n">price1</span><span class="p">,</span> <span class="n">St</span><span class="o">=</span><span class="n">St</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="n">kind</span><span class="p">,</span> <span class="n">pos</span><span class="o">=</span><span class="s2">&quot;long&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_option</span><span class="p">(</span><span class="n">K</span><span class="o">=</span><span class="n">K2</span><span class="p">,</span> <span class="n">price</span><span class="o">=</span><span class="n">price2</span><span class="p">,</span> <span class="n">St</span><span class="o">=</span><span class="n">St</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="n">kind</span><span class="p">,</span> <span class="n">pos</span><span class="o">=</span><span class="s2">&quot;short&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="BearSpread"><a class="viewcode-back" href="../05_options.html#options.BearSpread">[docs]</a><span class="k">class</span> <span class="nc">BearSpread</span><span class="p">(</span><span class="n">OpStrat</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Bearish strategy but with limited loss and limited gain.</span>
+
+<span class="sd">    Combination of 2 puts or 2 calls.</span>
+
+<span class="sd">    - Short K1 (put or call)</span>
+<span class="sd">    - Long K2 (put or call)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">St</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">K1</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">K2</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">price1</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">price2</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s2">&quot;put&quot;</span>
+    <span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">St</span><span class="o">=</span><span class="n">St</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">K2</span> <span class="o">=</span> <span class="n">K1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">K2</span> <span class="o">=</span> <span class="n">K2</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">price1</span> <span class="o">=</span> <span class="n">price1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">price2</span> <span class="o">=</span> <span class="n">price2</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_option</span><span class="p">(</span><span class="n">K</span><span class="o">=</span><span class="n">K1</span><span class="p">,</span> <span class="n">price</span><span class="o">=</span><span class="n">price1</span><span class="p">,</span> <span class="n">St</span><span class="o">=</span><span class="n">St</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="n">kind</span><span class="p">,</span> <span class="n">pos</span><span class="o">=</span><span class="s2">&quot;short&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_option</span><span class="p">(</span><span class="n">K</span><span class="o">=</span><span class="n">K2</span><span class="p">,</span> <span class="n">price</span><span class="o">=</span><span class="n">price2</span><span class="p">,</span> <span class="n">St</span><span class="o">=</span><span class="n">St</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="n">kind</span><span class="p">,</span> <span class="n">pos</span><span class="o">=</span><span class="s2">&quot;long&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="LongPutLadder"><a class="viewcode-back" href="../05_options.html#options.LongPutLadder">[docs]</a><span class="k">class</span> <span class="nc">LongPutLadder</span><span class="p">(</span><span class="n">BearSpread</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Bear put spread combined with selling another lower-strike put.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">St</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">K1</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">K2</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">K3</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">price1</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">price2</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">price3</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">St</span><span class="o">=</span><span class="n">St</span><span class="p">,</span> <span class="n">K1</span><span class="o">=</span><span class="n">K2</span><span class="p">,</span> <span class="n">K2</span><span class="o">=</span><span class="n">K3</span><span class="p">,</span> <span class="n">price1</span><span class="o">=</span><span class="n">price2</span><span class="p">,</span> <span class="n">price2</span><span class="o">=</span><span class="n">price3</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">K1</span> <span class="o">=</span> <span class="n">K1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">price1</span> <span class="o">=</span> <span class="n">price1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_option</span><span class="p">(</span><span class="n">K</span><span class="o">=</span><span class="n">K1</span><span class="p">,</span> <span class="n">price</span><span class="o">=</span><span class="n">price1</span><span class="p">,</span> <span class="n">St</span><span class="o">=</span><span class="n">St</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s2">&quot;put&quot;</span><span class="p">,</span> <span class="n">pos</span><span class="o">=</span><span class="s2">&quot;short&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="ShortPutLadder"><a class="viewcode-back" href="../05_options.html#options.ShortPutLadder">[docs]</a><span class="k">class</span> <span class="nc">ShortPutLadder</span><span class="p">(</span><span class="n">BearSpread</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Bull put spread combined with buying another lower-strike put.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">St</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">K1</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">K2</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">K3</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">price1</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">price2</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">price3</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="n">St</span><span class="o">=</span><span class="n">St</span><span class="p">,</span> <span class="n">K1</span><span class="o">=</span><span class="n">K2</span><span class="p">,</span> <span class="n">K2</span><span class="o">=</span><span class="n">K3</span><span class="p">,</span> <span class="n">price1</span><span class="o">=</span><span class="n">price2</span><span class="p">,</span> <span class="n">price2</span><span class="o">=</span><span class="n">price3</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s2">&quot;put&quot;</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">K1</span> <span class="o">=</span> <span class="n">K1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">price1</span> <span class="o">=</span> <span class="n">price1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_option</span><span class="p">(</span><span class="n">K</span><span class="o">=</span><span class="n">K1</span><span class="p">,</span> <span class="n">price</span><span class="o">=</span><span class="n">price1</span><span class="p">,</span> <span class="n">St</span><span class="o">=</span><span class="n">St</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s2">&quot;put&quot;</span><span class="p">,</span> <span class="n">pos</span><span class="o">=</span><span class="s2">&quot;long&quot;</span><span class="p">)</span></div>
+
+
+<span class="k">class</span> <span class="nc">_Butterfly</span><span class="p">(</span><span class="n">OpStrat</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">St</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">K1</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">K2</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">K3</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">price1</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">price2</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">price3</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">([</span><span class="n">K1</span><span class="p">,</span> <span class="n">K3</span><span class="p">]),</span> <span class="n">K2</span><span class="p">):</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;specified strikes are not equidistant.&quot;</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">St</span><span class="o">=</span><span class="n">St</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">K1</span> <span class="o">=</span> <span class="n">K1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">K2</span> <span class="o">=</span> <span class="n">K2</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">K3</span> <span class="o">=</span> <span class="n">K3</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">price1</span> <span class="o">=</span> <span class="n">price1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">price2</span> <span class="o">=</span> <span class="n">price2</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">price3</span> <span class="o">=</span> <span class="n">price3</span>
+
+
+<div class="viewcode-block" id="LongButterfly"><a class="viewcode-back" href="../05_options.html#options.LongButterfly">[docs]</a><span class="k">class</span> <span class="nc">LongButterfly</span><span class="p">(</span><span class="n">_Butterfly</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Combination of 4 calls or 4 puts.  Short volatility exposure.</span>
+
+<span class="sd">    - Long K1 (put or call)</span>
+<span class="sd">    - Short 2x K2 (put or call)</span>
+<span class="sd">    - Long K3 (put or call)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">St</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">K1</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">K2</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">K3</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">price1</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">price2</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">price3</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">kind</span><span class="o">=</span><span class="s2">&quot;call&quot;</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="n">St</span><span class="o">=</span><span class="n">St</span><span class="p">,</span>
+            <span class="n">K1</span><span class="o">=</span><span class="n">K1</span><span class="p">,</span>
+            <span class="n">K2</span><span class="o">=</span><span class="n">K2</span><span class="p">,</span>
+            <span class="n">K3</span><span class="o">=</span><span class="n">K3</span><span class="p">,</span>
+            <span class="n">price1</span><span class="o">=</span><span class="n">price1</span><span class="p">,</span>
+            <span class="n">price2</span><span class="o">=</span><span class="n">price2</span><span class="p">,</span>
+            <span class="n">price3</span><span class="o">=</span><span class="n">price3</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">kind</span> <span class="o">=</span> <span class="n">kind</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_option</span><span class="p">(</span><span class="n">K</span><span class="o">=</span><span class="n">K1</span><span class="p">,</span> <span class="n">price</span><span class="o">=</span><span class="n">price1</span><span class="p">,</span> <span class="n">St</span><span class="o">=</span><span class="n">St</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="n">kind</span><span class="p">,</span> <span class="n">pos</span><span class="o">=</span><span class="s2">&quot;long&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_option</span><span class="p">(</span><span class="n">K</span><span class="o">=</span><span class="n">K2</span><span class="p">,</span> <span class="n">price</span><span class="o">=</span><span class="n">price2</span><span class="p">,</span> <span class="n">St</span><span class="o">=</span><span class="n">St</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="n">kind</span><span class="p">,</span> <span class="n">pos</span><span class="o">=</span><span class="s2">&quot;short&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_option</span><span class="p">(</span><span class="n">K</span><span class="o">=</span><span class="n">K2</span><span class="p">,</span> <span class="n">price</span><span class="o">=</span><span class="n">price2</span><span class="p">,</span> <span class="n">St</span><span class="o">=</span><span class="n">St</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="n">kind</span><span class="p">,</span> <span class="n">pos</span><span class="o">=</span><span class="s2">&quot;short&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_option</span><span class="p">(</span><span class="n">K</span><span class="o">=</span><span class="n">K3</span><span class="p">,</span> <span class="n">price</span><span class="o">=</span><span class="n">price3</span><span class="p">,</span> <span class="n">St</span><span class="o">=</span><span class="n">St</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="n">kind</span><span class="p">,</span> <span class="n">pos</span><span class="o">=</span><span class="s2">&quot;long&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="ShortButterfly"><a class="viewcode-back" href="../05_options.html#options.ShortButterfly">[docs]</a><span class="k">class</span> <span class="nc">ShortButterfly</span><span class="p">(</span><span class="n">_Butterfly</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Combination of 4 calls or 4 puts.  Long volatility exposure.</span>
+
+<span class="sd">    - Short K1 (put or call)</span>
+<span class="sd">    - Long 2x K2 (put or call)</span>
+<span class="sd">    - Short K3 (put or call)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">St</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">K1</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">K2</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">K3</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">price1</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">price2</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">price3</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">kind</span><span class="o">=</span><span class="s2">&quot;call&quot;</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="n">St</span><span class="o">=</span><span class="n">St</span><span class="p">,</span>
+            <span class="n">K1</span><span class="o">=</span><span class="n">K1</span><span class="p">,</span>
+            <span class="n">K2</span><span class="o">=</span><span class="n">K2</span><span class="p">,</span>
+            <span class="n">K3</span><span class="o">=</span><span class="n">K3</span><span class="p">,</span>
+            <span class="n">price1</span><span class="o">=</span><span class="n">price1</span><span class="p">,</span>
+            <span class="n">price2</span><span class="o">=</span><span class="n">price2</span><span class="p">,</span>
+            <span class="n">price3</span><span class="o">=</span><span class="n">price3</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">kind</span> <span class="o">=</span> <span class="n">kind</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_option</span><span class="p">(</span><span class="n">K</span><span class="o">=</span><span class="n">K1</span><span class="p">,</span> <span class="n">price</span><span class="o">=</span><span class="n">price1</span><span class="p">,</span> <span class="n">St</span><span class="o">=</span><span class="n">St</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="n">kind</span><span class="p">,</span> <span class="n">pos</span><span class="o">=</span><span class="s2">&quot;short&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_option</span><span class="p">(</span><span class="n">K</span><span class="o">=</span><span class="n">K2</span><span class="p">,</span> <span class="n">price</span><span class="o">=</span><span class="n">price2</span><span class="p">,</span> <span class="n">St</span><span class="o">=</span><span class="n">St</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="n">kind</span><span class="p">,</span> <span class="n">pos</span><span class="o">=</span><span class="s2">&quot;long&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_option</span><span class="p">(</span><span class="n">K</span><span class="o">=</span><span class="n">K2</span><span class="p">,</span> <span class="n">price</span><span class="o">=</span><span class="n">price2</span><span class="p">,</span> <span class="n">St</span><span class="o">=</span><span class="n">St</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="n">kind</span><span class="p">,</span> <span class="n">pos</span><span class="o">=</span><span class="s2">&quot;long&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_option</span><span class="p">(</span><span class="n">K</span><span class="o">=</span><span class="n">K3</span><span class="p">,</span> <span class="n">price</span><span class="o">=</span><span class="n">price3</span><span class="p">,</span> <span class="n">St</span><span class="o">=</span><span class="n">St</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="n">kind</span><span class="p">,</span> <span class="n">pos</span><span class="o">=</span><span class="s2">&quot;short&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="LongIronButterfly"><a class="viewcode-back" href="../05_options.html#options.LongIronButterfly">[docs]</a><span class="k">class</span> <span class="nc">LongIronButterfly</span><span class="p">(</span><span class="n">_Butterfly</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Combination of 2 puts and 2 calls.  Long volatility exposure.</span>
+
+<span class="sd">    - Short K1 (put)</span>
+<span class="sd">    - Long 2x K2 (1 put, 1 call)</span>
+<span class="sd">    - Short K3 (call)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">St</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">K1</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">K2</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">K3</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">price1</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">price2</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">price3</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="n">St</span><span class="o">=</span><span class="n">St</span><span class="p">,</span>
+            <span class="n">K1</span><span class="o">=</span><span class="n">K1</span><span class="p">,</span>
+            <span class="n">K2</span><span class="o">=</span><span class="n">K2</span><span class="p">,</span>
+            <span class="n">K3</span><span class="o">=</span><span class="n">K3</span><span class="p">,</span>
+            <span class="n">price1</span><span class="o">=</span><span class="n">price1</span><span class="p">,</span>
+            <span class="n">price2</span><span class="o">=</span><span class="n">price2</span><span class="p">,</span>
+            <span class="n">price3</span><span class="o">=</span><span class="n">price3</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_option</span><span class="p">(</span><span class="n">K</span><span class="o">=</span><span class="n">K1</span><span class="p">,</span> <span class="n">price</span><span class="o">=</span><span class="n">price1</span><span class="p">,</span> <span class="n">St</span><span class="o">=</span><span class="n">St</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s2">&quot;put&quot;</span><span class="p">,</span> <span class="n">pos</span><span class="o">=</span><span class="s2">&quot;short&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_option</span><span class="p">(</span><span class="n">K</span><span class="o">=</span><span class="n">K2</span><span class="p">,</span> <span class="n">price</span><span class="o">=</span><span class="n">price2</span><span class="p">,</span> <span class="n">St</span><span class="o">=</span><span class="n">St</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s2">&quot;put&quot;</span><span class="p">,</span> <span class="n">pos</span><span class="o">=</span><span class="s2">&quot;long&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_option</span><span class="p">(</span><span class="n">K</span><span class="o">=</span><span class="n">K2</span><span class="p">,</span> <span class="n">price</span><span class="o">=</span><span class="n">price2</span><span class="p">,</span> <span class="n">St</span><span class="o">=</span><span class="n">St</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s2">&quot;call&quot;</span><span class="p">,</span> <span class="n">pos</span><span class="o">=</span><span class="s2">&quot;long&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_option</span><span class="p">(</span><span class="n">K</span><span class="o">=</span><span class="n">K3</span><span class="p">,</span> <span class="n">price</span><span class="o">=</span><span class="n">price3</span><span class="p">,</span> <span class="n">St</span><span class="o">=</span><span class="n">St</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s2">&quot;call&quot;</span><span class="p">,</span> <span class="n">pos</span><span class="o">=</span><span class="s2">&quot;short&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="ShortIronButterfly"><a class="viewcode-back" href="../05_options.html#options.ShortIronButterfly">[docs]</a><span class="k">class</span> <span class="nc">ShortIronButterfly</span><span class="p">(</span><span class="n">_Butterfly</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Combination of 2 puts and 2 calls.  Long volatility exposure.</span>
+
+<span class="sd">    - Long K1 (put)</span>
+<span class="sd">    - Short 2x K2 (1 put, 1 call)</span>
+<span class="sd">    - Long K3 (call)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">St</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">K1</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">K2</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">K3</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">price1</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">price2</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">price3</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="n">St</span><span class="o">=</span><span class="n">St</span><span class="p">,</span>
+            <span class="n">K1</span><span class="o">=</span><span class="n">K1</span><span class="p">,</span>
+            <span class="n">K2</span><span class="o">=</span><span class="n">K2</span><span class="p">,</span>
+            <span class="n">K3</span><span class="o">=</span><span class="n">K3</span><span class="p">,</span>
+            <span class="n">price1</span><span class="o">=</span><span class="n">price1</span><span class="p">,</span>
+            <span class="n">price2</span><span class="o">=</span><span class="n">price2</span><span class="p">,</span>
+            <span class="n">price3</span><span class="o">=</span><span class="n">price3</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_option</span><span class="p">(</span><span class="n">K</span><span class="o">=</span><span class="n">K1</span><span class="p">,</span> <span class="n">price</span><span class="o">=</span><span class="n">price1</span><span class="p">,</span> <span class="n">St</span><span class="o">=</span><span class="n">St</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s2">&quot;put&quot;</span><span class="p">,</span> <span class="n">pos</span><span class="o">=</span><span class="s2">&quot;long&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_option</span><span class="p">(</span><span class="n">K</span><span class="o">=</span><span class="n">K2</span><span class="p">,</span> <span class="n">price</span><span class="o">=</span><span class="n">price2</span><span class="p">,</span> <span class="n">St</span><span class="o">=</span><span class="n">St</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s2">&quot;put&quot;</span><span class="p">,</span> <span class="n">pos</span><span class="o">=</span><span class="s2">&quot;short&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_option</span><span class="p">(</span><span class="n">K</span><span class="o">=</span><span class="n">K2</span><span class="p">,</span> <span class="n">price</span><span class="o">=</span><span class="n">price2</span><span class="p">,</span> <span class="n">St</span><span class="o">=</span><span class="n">St</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s2">&quot;call&quot;</span><span class="p">,</span> <span class="n">pos</span><span class="o">=</span><span class="s2">&quot;short&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_option</span><span class="p">(</span><span class="n">K</span><span class="o">=</span><span class="n">K3</span><span class="p">,</span> <span class="n">price</span><span class="o">=</span><span class="n">price3</span><span class="p">,</span> <span class="n">St</span><span class="o">=</span><span class="n">St</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s2">&quot;call&quot;</span><span class="p">,</span> <span class="n">pos</span><span class="o">=</span><span class="s2">&quot;long&quot;</span><span class="p">)</span></div>
+
+
+<span class="k">class</span> <span class="nc">_Condor</span><span class="p">(</span><span class="n">OpStrat</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">St</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">K1</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">K2</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">K3</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">K4</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">price1</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">price2</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">price3</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">price4</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">K2</span> <span class="o">-</span> <span class="n">K1</span><span class="p">,</span> <span class="n">K4</span> <span class="o">-</span> <span class="n">K3</span><span class="p">):</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;specified wings are not equidistant.&quot;</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">St</span><span class="o">=</span><span class="n">St</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">K1</span> <span class="o">=</span> <span class="n">K1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">K2</span> <span class="o">=</span> <span class="n">K2</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">K3</span> <span class="o">=</span> <span class="n">K3</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">K4</span> <span class="o">=</span> <span class="n">K4</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">price1</span> <span class="o">=</span> <span class="n">price1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">price2</span> <span class="o">=</span> <span class="n">price2</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">price3</span> <span class="o">=</span> <span class="n">price3</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">price4</span> <span class="o">=</span> <span class="n">price4</span>
+
+
+<div class="viewcode-block" id="LongCondor"><a class="viewcode-back" href="../05_options.html#options.LongCondor">[docs]</a><span class="k">class</span> <span class="nc">LongCondor</span><span class="p">(</span><span class="n">_Condor</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Combination of 4 calls or 4 puts.  Short volatility exposure.</span>
+
+<span class="sd">    - Long K1 (put or call)</span>
+<span class="sd">    - Short K2 != K3 (put or call)</span>
+<span class="sd">    - Long K4 (put or call)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">St</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">K1</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">K2</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">K3</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">K4</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">price1</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">price2</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">price3</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">price4</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">kind</span><span class="o">=</span><span class="s2">&quot;call&quot;</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="n">St</span><span class="o">=</span><span class="n">St</span><span class="p">,</span>
+            <span class="n">K1</span><span class="o">=</span><span class="n">K1</span><span class="p">,</span>
+            <span class="n">K2</span><span class="o">=</span><span class="n">K2</span><span class="p">,</span>
+            <span class="n">K3</span><span class="o">=</span><span class="n">K3</span><span class="p">,</span>
+            <span class="n">K4</span><span class="o">=</span><span class="n">K4</span><span class="p">,</span>
+            <span class="n">price1</span><span class="o">=</span><span class="n">price1</span><span class="p">,</span>
+            <span class="n">price2</span><span class="o">=</span><span class="n">price2</span><span class="p">,</span>
+            <span class="n">price3</span><span class="o">=</span><span class="n">price3</span><span class="p">,</span>
+            <span class="n">price4</span><span class="o">=</span><span class="n">price4</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">kind</span> <span class="o">=</span> <span class="n">kind</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_option</span><span class="p">(</span><span class="n">K</span><span class="o">=</span><span class="n">K1</span><span class="p">,</span> <span class="n">price</span><span class="o">=</span><span class="n">price1</span><span class="p">,</span> <span class="n">St</span><span class="o">=</span><span class="n">St</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="n">kind</span><span class="p">,</span> <span class="n">pos</span><span class="o">=</span><span class="s2">&quot;long&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_option</span><span class="p">(</span><span class="n">K</span><span class="o">=</span><span class="n">K2</span><span class="p">,</span> <span class="n">price</span><span class="o">=</span><span class="n">price2</span><span class="p">,</span> <span class="n">St</span><span class="o">=</span><span class="n">St</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="n">kind</span><span class="p">,</span> <span class="n">pos</span><span class="o">=</span><span class="s2">&quot;short&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_option</span><span class="p">(</span><span class="n">K</span><span class="o">=</span><span class="n">K3</span><span class="p">,</span> <span class="n">price</span><span class="o">=</span><span class="n">price3</span><span class="p">,</span> <span class="n">St</span><span class="o">=</span><span class="n">St</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="n">kind</span><span class="p">,</span> <span class="n">pos</span><span class="o">=</span><span class="s2">&quot;short&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_option</span><span class="p">(</span><span class="n">K</span><span class="o">=</span><span class="n">K4</span><span class="p">,</span> <span class="n">price</span><span class="o">=</span><span class="n">price4</span><span class="p">,</span> <span class="n">St</span><span class="o">=</span><span class="n">St</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="n">kind</span><span class="p">,</span> <span class="n">pos</span><span class="o">=</span><span class="s2">&quot;long&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="ShortCondor"><a class="viewcode-back" href="../05_options.html#options.ShortCondor">[docs]</a><span class="k">class</span> <span class="nc">ShortCondor</span><span class="p">(</span><span class="n">_Condor</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Combination of 4 calls or 4 puts.  Long volatility exposure.</span>
+
+<span class="sd">    - Short K1 (put or call)</span>
+<span class="sd">    - Long K2 != K3 (put or call)</span>
+<span class="sd">    - Short K4 (put or call)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">St</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">K1</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">K2</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">K3</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">K4</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">price1</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">price2</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">price3</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">price4</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">kind</span><span class="o">=</span><span class="s2">&quot;call&quot;</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="n">St</span><span class="o">=</span><span class="n">St</span><span class="p">,</span>
+            <span class="n">K1</span><span class="o">=</span><span class="n">K1</span><span class="p">,</span>
+            <span class="n">K2</span><span class="o">=</span><span class="n">K2</span><span class="p">,</span>
+            <span class="n">K3</span><span class="o">=</span><span class="n">K3</span><span class="p">,</span>
+            <span class="n">K4</span><span class="o">=</span><span class="n">K4</span><span class="p">,</span>
+            <span class="n">price1</span><span class="o">=</span><span class="n">price1</span><span class="p">,</span>
+            <span class="n">price2</span><span class="o">=</span><span class="n">price2</span><span class="p">,</span>
+            <span class="n">price3</span><span class="o">=</span><span class="n">price3</span><span class="p">,</span>
+            <span class="n">price4</span><span class="o">=</span><span class="n">price4</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">kind</span> <span class="o">=</span> <span class="n">kind</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_option</span><span class="p">(</span><span class="n">K</span><span class="o">=</span><span class="n">K1</span><span class="p">,</span> <span class="n">price</span><span class="o">=</span><span class="n">price1</span><span class="p">,</span> <span class="n">St</span><span class="o">=</span><span class="n">St</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="n">kind</span><span class="p">,</span> <span class="n">pos</span><span class="o">=</span><span class="s2">&quot;short&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_option</span><span class="p">(</span><span class="n">K</span><span class="o">=</span><span class="n">K2</span><span class="p">,</span> <span class="n">price</span><span class="o">=</span><span class="n">price2</span><span class="p">,</span> <span class="n">St</span><span class="o">=</span><span class="n">St</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="n">kind</span><span class="p">,</span> <span class="n">pos</span><span class="o">=</span><span class="s2">&quot;long&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_option</span><span class="p">(</span><span class="n">K</span><span class="o">=</span><span class="n">K3</span><span class="p">,</span> <span class="n">price</span><span class="o">=</span><span class="n">price3</span><span class="p">,</span> <span class="n">St</span><span class="o">=</span><span class="n">St</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="n">kind</span><span class="p">,</span> <span class="n">pos</span><span class="o">=</span><span class="s2">&quot;long&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_option</span><span class="p">(</span><span class="n">K</span><span class="o">=</span><span class="n">K4</span><span class="p">,</span> <span class="n">price</span><span class="o">=</span><span class="n">price4</span><span class="p">,</span> <span class="n">St</span><span class="o">=</span><span class="n">St</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="n">kind</span><span class="p">,</span> <span class="n">pos</span><span class="o">=</span><span class="s2">&quot;short&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="LongIronCondor"><a class="viewcode-back" href="../05_options.html#options.LongIronCondor">[docs]</a><span class="k">class</span> <span class="nc">LongIronCondor</span><span class="p">(</span><span class="n">_Condor</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Combination of 2 puts and 2 calls.  Long volatility exposure.</span>
+
+<span class="sd">    - Short K1 (put)</span>
+<span class="sd">    - Long K2 (put)</span>
+<span class="sd">    - Long K3 (call)</span>
+<span class="sd">    - Short K4 (call)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">St</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">K1</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">K2</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">K3</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">K4</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">price1</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">price2</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">price3</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">price4</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="n">St</span><span class="o">=</span><span class="n">St</span><span class="p">,</span>
+            <span class="n">K1</span><span class="o">=</span><span class="n">K1</span><span class="p">,</span>
+            <span class="n">K2</span><span class="o">=</span><span class="n">K2</span><span class="p">,</span>
+            <span class="n">K3</span><span class="o">=</span><span class="n">K3</span><span class="p">,</span>
+            <span class="n">K4</span><span class="o">=</span><span class="n">K4</span><span class="p">,</span>
+            <span class="n">price1</span><span class="o">=</span><span class="n">price1</span><span class="p">,</span>
+            <span class="n">price2</span><span class="o">=</span><span class="n">price2</span><span class="p">,</span>
+            <span class="n">price3</span><span class="o">=</span><span class="n">price3</span><span class="p">,</span>
+            <span class="n">price4</span><span class="o">=</span><span class="n">price4</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_option</span><span class="p">(</span><span class="n">K</span><span class="o">=</span><span class="n">K1</span><span class="p">,</span> <span class="n">price</span><span class="o">=</span><span class="n">price1</span><span class="p">,</span> <span class="n">St</span><span class="o">=</span><span class="n">St</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s2">&quot;put&quot;</span><span class="p">,</span> <span class="n">pos</span><span class="o">=</span><span class="s2">&quot;short&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_option</span><span class="p">(</span><span class="n">K</span><span class="o">=</span><span class="n">K2</span><span class="p">,</span> <span class="n">price</span><span class="o">=</span><span class="n">price2</span><span class="p">,</span> <span class="n">St</span><span class="o">=</span><span class="n">St</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s2">&quot;put&quot;</span><span class="p">,</span> <span class="n">pos</span><span class="o">=</span><span class="s2">&quot;long&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_option</span><span class="p">(</span><span class="n">K</span><span class="o">=</span><span class="n">K3</span><span class="p">,</span> <span class="n">price</span><span class="o">=</span><span class="n">price3</span><span class="p">,</span> <span class="n">St</span><span class="o">=</span><span class="n">St</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s2">&quot;call&quot;</span><span class="p">,</span> <span class="n">pos</span><span class="o">=</span><span class="s2">&quot;long&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_option</span><span class="p">(</span><span class="n">K</span><span class="o">=</span><span class="n">K4</span><span class="p">,</span> <span class="n">price</span><span class="o">=</span><span class="n">price4</span><span class="p">,</span> <span class="n">St</span><span class="o">=</span><span class="n">St</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s2">&quot;call&quot;</span><span class="p">,</span> <span class="n">pos</span><span class="o">=</span><span class="s2">&quot;short&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="ShortIronCondor"><a class="viewcode-back" href="../05_options.html#options.ShortIronCondor">[docs]</a><span class="k">class</span> <span class="nc">ShortIronCondor</span><span class="p">(</span><span class="n">_Condor</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Combination of 2 puts and 2 calls.  Short volatility exposure.</span>
+
+<span class="sd">    - Long K1 (put)</span>
+<span class="sd">    - Short K2 (put)</span>
+<span class="sd">    - Short K3 (call)</span>
+<span class="sd">    - Long K4 (call)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">St</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">K1</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">K2</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">K3</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">K4</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">price1</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">price2</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">price3</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">price4</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="n">St</span><span class="o">=</span><span class="n">St</span><span class="p">,</span>
+            <span class="n">K1</span><span class="o">=</span><span class="n">K1</span><span class="p">,</span>
+            <span class="n">K2</span><span class="o">=</span><span class="n">K2</span><span class="p">,</span>
+            <span class="n">K3</span><span class="o">=</span><span class="n">K3</span><span class="p">,</span>
+            <span class="n">K4</span><span class="o">=</span><span class="n">K4</span><span class="p">,</span>
+            <span class="n">price1</span><span class="o">=</span><span class="n">price1</span><span class="p">,</span>
+            <span class="n">price2</span><span class="o">=</span><span class="n">price2</span><span class="p">,</span>
+            <span class="n">price3</span><span class="o">=</span><span class="n">price3</span><span class="p">,</span>
+            <span class="n">price4</span><span class="o">=</span><span class="n">price4</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_option</span><span class="p">(</span><span class="n">K</span><span class="o">=</span><span class="n">K1</span><span class="p">,</span> <span class="n">price</span><span class="o">=</span><span class="n">price1</span><span class="p">,</span> <span class="n">St</span><span class="o">=</span><span class="n">St</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s2">&quot;put&quot;</span><span class="p">,</span> <span class="n">pos</span><span class="o">=</span><span class="s2">&quot;long&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_option</span><span class="p">(</span><span class="n">K</span><span class="o">=</span><span class="n">K2</span><span class="p">,</span> <span class="n">price</span><span class="o">=</span><span class="n">price2</span><span class="p">,</span> <span class="n">St</span><span class="o">=</span><span class="n">St</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s2">&quot;put&quot;</span><span class="p">,</span> <span class="n">pos</span><span class="o">=</span><span class="s2">&quot;short&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_option</span><span class="p">(</span><span class="n">K</span><span class="o">=</span><span class="n">K3</span><span class="p">,</span> <span class="n">price</span><span class="o">=</span><span class="n">price3</span><span class="p">,</span> <span class="n">St</span><span class="o">=</span><span class="n">St</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s2">&quot;call&quot;</span><span class="p">,</span> <span class="n">pos</span><span class="o">=</span><span class="s2">&quot;short&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_option</span><span class="p">(</span><span class="n">K</span><span class="o">=</span><span class="n">K4</span><span class="p">,</span> <span class="n">price</span><span class="o">=</span><span class="n">price4</span><span class="p">,</span> <span class="n">St</span><span class="o">=</span><span class="n">St</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s2">&quot;call&quot;</span><span class="p">,</span> <span class="n">pos</span><span class="o">=</span><span class="s2">&quot;long&quot;</span><span class="p">)</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, chenlin.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

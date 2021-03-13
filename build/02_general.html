@@ -1,0 +1,680 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>general模块 &mdash; finance 1.3 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="datasets模块" href="03_datasets.html" />
+    <link rel="prev" title="returns模块" href="01_returns.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> finance
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="01_returns.html"><strong>returns模块</strong></a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#"><strong>general模块</strong></a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#descriptions">Descriptions</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="03_datasets.html"><strong>datasets模块</strong></a></li>
+<li class="toctree-l1"><a class="reference internal" href="04_ols.html"><strong>ols模块</strong></a></li>
+<li class="toctree-l1"><a class="reference internal" href="05_options.html"><strong>options模块</strong></a></li>
+<li class="toctree-l1"><a class="reference internal" href="06_utils.html"><strong>utils模块</strong></a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">finance</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li><strong>general模块</strong></li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/02_general.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-general">
+<span id="general"></span><h1><strong>general模块</strong><a class="headerlink" href="#module-general" title="Permalink to this headline">¶</a></h1>
+<p>Generalized tools for financial analysis &amp; quantitative finance.</p>
+<div class="section" id="descriptions">
+<h2>Descriptions<a class="headerlink" href="#descriptions" title="Permalink to this headline">¶</a></h2>
+<dl class="simple">
+<dt>activeshare</dt><dd><p>Compute the active ahare of a fund versus an index.</p>
+</dd>
+<dt>amortize</dt><dd><p>Construct an amortization schedule for a fixed-rate loan.</p>
+</dd>
+<dt>BestFitDist</dt><dd><p>Which continuous distribution best models <cite>x</cite>?</p>
+</dd>
+<dt>corr_heatmap</dt><dd><p>Wrapper around seaborn.heatmap for visualizing correlation matrix.</p>
+</dd>
+<dt>ewm_params</dt><dd><p>Return corresponding param. values for exponential weighted functions.</p>
+</dd>
+<dt>ewm_weights</dt><dd><p>Exponential weights as a function of position <cite>i</cite>.</p>
+</dd>
+<dt>ewm_bootstrap</dt><dd><p>Bootstrap a new distribution through exponential weighting.</p>
+</dd>
+<dt>factor_loadings</dt><dd><p>Security factor exposures generated through OLS regression.</p>
+</dd>
+<dt>PCA</dt><dd><p>Performs principal component analysis (PCA) on a set of returns.</p>
+</dd>
+<dt>PortSim</dt><dd><p>Basic portfolio simulation.</p>
+</dd>
+<dt>TEOpt</dt><dd><p>Tracking error optimization/security replication.</p>
+</dd>
+<dt>variance_inflation_factor</dt><dd><p>Calculate variance inflation factor (VIF) for each all <cite>regressors</cite>.</p>
+</dd>
+</dl>
+<dl class="py class">
+<dt id="general.BestFitDist">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">general.</span></code><code class="sig-name descname"><span class="pre">BestFitDist</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bins</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'auto'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">distributions</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/general.html#BestFitDist"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#general.BestFitDist" title="Permalink to this definition">¶</a></dt>
+<dd><p>Which continuous distribution best models <cite>x</cite>?</p>
+<p>Core process within <cite>.fit</cite> is adopted from &#64;tmthydvnprt (Stack Overflow).</p>
+<dl class="simple">
+<dt>x<span class="classifier">1-d array-like or Series</span></dt><dd><p>Empirical input data to model/fit</p>
+</dd>
+<dt>bins<span class="classifier">int or sequence of scalars or str, optional, default ‘auto’</span></dt><dd><p>Passed to np.histogram; see docs</p>
+</dd>
+<dt>distributions<span class="classifier">sequence or None, default None</span></dt><dd><p>If specified, limit the tests to these distribution names only.
+Example: [‘normal’, ‘cauchy’, ‘laplace’]
+If None, defaults to the full set; see:
+docs.scipy.org/doc/scipy/reference/stats.html#continuous-distributions</p>
+</dd>
+</dl>
+<p>from pyfinance import BestFitDist
+# 1000 random samples from a N~(5,3) distribution
+r = np.random.normal(loc=5, scale=3, size=1000)
+dist = [‘normal’, ‘cauchy’, ‘laplace’, ‘lognormal’, ‘johnsonsu’]
+fitted = BestFitDist(r, distributions=dist).fit()</p>
+<p>print(fitted.best())
+name                     norm
+params    (4.88130759176, …
+sse                 0.0015757
+dtype: object</p>
+<dl class="simple">
+<dt>print(fitted.all())</dt><dd><p>name      sse               params</p>
+</dd>
+</dl>
+<p>3      alpha  0.22361  (3.8149848058e-0…
+4     anglit  0.02263  (5.49753868994, …
+5    arcsine  0.10216  (-4.69316502376,…
+6       beta  0.00161  (150.926126014, …
+7  betaprime  0.00226  (30.4979678995, …
+8   bradford  0.06195  (1.02226022038, …
+9       burr  0.23714  (0.662101587716,…
+0      ksone      NaN  (1.30534444533, …
+1  kstwobign  0.01196  (-6.31494451637,…
+2       norm  0.00158  (4.88130759176, …</p>
+<dl class="py method">
+<dt id="general.BestFitDist.all">
+<code class="sig-name descname"><span class="pre">all</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">by</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'name'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ascending</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/general.html#BestFitDist.all"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#general.BestFitDist.all" title="Permalink to this definition">¶</a></dt>
+<dd><p>All tested distributions, their parameters, and SSEs.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="general.BestFitDist.best">
+<code class="sig-name descname"><span class="pre">best</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/general.html#BestFitDist.best"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#general.BestFitDist.best" title="Permalink to this definition">¶</a></dt>
+<dd><p>The resulting best-fit distribution, its parameters, and SSE.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="general.BestFitDist.fit">
+<code class="sig-name descname"><span class="pre">fit</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/general.html#BestFitDist.fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#general.BestFitDist.fit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fit each distribution to <cite>data</cite> and calculate an SSE.</p>
+<p>WARNING: significant runtime. (~1min)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="general.BestFitDist.plot">
+<code class="sig-name descname"><span class="pre">plot</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/general.html#BestFitDist.plot"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#general.BestFitDist.plot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plot the empirical histogram versus best-fit distribution’s PDF.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="general.PCA">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">general.</span></code><code class="sig-name descname"><span class="pre">PCA</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">m</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Jolliffe'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u_based_decision</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/general.html#PCA"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#general.PCA" title="Permalink to this definition">¶</a></dt>
+<dd><p>Performs principal component analysis (PCA) on a set of returns.</p>
+<p>Designed as an alternative to sklearn’s PCA implementationn; has less
+available parameters but a number of pre-canned convenience methods.  This
+class-based implementation is principally geared towards analysis of
+asset returns, such as in Rankin (2016).</p>
+<p>One major difference is that the sign of the eignvectors is not flipped to
+enforce deterministic output, as is done in sklearn.</p>
+<blockquote>
+<div><p>(See sklearn/decomposition/pca.py, L390)</p>
+</div></blockquote>
+<dl class="simple">
+<dt>m<span class="classifier">array-like (DataFrame, np.matrix, np.array)</span></dt><dd><p>Time series of returns.  Cannot be sparse.</p>
+</dd>
+<dt>threshold<span class="classifier">float, or str in {‘Jolliffe’, ‘Kaiser’}</span></dt><dd><p>The threshold below which eigenvalues and corresponding components
+are dropped.  ‘Jolliffe’ is Jolliffe’s criterion (0.7), while
+Kaiser’s criterion is 1.0.</p>
+</dd>
+</dl>
+<p>Abdi &amp; Williams, Principal Component Analysis, 2010
+Bro, Acar &amp; Kolda, Resolving the Sign Ambiguity in the Singular Value</p>
+<blockquote>
+<div><p>Decomposition, 2007</p>
+</div></blockquote>
+<p>Mandel, Use of Singular Value Decomposition in Regression Analysis, 1982
+Rankin, Multi-Dimensional Diversification: Improving Portfolio Selection</p>
+<blockquote>
+<div><p>Using Principal Component Analysis, 2016</p>
+</div></blockquote>
+<dl class="py method">
+<dt id="general.PCA.eigen_table">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">eigen_table</span></code><a class="headerlink" href="#general.PCA.eigen_table" title="Permalink to this definition">¶</a></dt>
+<dd><p>Eigenvalues, expl. variance, and cumulative expl. variance.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="general.PCA.fit">
+<code class="sig-name descname"><span class="pre">fit</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/general.html#PCA.fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#general.PCA.fit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fit the model by computing full SVD on m.</p>
+<p>SVD factors the matrix m as u * np.diag(s) * v, where u and v are
+unitary and s is a 1-d array of m‘s singular values.  Note that the SVD
+is commonly written as a = U S V.H, and the v returned by this function
+is V.H (the Hermitian transpose).  Therefore, we denote V.H as vt, and
+back into the actual v, denoted just v.</p>
+<p>The decomposition uses np.linalg.svd with full_matrices=False, so for
+m with shape (M, N), then the shape of:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>u is (M, K)</p></li>
+<li><p>v is (K, N</p></li>
+</ul>
+</div></blockquote>
+<p>where K = min(M, N)</p>
+<p>Intertia is the percentage of explained variance.</p>
+<p>self, to enable method chaining</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="general.PCA.loadings">
+<code class="sig-name descname"><span class="pre">loadings</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/general.html#PCA.loadings"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#general.PCA.loadings" title="Permalink to this definition">¶</a></dt>
+<dd><p>Loadings = eigenvectors times sqrt(eigenvalues).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="general.PCA.relative_diversification">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">relative_diversification</span></code><a class="headerlink" href="#general.PCA.relative_diversification" title="Permalink to this definition">¶</a></dt>
+<dd><p>Number of components needed to explain &gt; x% of variance.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="general.PortSim">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">general.</span></code><code class="sig-name descname"><span class="pre">PortSim</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fee</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fee_freq</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Q'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lookback</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">strict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dist_amt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dist_pct</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dist_freq</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v0</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1000000.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">include_start</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">freq</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'M'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">in_format</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'num'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/general.html#PortSim"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#general.PortSim" title="Permalink to this definition">¶</a></dt>
+<dd><p>Basic portfolio simulation.</p>
+<p>NOTE: work-in-progress as of 2017.08.25.</p>
+<dl>
+<dt>r<span class="classifier">Series or DataFrame</span></dt><dd><p>Time series of gross-of-fees security/account/fund returns.  Series are
+converted to single-column DataFrame with <cite>prep</cite></p>
+</dd>
+<dt>fee<span class="classifier">float, default 0.</span></dt><dd><p>The <em>annual</em> percentage fee expressed as a decimal</p>
+</dd>
+<dt>fee_freq<span class="classifier">str, int, or float, default ‘Q’</span></dt><dd><p>The fee frequency.  If str, it is case insensitive and should be:
+- One of (‘D’, ‘W’, ‘M’, ‘Q’, ‘A’)
+- One of pandas anchored offsets, such as ‘W-FRI’:</p>
+<blockquote>
+<div><p>pandas.pydata.org/pandas-docs/stable/timeseries.html#anchored-offsets</p>
+</div></blockquote>
+<p>If int or float, this is interpreted as the number of billing periods
+per year</p>
+</dd>
+<dt>start<span class="classifier">str or date, default None</span></dt><dd><p>Date (inclusive) on which to truncate <cite>r</cite></p>
+</dd>
+<dt>end<span class="classifier">str or date, default None</span></dt><dd><p>Date (inclusive) on which to truncate <cite>r</cite></p>
+</dd>
+<dt>lookback<span class="classifier">dict, default {}</span></dt><dd><p>Keyword args dict passed to <cite>constrain_horizon</cite>.  See
+utils.constrain_horizon</p>
+</dd>
+<dt>strict<span class="classifier">bool, default False</span></dt><dd><p>Passed to <cite>constrain_horizon</cite>.
+If True, raise Error if the implied start date on the horizon predates
+the actual start date of <cite>r</cite>.  If False, just return <cite>r</cite> in this
+situation</p>
+</dd>
+<dt>dist_amt<span class="classifier">int or float, default None</span></dt><dd><p>The <em>annual</em> dollar distribution.
+dist_amt &gt; 0: money withdrawn from account/fund
+dist_amt &lt; 0: money deposited to account/fund</p>
+</dd>
+<dt>v0<span class="classifier">int or float, default float(1e6)</span></dt><dd><p>The initial investment</p>
+</dd>
+<dt>include_start<span class="classifier">bool, default True</span></dt><dd><p>Whether to prepend a starting date to resulting DataFrame displays</p>
+</dd>
+<dt>freq<span class="classifier">str, default ‘M’</span></dt><dd><p>The frequency of <cite>r</cite>.  Passed to returns.prep</p>
+</dd>
+<dt>name<span class="classifier">str, default None</span></dt><dd><p>For cases where a Series is converted to a single-column DataFrame,
+<cite>name</cite> specifies the resulting column name; it is passed to
+<cite>pd.Series.to_frame</cite>; passed to returns.prep</p>
+</dd>
+<dt>in_format<span class="classifier">str, {‘num’, ‘dec’}</span></dt><dd><p>Passed to returns.prep; converts percentage figures from
+numeral form to decimal form</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt id="general.TEOpt">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">general.</span></code><code class="sig-name descname"><span class="pre">TEOpt</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">proxies</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">window</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sumto</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/general.html#TEOpt"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#general.TEOpt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tracking error optimization/security replication.</p>
+<p>At the end of each period, TEOpt computes an optimization over the trailing
+<cite>window</cite> periods, solving for the vector of weights that would have
+minimized the tracking error of <cite>r</cite> to <cite>proxies</cite> over that period.</p>
+<p># TODO</p>
+<dl class="simple">
+<dt>r<span class="classifier">DataFrame</span></dt><dd><p>The target time series of returns to be replicated</p>
+</dd>
+<dt>proxies<span class="classifier">DataFrame</span></dt><dd><p>The available proxies used towards building a replicating portfolio</p>
+</dd>
+<dt>window<span class="classifier">int</span></dt><dd><p>The lookback window utilized in each rolling optimization</p>
+</dd>
+<dt>sumto: float, default 1</dt><dd><p>Optimization constraint: proxy weights should sum to this parameter</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt id="general.TEOpt.ex_ante_te">
+<code class="sig-name descname"><span class="pre">ex_ante_te</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/general.html#TEOpt.ex_ante_te"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#general.TEOpt.ex_ante_te" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tracking error corresponding to each optimized lookback period.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="general.TEOpt.opt_weights">
+<code class="sig-name descname"><span class="pre">opt_weights</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/general.html#TEOpt.opt_weights"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#general.TEOpt.opt_weights" title="Permalink to this definition">¶</a></dt>
+<dd><p>Optimal weights (period-end).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="general.TEOpt.optimize">
+<code class="sig-name descname"><span class="pre">optimize</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/general.html#TEOpt.optimize"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#general.TEOpt.optimize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Analogous to <cite>sklearn</cite>’s fit.  Returns <cite>self</cite> to enable chaining.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="general.TEOpt.replicate">
+<code class="sig-name descname"><span class="pre">replicate</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/general.html#TEOpt.replicate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#general.TEOpt.replicate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Forward-month returns of the replicating portfolio.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt id="general.activeshare">
+<code class="sig-prename descclassname"><span class="pre">general.</span></code><code class="sig-name descname"><span class="pre">activeshare</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fund</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">idx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">in_format</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'num'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/general.html#activeshare"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#general.activeshare" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute the active ahare of a fund versus an index.</p>
+<p>Formula is 0.5 * sum(abs(w_fund - w_idx)).</p>
+<dl class="simple">
+<dt>fund: {pd.Series, pd.DataFrame}</dt><dd><p>The fund’s holdings, with tickers as the Index and weights as
+values.  If a DataFrame, each column is a ticker/portfolio.</p>
+</dd>
+<dt>idx: pd.Series</dt><dd><p>The benchmark portfolio, with tickers as the Index and weights
+as values.</p>
+</dd>
+<dt>in_format: {‘num’, ‘dec’}</dt><dd><p>Decimal notation of the inputs.  “num” means 0.5% is denoted 0.5;
+“dec” means 0.5% is denoted 0.005.</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>act_sh<span class="classifier">pd.Series or pd.DataFrame</span></dt><dd><p>The dimension will be one-lower than that of <cite>fund</cite>.
+If <cite>fund</cite> is a Series, the result is a scalar value.
+If <cite>fund</cite> is a DataFrame, the result is a Series, with
+the columns of <cite>fund</cite> as the resulting Index.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="general.amortize">
+<code class="sig-prename descclassname"><span class="pre">general.</span></code><code class="sig-name descname"><span class="pre">amortize</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rate</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nper</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pv</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">freq</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'M'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/general.html#amortize"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#general.amortize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Construct an amortization schedule for a fixed-rate loan.</p>
+<p>Rate -&gt; annualized input</p>
+<p># a 6.75% $200,000 loan, 30-year tenor, payments due monthly
+# view the 5 final months
+print(amortize(rate=.0675, nper=30, pv=200000).round(2).tail())</p>
+<blockquote>
+<div><p>beg_bal     prin  interest  end_bal</p>
+</div></blockquote>
+<p>356  6377.95 -1261.32    -35.88  5116.63
+357  5116.63 -1268.42    -28.78  3848.22
+358  3848.22 -1275.55    -21.65  2572.67
+359  2572.67 -1282.72    -14.47  1289.94
+360  1289.94 -1289.94     -7.26    -0.00</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="general.corr_heatmap">
+<code class="sig-prename descclassname"><span class="pre">general.</span></code><code class="sig-name descname"><span class="pre">corr_heatmap</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mask_half</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmap</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'RdYlGn_r'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vmin</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-</span> <span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vmax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">linewidths</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">square</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">figsize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(10,</span> <span class="pre">10)</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/general.html#corr_heatmap"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#general.corr_heatmap" title="Permalink to this definition">¶</a></dt>
+<dd><p>Wrapper around seaborn.heatmap for visualizing correlation matrix.</p>
+<dl class="simple">
+<dt>x<span class="classifier">DataFrame</span></dt><dd><p>Underlying data (not a correlation matrix)</p>
+</dd>
+<dt>mask_half<span class="classifier">bool, default True</span></dt><dd><p>If True, mask (whiteout) the upper right triangle of the matrix</p>
+</dd>
+</dl>
+<p>All other parameters passed to seaborn.heatmap:
+<a class="reference external" href="https://seaborn.pydata.org/generated/seaborn.heatmap.html">https://seaborn.pydata.org/generated/seaborn.heatmap.html</a></p>
+<p># Generate some correlated data
+&gt;&gt;&gt; import numpy as np
+&gt;&gt;&gt; import pandas as pd
+&gt;&gt;&gt; k = 10
+&gt;&gt;&gt; size = 400
+&gt;&gt;&gt; mu = np.random.randint(0, 10, k).astype(float)
+&gt;&gt;&gt; r = np.random.ranf(k ** 2).reshape((k, k)) * 5
+&gt;&gt;&gt; df = pd.DataFrame(np.random.multivariate_normal(mu, r, size=size))
+&gt;&gt;&gt; corr_heatmap(df, figsize=(6, 6))</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="general.ewm_bootstrap">
+<code class="sig-prename descclassname"><span class="pre">general.</span></code><code class="sig-name descname"><span class="pre">ewm_bootstrap</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">com</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">span</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">halflife</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/general.html#ewm_bootstrap"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#general.ewm_bootstrap" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bootstrap a new distribution through exponential weighting.</p>
+<dl class="simple">
+<dt>a<span class="classifier">1-D array-like</span></dt><dd><p>Array from which to generate random sample of elements</p>
+</dd>
+<dt>size<span class="classifier">int or tuple of ints, default None</span></dt><dd><p>Output shape.  If None, a single value is returned</p>
+</dd>
+<dt>com<span class="classifier">float, default None</span></dt><dd><p>Center of mass; alpha = 1 / (1 + com), for com ≥ 0</p>
+</dd>
+<dt>span<span class="classifier">float, default None</span></dt><dd><p>Span parameter; a = 2 / (span + 1), for span ≥ 1</p>
+</dd>
+<dt>halflife<span class="classifier">float, default None</span></dt><dd><p>Halflife parameter; alpha = 1 − exp(log(0.5) / halflife),
+for halflife &gt; 0</p>
+</dd>
+<dt>alpha<span class="classifier">float, default None</span></dt><dd><p>Smoothing factor</p>
+</dd>
+</dl>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">123</span><span class="p">)</span>
+</pre></div>
+</div>
+<p># Our bootstrapped histogram should approximate these freqs
+&gt;&gt;&gt; ewm_weights(10, alpha=.10)
+[ 0.05948221  0.06609135  0.07343483  0.08159426  0.09066029  0.10073365</p>
+<blockquote>
+<div><p>0.11192628  0.12436253  0.13818059  0.15353399]</p>
+</div></blockquote>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">res</span> <span class="o">=</span> <span class="n">ewm_bootstrap</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">10</span><span class="p">),</span> <span class="n">size</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="mf">1e6</span><span class="p">),</span> <span class="n">alpha</span><span class="o">=.</span><span class="mi">10</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">res</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">res</span><span class="p">)</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">(</span><span class="n">res</span> <span class="o">/</span> <span class="n">res</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+<span class="go">9    0.15323</span>
+<span class="go">8    0.13834</span>
+<span class="go">7    0.12424</span>
+<span class="go">6    0.11189</span>
+<span class="go">5    0.10113</span>
+<span class="go">dtype: float64</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt id="general.ewm_params">
+<code class="sig-prename descclassname"><span class="pre">general.</span></code><code class="sig-name descname"><span class="pre">ewm_params</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">param</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">param_value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/general.html#ewm_params"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#general.ewm_params" title="Permalink to this definition">¶</a></dt>
+<dd><p>Corresponding parameter values for exponentially weighted functions.</p>
+<p>param : {‘alpha’, ‘com’, ‘span’, ‘halflife’}
+param_value : float or int</p>
+<blockquote>
+<div><p>The parameter value.</p>
+</div></blockquote>
+<dl class="simple">
+<dt>result<span class="classifier">dict</span></dt><dd><p>Layout/index of corresponding parameters.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="general.ewm_weights">
+<code class="sig-prename descclassname"><span class="pre">general.</span></code><code class="sig-name descname"><span class="pre">ewm_weights</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">i</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">com</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">span</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">halflife</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/general.html#ewm_weights"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#general.ewm_weights" title="Permalink to this definition">¶</a></dt>
+<dd><p>Exponential weights as a function of position <cite>i</cite>.</p>
+<p>Mimics pandas’ methodology with adjust=True:
+<a class="reference external" href="http://pandas.pydata.org/pandas-docs/stable/computation.html#exponentially-weighted-windows">http://pandas.pydata.org/pandas-docs/stable/computation.html#exponentially-weighted-windows</a></p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="general.factor_loadings">
+<code class="sig-prename descclassname"><span class="pre">general.</span></code><code class="sig-name descname"><span class="pre">factor_loadings</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">factors</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pickle_from</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pickle_to</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/general.html#factor_loadings"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#general.factor_loadings" title="Permalink to this definition">¶</a></dt>
+<dd><p>Security factor exposures generated through OLS regression.</p>
+<p>Incorporates a handful of well-known factors models.</p>
+<dl class="simple">
+<dt>r<span class="classifier">Series or DataFrame</span></dt><dd><p>The left-hand-side variable(s).  If <cite>r</cite> is nx1 shape (a Series or
+single-column DataFrame), the result will be a DataFrame.  If <cite>r</cite> is
+an nxm DataFrame, the result will be a dictionary of DataFrames.</p>
+</dd>
+<dt>factors<span class="classifier">DataFrame or None, default None</span></dt><dd><p>Factor returns (right-hand-side variables).  If None, factor returns
+are loaded from <cite>pyfinance.datasets.load_factors</cite></p>
+</dd>
+<dt>scale<span class="classifier">bool, default False</span></dt><dd><p>If True, cale up/down the volatilities of all factors besides MKT &amp; RF,
+to the vol of MKT.  Both means and the standard deviations are
+multiplied by the scale factor (ratio of MKT.std() to other stdevs)</p>
+</dd>
+<dt>pickle_from<span class="classifier">str or None, default None</span></dt><dd><p>Passed to <cite>pyfinance.datasets.load_factors</cite> if factors is not None</p>
+</dd>
+<dt>pickle_to<span class="classifier">str or None, default None</span></dt><dd><p>Passed to <cite>pyfinance.datasets.load_factors</cite> if factors is not None</p>
+</dd>
+</dl>
+<p># TODO</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="general.variance_inflation_factor">
+<code class="sig-prename descclassname"><span class="pre">general.</span></code><code class="sig-name descname"><span class="pre">variance_inflation_factor</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">regressors</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hasconst</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/general.html#variance_inflation_factor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#general.variance_inflation_factor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate variance inflation factor (VIF) for each all <cite>regressors</cite>.</p>
+<p>A wrapper/modification of statsmodels:
+statsmodels.stats.outliers_influence.variance_inflation_factor</p>
+<p>One recommendation is that if VIF is greater than 5, then the explanatory
+variable <cite>x</cite> is highly collinear with the other explanatory
+variables, and the parameter estimates will have large standard errors
+because of this. [source: StatsModels]</p>
+<dl class="simple">
+<dt>regressors: DataFrame</dt><dd><p>DataFrame containing the entire set of regressors</p>
+</dd>
+<dt>hasconst<span class="classifier">bool, default False</span></dt><dd><p>If False, a column vector will be added to <cite>regressors</cite> for use in
+OLS</p>
+</dd>
+</dl>
+<p># Generate some data
+from datetime import date
+from pandas_datareader.data import DataReader as dr</p>
+<dl>
+<dt>syms = {‘TWEXBMTH’<span class="classifier">‘usd’,</span></dt><dd><blockquote>
+<div><p>‘T10Y2YM’ : ‘term_spread’,
+‘PCOPPUSDM’ : ‘copper’</p>
+</div></blockquote>
+<p>}</p>
+</dd>
+</dl>
+<p>start = date(2000, 1, 1)
+data = (dr(syms.keys(), ‘fred’, start)</p>
+<blockquote>
+<div><p>.pct_change()
+.dropna())</p>
+</div></blockquote>
+<p>data = data.rename(columns = syms)</p>
+<p>print(variance_inflation_factor(data))
+usd            1.31609
+term_spread    1.03793
+copper         1.37055
+dtype: float64</p>
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="03_datasets.html" class="btn btn-neutral float-right" title="datasets模块" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="01_returns.html" class="btn btn-neutral float-left" title="returns模块" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, chenlin.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

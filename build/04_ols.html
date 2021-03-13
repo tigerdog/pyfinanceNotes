@@ -1,0 +1,887 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>ols模块 &mdash; finance 1.3 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="options模块" href="05_options.html" />
+    <link rel="prev" title="datasets模块" href="03_datasets.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> finance
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="01_returns.html"><strong>returns模块</strong></a></li>
+<li class="toctree-l1"><a class="reference internal" href="02_general.html"><strong>general模块</strong></a></li>
+<li class="toctree-l1"><a class="reference internal" href="03_datasets.html"><strong>datasets模块</strong></a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#"><strong>ols模块</strong></a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#id1"><strong>OLS类</strong></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#beta"><strong>beta方法</strong></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="05_options.html"><strong>options模块</strong></a></li>
+<li class="toctree-l1"><a class="reference internal" href="06_utils.html"><strong>utils模块</strong></a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">finance</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li><strong>ols模块</strong></li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/04_ols.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-ols">
+<span id="ols"></span><h1><strong>ols模块</strong><a class="headerlink" href="#module-ols" title="Permalink to this headline">¶</a></h1>
+<p>Ordinary least-squares (OLS) regression.  Static and rolling cases.</p>
+<dl class="py class">
+<dt id="ols.OLS">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">ols.</span></code><code class="sig-name descname"><span class="pre">OLS</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">has_const</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_const</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ols.html#OLS"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ols.OLS" title="Permalink to this definition">¶</a></dt>
+<dd><p>Ordinary least-squares (OLS) regression.</p>
+<p>Implemented in NumPy.  Outputs are NumPy arrays or scalars.</p>
+<p>Attributes largely mimic statsmodels’ OLS RegressionResultsWrapper.
+(see statsmodels.regression.linear_model.RegressionResults)</p>
+<p>The core of the model is calculated with the ‘gelsd’ LAPACK driver,
+witin numpy.linalg.lstsq, yielding the coefficients (parameters).  Most
+methods are then a derivation of these coefficients.</p>
+<dl class="simple">
+<dt>y<span class="classifier">array-like</span></dt><dd><p>The single y (dependent, response, endogenous) variable.</p>
+</dd>
+<dt>x<span class="classifier">array-like or None, default None</span></dt><dd><p>The x (independent, explanatory, exogenous) variables.  If only <cite>y</cite>
+is given (and <cite>x=None</cite>), <cite>y</cite> is assumed to be the first column of
+<cite>y</cite> and <cite>x</cite> the remaining [1:] columns.</p>
+</dd>
+<dt>has_const<span class="classifier">bool, default False</span></dt><dd><p>Specifies whether <cite>x</cite> includes a user-supplied constant (a column
+vector).  If False, it is added at instantiation.</p>
+</dd>
+<dt>use_const ; bool, default True</dt><dd><p>Whether to include an intercept term in the model output.  Note the
+difference between has_const and use_const.  The former specifies
+whether a column vector of 1s is included in the input; the latter
+specifies whether the model itself should include a constant
+(intercept) term.  Exogenous data that is ~N(0,1) would have a
+constant equal to zero; specify use_const=False in this situation.</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt id="ols.OLS.alpha">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">alpha</span></code><a class="headerlink" href="#ols.OLS.alpha" title="Permalink to this definition">¶</a></dt>
+<dd><p>The intercept term (alpha).</p>
+<p>Technically defined as the coefficient to a column vector of ones.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ols.OLS.beta">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">beta</span></code><a class="headerlink" href="#ols.OLS.beta" title="Permalink to this definition">¶</a></dt>
+<dd><p>The parameters (coefficients), excl. the intercept.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ols.OLS.condition_number">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">condition_number</span></code><a class="headerlink" href="#ols.OLS.condition_number" title="Permalink to this definition">¶</a></dt>
+<dd><p>Condition number of x; ratio of largest to smallest eigenvalue.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ols.OLS.df_err">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">df_err</span></code><a class="headerlink" href="#ols.OLS.df_err" title="Permalink to this definition">¶</a></dt>
+<dd><p>Residual degrees of freedom. n - k - 1.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ols.OLS.df_reg">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">df_reg</span></code><a class="headerlink" href="#ols.OLS.df_reg" title="Permalink to this definition">¶</a></dt>
+<dd><p>Model degrees of freedom. Equal to k.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ols.OLS.df_tot">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">df_tot</span></code><a class="headerlink" href="#ols.OLS.df_tot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Total degrees of freedom, n - 1.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ols.OLS.fstat">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">fstat</span></code><a class="headerlink" href="#ols.OLS.fstat" title="Permalink to this definition">¶</a></dt>
+<dd><p>F-statistic of the fully specified model.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ols.OLS.fstat_sig">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">fstat_sig</span></code><a class="headerlink" href="#ols.OLS.fstat_sig" title="Permalink to this definition">¶</a></dt>
+<dd><p>p-value of the F-statistic.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ols.OLS.ms_err">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">ms_err</span></code><a class="headerlink" href="#ols.OLS.ms_err" title="Permalink to this definition">¶</a></dt>
+<dd><p>Mean squared error the errors (residuals).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ols.OLS.ms_reg">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">ms_reg</span></code><a class="headerlink" href="#ols.OLS.ms_reg" title="Permalink to this definition">¶</a></dt>
+<dd><p>Mean squared error the regression (model).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ols.OLS.predicted">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">predicted</span></code><a class="headerlink" href="#ols.OLS.predicted" title="Permalink to this definition">¶</a></dt>
+<dd><p>The predicted values of y (yhat).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ols.OLS.pvalue_alpha">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">pvalue_alpha</span></code><a class="headerlink" href="#ols.OLS.pvalue_alpha" title="Permalink to this definition">¶</a></dt>
+<dd><p>Two-tailed p values for t-stats of the intercept only.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ols.OLS.pvalue_beta">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">pvalue_beta</span></code><a class="headerlink" href="#ols.OLS.pvalue_beta" title="Permalink to this definition">¶</a></dt>
+<dd><p>Two-tailed p values for t-stats of parameters, excl. intercept.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ols.OLS.resids">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">resids</span></code><a class="headerlink" href="#ols.OLS.resids" title="Permalink to this definition">¶</a></dt>
+<dd><p>The residuals (errors).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ols.OLS.rsq">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">rsq</span></code><a class="headerlink" href="#ols.OLS.rsq" title="Permalink to this definition">¶</a></dt>
+<dd><p>The coefficent of determination, R-squared.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ols.OLS.rsq_adj">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">rsq_adj</span></code><a class="headerlink" href="#ols.OLS.rsq_adj" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adjusted R-squared.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ols.OLS.se_alpha">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">se_alpha</span></code><a class="headerlink" href="#ols.OLS.se_alpha" title="Permalink to this definition">¶</a></dt>
+<dd><p>Standard errors (SE) of the intercept (alpha) only.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ols.OLS.se_beta">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">se_beta</span></code><a class="headerlink" href="#ols.OLS.se_beta" title="Permalink to this definition">¶</a></dt>
+<dd><p>Standard errors (SE) of the parameters, excluding the intercept.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ols.OLS.ss_err">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">ss_err</span></code><a class="headerlink" href="#ols.OLS.ss_err" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sum of squares of the residuals (error sum of squares).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ols.OLS.ss_reg">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">ss_reg</span></code><a class="headerlink" href="#ols.OLS.ss_reg" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sum of squares of the regression.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ols.OLS.ss_tot">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">ss_tot</span></code><a class="headerlink" href="#ols.OLS.ss_tot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Total sum of squares.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ols.OLS.std_err">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">std_err</span></code><a class="headerlink" href="#ols.OLS.std_err" title="Permalink to this definition">¶</a></dt>
+<dd><p>Standard error of the estimate (SEE).  A scalar.</p>
+<p>For standard errors of parameters, see _se_all, se_alpha, and se_beta.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ols.OLS.tstat_alpha">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">tstat_alpha</span></code><a class="headerlink" href="#ols.OLS.tstat_alpha" title="Permalink to this definition">¶</a></dt>
+<dd><p>The t-statistic of the intercept (alpha).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ols.OLS.tstat_beta">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">tstat_beta</span></code><a class="headerlink" href="#ols.OLS.tstat_beta" title="Permalink to this definition">¶</a></dt>
+<dd><p>The t-statistics of the parameters, excl. the intecept.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ols.OLS.ybar">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">ybar</span></code><a class="headerlink" href="#ols.OLS.ybar" title="Permalink to this definition">¶</a></dt>
+<dd><p>The mean of y.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="ols.PandasRollingOLS">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">ols.</span></code><code class="sig-name descname"><span class="pre">PandasRollingOLS</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">window</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">has_const</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_const</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">names</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ols.html#PandasRollingOLS"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ols.PandasRollingOLS" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="py method">
+<dt id="ols.PandasRollingOLS.condition_number">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">condition_number</span></code><a class="headerlink" href="#ols.PandasRollingOLS.condition_number" title="Permalink to this definition">¶</a></dt>
+<dd><p>Condition number of x; ratio of largest to smallest eigenvalue.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ols.PandasRollingOLS.fstat">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">fstat</span></code><a class="headerlink" href="#ols.PandasRollingOLS.fstat" title="Permalink to this definition">¶</a></dt>
+<dd><p>F-statistic of the fully specified model.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ols.PandasRollingOLS.fstat_sig">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">fstat_sig</span></code><a class="headerlink" href="#ols.PandasRollingOLS.fstat_sig" title="Permalink to this definition">¶</a></dt>
+<dd><p>p-value of the F-statistic.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ols.PandasRollingOLS.ms_err">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">ms_err</span></code><a class="headerlink" href="#ols.PandasRollingOLS.ms_err" title="Permalink to this definition">¶</a></dt>
+<dd><p>Mean squared error the errors (residuals).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ols.PandasRollingOLS.ms_reg">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">ms_reg</span></code><a class="headerlink" href="#ols.PandasRollingOLS.ms_reg" title="Permalink to this definition">¶</a></dt>
+<dd><p>Mean squared error the regression (model).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ols.PandasRollingOLS.predicted">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">predicted</span></code><a class="headerlink" href="#ols.PandasRollingOLS.predicted" title="Permalink to this definition">¶</a></dt>
+<dd><p>The predicted values of y (‘yhat’).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ols.PandasRollingOLS.pvalue_alpha">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">pvalue_alpha</span></code><a class="headerlink" href="#ols.PandasRollingOLS.pvalue_alpha" title="Permalink to this definition">¶</a></dt>
+<dd><p>Two-tailed p values for t-stats of the intercept only.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ols.PandasRollingOLS.pvalue_beta">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">pvalue_beta</span></code><a class="headerlink" href="#ols.PandasRollingOLS.pvalue_beta" title="Permalink to this definition">¶</a></dt>
+<dd><p>Two-tailed p values for t-stats of parameters, excl. intercept.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ols.PandasRollingOLS.rsq">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">rsq</span></code><a class="headerlink" href="#ols.PandasRollingOLS.rsq" title="Permalink to this definition">¶</a></dt>
+<dd><p>The coefficent of determination, R-squared.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ols.PandasRollingOLS.rsq_adj">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">rsq_adj</span></code><a class="headerlink" href="#ols.PandasRollingOLS.rsq_adj" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adjusted R-squared.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ols.PandasRollingOLS.se_alpha">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">se_alpha</span></code><a class="headerlink" href="#ols.PandasRollingOLS.se_alpha" title="Permalink to this definition">¶</a></dt>
+<dd><p>Standard errors (SE) of the intercept (alpha) only.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ols.PandasRollingOLS.se_beta">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">se_beta</span></code><a class="headerlink" href="#ols.PandasRollingOLS.se_beta" title="Permalink to this definition">¶</a></dt>
+<dd><p>Standard errors (SE) of the parameters, excluding the intercept.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ols.PandasRollingOLS.ss_err">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">ss_err</span></code><a class="headerlink" href="#ols.PandasRollingOLS.ss_err" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sum of squares of the residuals (error sum of squares).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ols.PandasRollingOLS.ss_reg">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">ss_reg</span></code><a class="headerlink" href="#ols.PandasRollingOLS.ss_reg" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sum of squares of the regression.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ols.PandasRollingOLS.ss_tot">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">ss_tot</span></code><a class="headerlink" href="#ols.PandasRollingOLS.ss_tot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Total sum of squares.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ols.PandasRollingOLS.std_err">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">std_err</span></code><a class="headerlink" href="#ols.PandasRollingOLS.std_err" title="Permalink to this definition">¶</a></dt>
+<dd><p>Standard error of the estimate (SEE).  A scalar.</p>
+<p>For standard errors of parameters, see _se_all, se_alpha, and se_beta.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ols.PandasRollingOLS.tstat_alpha">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">tstat_alpha</span></code><a class="headerlink" href="#ols.PandasRollingOLS.tstat_alpha" title="Permalink to this definition">¶</a></dt>
+<dd><p>The t-statistic of the intercept (alpha).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ols.PandasRollingOLS.tstat_beta">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">tstat_beta</span></code><a class="headerlink" href="#ols.PandasRollingOLS.tstat_beta" title="Permalink to this definition">¶</a></dt>
+<dd><p>The t-statistics of the parameters, excl. the intecept.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ols.PandasRollingOLS.ybar">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">ybar</span></code><a class="headerlink" href="#ols.PandasRollingOLS.ybar" title="Permalink to this definition">¶</a></dt>
+<dd><p>The mean of y.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="ols.RollingOLS">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">ols.</span></code><code class="sig-name descname"><span class="pre">RollingOLS</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">window</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">has_const</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_const</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ols.html#RollingOLS"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ols.RollingOLS" title="Permalink to this definition">¶</a></dt>
+<dd><p>Rolling ordinary least-squares regression.</p>
+<p>Uses matrix formulation with NumPy broadcasting.  Outputs are NumPy arrays
+or scalars.</p>
+<p>Attributes largely mimic statsmodels’ OLS RegressionResultsWrapper.
+(see statsmodels.regression.linear_model.RegressionResults)</p>
+<p>The core of the model is calculated with the ‘gelsd’ LAPACK driver,
+witin numpy.linalg.lstsq, yielding the coefficients (parameters).  Most
+methods are then a derivation of these coefficients.</p>
+<dl class="simple">
+<dt>y<span class="classifier">array-like</span></dt><dd><p>The single y (dependent, response, endogenous) variable</p>
+</dd>
+<dt>x<span class="classifier">array-like or None, default None</span></dt><dd><p>The x (independent, explanatory, exogenous) variables.  If only <cite>y</cite>
+is given (and <cite>x=None</cite>), <cite>y</cite> is assumed to be the first column of
+<cite>y</cite> and <cite>x</cite> the remaining [1:] columns</p>
+</dd>
+<dt>window<span class="classifier">int</span></dt><dd><p>Length of each rolling window</p>
+</dd>
+<dt>has_const<span class="classifier">bool, default False</span></dt><dd><p>Specifies whether <cite>x</cite> includes a user-supplied constant (a column
+vector).  If False, it is added at instantiation</p>
+</dd>
+<dt>use_const<span class="classifier">bool, default True</span></dt><dd><p>Whether to include an intercept term in the model output.  Note the
+difference between has_const and use_const.  The former specifies
+whether a column vector of 1s is included in the input; the latter
+specifies whether the model itself should include a constant
+(intercept) term.  Exogenous data that is ~N(0,1) would have a
+constant equal to zero; specify use_const=False in this situation</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt id="ols.RollingOLS.condition_number">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">condition_number</span></code><a class="headerlink" href="#ols.RollingOLS.condition_number" title="Permalink to this definition">¶</a></dt>
+<dd><p>Condition number of x; ratio of largest to smallest eigenvalue.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ols.RollingOLS.df_err">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">df_err</span></code><a class="headerlink" href="#ols.RollingOLS.df_err" title="Permalink to this definition">¶</a></dt>
+<dd><p>Residual degrees of freedom. n - k - 1.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ols.RollingOLS.df_reg">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">df_reg</span></code><a class="headerlink" href="#ols.RollingOLS.df_reg" title="Permalink to this definition">¶</a></dt>
+<dd><p>Model degrees of freedom. Equal to k.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ols.RollingOLS.df_tot">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">df_tot</span></code><a class="headerlink" href="#ols.RollingOLS.df_tot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Total degrees of freedom, n - 1.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ols.RollingOLS.fstat">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">fstat</span></code><a class="headerlink" href="#ols.RollingOLS.fstat" title="Permalink to this definition">¶</a></dt>
+<dd><p>F-statistic of the fully specified model.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ols.RollingOLS.fstat_sig">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">fstat_sig</span></code><a class="headerlink" href="#ols.RollingOLS.fstat_sig" title="Permalink to this definition">¶</a></dt>
+<dd><p>p-value of the F-statistic.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ols.RollingOLS.ms_err">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">ms_err</span></code><a class="headerlink" href="#ols.RollingOLS.ms_err" title="Permalink to this definition">¶</a></dt>
+<dd><p>Mean squared error the errors (residuals).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ols.RollingOLS.ms_reg">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">ms_reg</span></code><a class="headerlink" href="#ols.RollingOLS.ms_reg" title="Permalink to this definition">¶</a></dt>
+<dd><p>Mean squared error the regression (model).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ols.RollingOLS.predicted">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">predicted</span></code><a class="headerlink" href="#ols.RollingOLS.predicted" title="Permalink to this definition">¶</a></dt>
+<dd><p>The predicted values of y (‘yhat’).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ols.RollingOLS.pvalue_alpha">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">pvalue_alpha</span></code><a class="headerlink" href="#ols.RollingOLS.pvalue_alpha" title="Permalink to this definition">¶</a></dt>
+<dd><p>Two-tailed p values for t-stats of the intercept only.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ols.RollingOLS.pvalue_beta">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">pvalue_beta</span></code><a class="headerlink" href="#ols.RollingOLS.pvalue_beta" title="Permalink to this definition">¶</a></dt>
+<dd><p>Two-tailed p values for t-stats of parameters, excl. intercept.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ols.RollingOLS.rsq">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">rsq</span></code><a class="headerlink" href="#ols.RollingOLS.rsq" title="Permalink to this definition">¶</a></dt>
+<dd><p>The coefficent of determination, R-squared.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ols.RollingOLS.rsq_adj">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">rsq_adj</span></code><a class="headerlink" href="#ols.RollingOLS.rsq_adj" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adjusted R-squared.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ols.RollingOLS.se_alpha">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">se_alpha</span></code><a class="headerlink" href="#ols.RollingOLS.se_alpha" title="Permalink to this definition">¶</a></dt>
+<dd><p>Standard errors (SE) of the intercept (alpha) only.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ols.RollingOLS.se_beta">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">se_beta</span></code><a class="headerlink" href="#ols.RollingOLS.se_beta" title="Permalink to this definition">¶</a></dt>
+<dd><p>Standard errors (SE) of the parameters, excluding the intercept.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ols.RollingOLS.ss_err">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">ss_err</span></code><a class="headerlink" href="#ols.RollingOLS.ss_err" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sum of squares of the residuals (error sum of squares).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ols.RollingOLS.ss_reg">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">ss_reg</span></code><a class="headerlink" href="#ols.RollingOLS.ss_reg" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sum of squares of the regression.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ols.RollingOLS.ss_tot">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">ss_tot</span></code><a class="headerlink" href="#ols.RollingOLS.ss_tot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Total sum of squares.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ols.RollingOLS.std_err">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">std_err</span></code><a class="headerlink" href="#ols.RollingOLS.std_err" title="Permalink to this definition">¶</a></dt>
+<dd><p>Standard error of the estimate (SEE).  A scalar.</p>
+<p>For standard errors of parameters, see _se_all, se_alpha, and se_beta.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ols.RollingOLS.tstat_alpha">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">tstat_alpha</span></code><a class="headerlink" href="#ols.RollingOLS.tstat_alpha" title="Permalink to this definition">¶</a></dt>
+<dd><p>The t-statistic of the intercept (alpha).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ols.RollingOLS.tstat_beta">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">tstat_beta</span></code><a class="headerlink" href="#ols.RollingOLS.tstat_beta" title="Permalink to this definition">¶</a></dt>
+<dd><p>The t-statistics of the parameters, excl. the intecept.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ols.RollingOLS.ybar">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">ybar</span></code><a class="headerlink" href="#ols.RollingOLS.ybar" title="Permalink to this definition">¶</a></dt>
+<dd><p>The mean of y.</p>
+</dd></dl>
+
+</dd></dl>
+
+<div class="section" id="id1">
+<h2><strong>OLS类</strong><a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="id0">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">ols.</span></code><code class="sig-name descname"><span class="pre">OLS</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">has_const</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_const</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ols.html#OLS"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id0" title="Permalink to this definition">¶</a></dt>
+<dd><p>Ordinary least-squares (OLS) regression.</p>
+<p>Implemented in NumPy.  Outputs are NumPy arrays or scalars.</p>
+<p>Attributes largely mimic statsmodels’ OLS RegressionResultsWrapper.
+(see statsmodels.regression.linear_model.RegressionResults)</p>
+<p>The core of the model is calculated with the ‘gelsd’ LAPACK driver,
+witin numpy.linalg.lstsq, yielding the coefficients (parameters).  Most
+methods are then a derivation of these coefficients.</p>
+<dl class="simple">
+<dt>y<span class="classifier">array-like</span></dt><dd><p>The single y (dependent, response, endogenous) variable.</p>
+</dd>
+<dt>x<span class="classifier">array-like or None, default None</span></dt><dd><p>The x (independent, explanatory, exogenous) variables.  If only <cite>y</cite>
+is given (and <cite>x=None</cite>), <cite>y</cite> is assumed to be the first column of
+<cite>y</cite> and <cite>x</cite> the remaining [1:] columns.</p>
+</dd>
+<dt>has_const<span class="classifier">bool, default False</span></dt><dd><p>Specifies whether <cite>x</cite> includes a user-supplied constant (a column
+vector).  If False, it is added at instantiation.</p>
+</dd>
+<dt>use_const ; bool, default True</dt><dd><p>Whether to include an intercept term in the model output.  Note the
+difference between has_const and use_const.  The former specifies
+whether a column vector of 1s is included in the input; the latter
+specifies whether the model itself should include a constant
+(intercept) term.  Exogenous data that is ~N(0,1) would have a
+constant equal to zero; specify use_const=False in this situation.</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt id="id2">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">alpha</span></code><a class="headerlink" href="#id2" title="Permalink to this definition">¶</a></dt>
+<dd><p>The intercept term (alpha).</p>
+<p>Technically defined as the coefficient to a column vector of ones.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="id3">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">beta</span></code><a class="headerlink" href="#id3" title="Permalink to this definition">¶</a></dt>
+<dd><p>The parameters (coefficients), excl. the intercept.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="id4">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">condition_number</span></code><a class="headerlink" href="#id4" title="Permalink to this definition">¶</a></dt>
+<dd><p>Condition number of x; ratio of largest to smallest eigenvalue.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="id5">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">df_err</span></code><a class="headerlink" href="#id5" title="Permalink to this definition">¶</a></dt>
+<dd><p>Residual degrees of freedom. n - k - 1.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="id6">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">df_reg</span></code><a class="headerlink" href="#id6" title="Permalink to this definition">¶</a></dt>
+<dd><p>Model degrees of freedom. Equal to k.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="id7">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">df_tot</span></code><a class="headerlink" href="#id7" title="Permalink to this definition">¶</a></dt>
+<dd><p>Total degrees of freedom, n - 1.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="id8">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">fstat</span></code><a class="headerlink" href="#id8" title="Permalink to this definition">¶</a></dt>
+<dd><p>F-statistic of the fully specified model.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="id9">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">fstat_sig</span></code><a class="headerlink" href="#id9" title="Permalink to this definition">¶</a></dt>
+<dd><p>p-value of the F-statistic.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="id10">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">ms_err</span></code><a class="headerlink" href="#id10" title="Permalink to this definition">¶</a></dt>
+<dd><p>Mean squared error the errors (residuals).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="id11">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">ms_reg</span></code><a class="headerlink" href="#id11" title="Permalink to this definition">¶</a></dt>
+<dd><p>Mean squared error the regression (model).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="id12">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">predicted</span></code><a class="headerlink" href="#id12" title="Permalink to this definition">¶</a></dt>
+<dd><p>The predicted values of y (yhat).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="id13">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">pvalue_alpha</span></code><a class="headerlink" href="#id13" title="Permalink to this definition">¶</a></dt>
+<dd><p>Two-tailed p values for t-stats of the intercept only.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="id14">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">pvalue_beta</span></code><a class="headerlink" href="#id14" title="Permalink to this definition">¶</a></dt>
+<dd><p>Two-tailed p values for t-stats of parameters, excl. intercept.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="id15">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">resids</span></code><a class="headerlink" href="#id15" title="Permalink to this definition">¶</a></dt>
+<dd><p>The residuals (errors).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="id16">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">rsq</span></code><a class="headerlink" href="#id16" title="Permalink to this definition">¶</a></dt>
+<dd><p>The coefficent of determination, R-squared.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="id17">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">rsq_adj</span></code><a class="headerlink" href="#id17" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adjusted R-squared.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="id18">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">se_alpha</span></code><a class="headerlink" href="#id18" title="Permalink to this definition">¶</a></dt>
+<dd><p>Standard errors (SE) of the intercept (alpha) only.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="id19">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">se_beta</span></code><a class="headerlink" href="#id19" title="Permalink to this definition">¶</a></dt>
+<dd><p>Standard errors (SE) of the parameters, excluding the intercept.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="id20">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">ss_err</span></code><a class="headerlink" href="#id20" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sum of squares of the residuals (error sum of squares).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="id21">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">ss_reg</span></code><a class="headerlink" href="#id21" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sum of squares of the regression.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="id22">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">ss_tot</span></code><a class="headerlink" href="#id22" title="Permalink to this definition">¶</a></dt>
+<dd><p>Total sum of squares.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="id23">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">std_err</span></code><a class="headerlink" href="#id23" title="Permalink to this definition">¶</a></dt>
+<dd><p>Standard error of the estimate (SEE).  A scalar.</p>
+<p>For standard errors of parameters, see _se_all, se_alpha, and se_beta.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="id24">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">tstat_alpha</span></code><a class="headerlink" href="#id24" title="Permalink to this definition">¶</a></dt>
+<dd><p>The t-statistic of the intercept (alpha).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="id25">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">tstat_beta</span></code><a class="headerlink" href="#id25" title="Permalink to this definition">¶</a></dt>
+<dd><p>The t-statistics of the parameters, excl. the intecept.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="id26">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">ybar</span></code><a class="headerlink" href="#id26" title="Permalink to this definition">¶</a></dt>
+<dd><p>The mean of y.</p>
+</dd></dl>
+
+</dd></dl>
+
+<div class="section" id="beta">
+<h3><strong>beta方法</strong><a class="headerlink" href="#beta" title="Permalink to this headline">¶</a></h3>
+<p><strong>当E(u)=0和cov(x,u)=0时，β1等于总体的协方差除以x的方差</strong></p>
+<p><strong>用到了numpy的lstsq 是 LeaST SQuare （最小二乘）的意思。我们常用最小二乘法来求解超定线性方程组。</strong></p>
+<p><em>β系数也称为贝塔系数（Beta coefficient），是一种风险指数，用来衡量个别股票或股票基金相对于整个股市的价格波动情况。</em></p>
+<p><em>贝塔系数是统计学上的概念，它所反映的是某一投资对象相对于大盘的表现情况。</em></p>
+<p>数值和方向是重点,反映的是和大盘（基准）之间的联动性。</p>
+<p><em>可以作为考察基金经理降低投资波动性风险的能力，也可以作为股票收益相对于业绩评价基准收益的总体波动性。</em></p>
+<p>一个共同基金的贝塔系数如果是1.10，表示其波动是股市的1.10 倍，亦即上涨时比市场表现优10%，而下跌时则更差10%;若贝他系数为0．5，则波动情况只及一半。</p>
+<p>总风险=系统风险+个别风险</p>
+<p>公式为：个体和基准协方差/（基准的方差）
+<em>与系统风险相对的就是个别风险，即由公司自身因素所导致的价格波动。</em></p>
+<hr class="docutils" />
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="05_options.html" class="btn btn-neutral float-right" title="options模块" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="03_datasets.html" class="btn btn-neutral float-left" title="datasets模块" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, chenlin.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

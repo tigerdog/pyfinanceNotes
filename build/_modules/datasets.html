@@ -1,0 +1,862 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>datasets &mdash; finance 1.3 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> finance
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../01_returns.html">returns模块</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../02_general.html">general模块</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../03_datasets.html">datasets模块</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../04_ols.html">ols模块</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../05_options.html">options模块</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../06_utils.html">utils模块</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">finance</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="index.html">Module code</a> &raquo;</li>
+        
+      <li>datasets</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for datasets</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Financial dataset web scrubbing.</span>
+
+<span class="sd">Descriptions</span>
+<span class="sd">------------</span>
+<span class="sd">load_13f</span>
+<span class="sd">    Parse SEC 13F XML file to pandas DataFrame.</span>
+<span class="sd">load_factors</span>
+<span class="sd">    Load risk factor returns.</span>
+<span class="sd">load_industries</span>
+<span class="sd">    Load industry portfolio returns from Ken French&#39;s website.</span>
+<span class="sd">load_rates</span>
+<span class="sd">    Load database of interest rates (CP, corporate, government).</span>
+<span class="sd">load_rf</span>
+<span class="sd">    Build a risk-free rate return series using 3-month US T-bill yields.</span>
+<span class="sd">load_retaildata</span>
+<span class="sd">    Load and clean retail trade data from census.gov.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="n">__author__</span> <span class="o">=</span> <span class="s2">&quot;Brad Solomon &lt;brad.solomon.1124@gmail.com&gt;&quot;</span>
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">&quot;load_factors&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;load_industries&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;load_rates&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;load_shiller&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;load_rf&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;load_13f&quot;</span><span class="p">,</span>
+<span class="p">]</span>
+
+<span class="kn">import</span> <span class="nn">itertools</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">pandas.tseries</span> <span class="kn">import</span> <span class="n">offsets</span>
+<span class="kn">import</span> <span class="nn">pandas_datareader</span> <span class="k">as</span> <span class="nn">pdr</span>
+<span class="kn">import</span> <span class="nn">requests</span>
+<span class="kn">import</span> <span class="nn">xmltodict</span>
+
+<span class="c1"># Default start date for web-retrieved time series.</span>
+<span class="n">DSTART</span> <span class="o">=</span> <span class="s2">&quot;1950-01&quot;</span>
+
+
+<div class="viewcode-block" id="load_13f"><a class="viewcode-back" href="../03_datasets.html#datasets.load_13f">[docs]</a><span class="k">def</span> <span class="nf">load_13f</span><span class="p">(</span><span class="n">url</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Load and parse an SEC.gov-hosted 13F XML file to Pandas DataFrame.</span>
+
+<span class="sd">    Provide the URL to the raw .xml form13fInfoTable.  (See example below.)</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    url : str</span>
+<span class="sd">        Link to .xml file.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    df : pd.DataFrame</span>
+<span class="sd">        Holdings snapshot.</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    # Third Point LLC June 2017 13F</span>
+<span class="sd">    &gt;&gt;&gt; from pyfinance import datasets</span>
+<span class="sd">    &gt;&gt;&gt; url = &#39;https://www.sec.gov/Archives/edgar/data/1040273/000108514617001787/form13fInfoTable.xml&#39;  # noqa</span>
+<span class="sd">    &gt;&gt;&gt; df = datasets.load_13f(url=url)</span>
+
+<span class="sd">    .. _U.S. SEC: Accessing EDGAR Data:</span>
+<span class="sd">       https://www.sec.gov/edgar/searchedgar/accessing-edgar-data.htm</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">resp</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">)</span><span class="o">.</span><span class="n">text</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">xmltodict</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">resp</span><span class="p">)[</span><span class="s2">&quot;informationTable&quot;</span><span class="p">][</span><span class="s2">&quot;infoTable&quot;</span><span class="p">]</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="p">)</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span>
+        <span class="p">[</span><span class="s2">&quot;shrsOrPrnAmt&quot;</span><span class="p">,</span> <span class="s2">&quot;investmentDiscretion&quot;</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span>
+    <span class="p">)</span>
+    <span class="n">df</span><span class="p">[</span><span class="s2">&quot;votingAuthority&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;votingAuthority&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">d</span><span class="p">:</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;Sole&quot;</span><span class="p">])</span>
+    <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="s2">&quot;value&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_numeric</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;value&quot;</span><span class="p">],</span> <span class="n">errors</span><span class="o">=</span><span class="s2">&quot;coerce&quot;</span><span class="p">)</span>
+    <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="s2">&quot;votingAuthority&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_numeric</span><span class="p">(</span>
+        <span class="n">df</span><span class="p">[</span><span class="s2">&quot;votingAuthority&quot;</span><span class="p">],</span> <span class="n">errors</span><span class="o">=</span><span class="s2">&quot;coerce&quot;</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">df</span></div>
+
+
+<div class="viewcode-block" id="load_factors"><a class="viewcode-back" href="../03_datasets.html#datasets.load_factors">[docs]</a><span class="k">def</span> <span class="nf">load_factors</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Load risk factor returns.</span>
+
+<span class="sd">    Factors</span>
+<span class="sd">    -------</span>
+<span class="sd">    Symbol      Description                                            Source</span>
+<span class="sd">    ------      ----------                                             ------</span>
+<span class="sd">    MKT                                                                French</span>
+<span class="sd">    SMB         Size (small minus big)                                 French</span>
+<span class="sd">    HML         Value (high minus low)                                 French</span>
+<span class="sd">    RMW         Profitability (robust minus weak)                      French</span>
+<span class="sd">    CMA         Investment (conservative minus aggressive)             French</span>
+<span class="sd">    UMD         Momentum (up minus down)                               French</span>
+<span class="sd">    STR         Short-term reversal                                    French</span>
+<span class="sd">    LTR         Long-term reversal                                     French</span>
+<span class="sd">    BETA        Beta                                                   French</span>
+<span class="sd">    ACC         Accruals                                               French</span>
+<span class="sd">    VAR         Variance                                               French</span>
+<span class="sd">    IVAR        Residual variance                                      French</span>
+<span class="sd">    EP          Earnings-to-price                                      French</span>
+<span class="sd">    CP          Cash flow-to-price                                     French</span>
+<span class="sd">    DP          Dividend-to-price                                      French</span>
+<span class="sd">    BAB         Betting against beta                                   AQR</span>
+<span class="sd">    QMJ         Quality minus junk                                     AQR</span>
+<span class="sd">    HMLD        Value (high minus low) [modified version]              AQR</span>
+<span class="sd">    LIQ         Liquidity                                              Pastor</span>
+<span class="sd">    BDLB        Bond lookback straddle                                 Hsieh</span>
+<span class="sd">    FXLB        Curency lookback straddle                              Hsieh</span>
+<span class="sd">    CMLB        Commodity lookback straddle                            Hsieh</span>
+<span class="sd">    IRLB        Interest rate lookback straddle                        Hsieh</span>
+<span class="sd">    STLB        Stock lookback straddle                                Hsieh</span>
+<span class="sd">    PUT         CBOE S&amp;P 500 PutWrite Index                            CBOE</span>
+<span class="sd">    BXM         CBOE S&amp;P 500 BuyWrite Index®                           CBOE</span>
+<span class="sd">    RXM         CBOE S&amp;P 500 Risk Reversal Index                       CBOE</span>
+
+<span class="sd">    Source Directory</span>
+<span class="sd">    ----------------</span>
+<span class="sd">    Source      Link</span>
+<span class="sd">    ------      ----</span>
+<span class="sd">    French      http://mba.tuck.dartmouth.edu/pages/faculty/ken.french/data_library.html  # noqa</span>
+<span class="sd">    Pastor      http://faculty.chicagobooth.edu/lubos.pastor/research/liq_data_1962_2016.txt  # noqa</span>
+<span class="sd">    AQR         https://www.aqr.com/library/data-sets</span>
+<span class="sd">    Hsieh       https://faculty.fuqua.duke.edu/~dah7/HFData.htm</span>
+<span class="sd">    Fed         https://fred.stlouisfed.org/</span>
+<span class="sd">    CBOE        http://www.cboe.com/products/strategy-benchmark-indexes</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># TODO: factors elegible for addition</span>
+    <span class="c1">#   VIIX, VIIZ, XIV, ZIV, CRP (AQR)</span>
+    <span class="c1">#   http://www.cboe.com/micro/buywrite/monthendpricehistory.xls ends 2016</span>
+    <span class="c1">#   could use:</span>
+    <span class="c1">#   http://www.cboe.com/publish/scheduledtask/mktdata/datahouse/putdailyprice.csv</span>
+
+    <span class="c1"># Warning: slow, kludgy data retrieval follows</span>
+    <span class="c1"># ------------------------------------------------------------------------</span>
+
+    <span class="c1"># `tgt` will become a list of DataFrames and eventually concatenated</span>
+    <span class="n">tgt</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="c1"># MKT, SMB, HML, RMW, CMA, RF, UMD, STR, LTR</span>
+    <span class="n">facs</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="s2">&quot;F-F_Research_Data_5_Factors_2x3&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;F-F_Momentum_Factor&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;F-F_ST_Reversal_Factor&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;F-F_LT_Reversal_Factor&quot;</span><span class="p">,</span>
+    <span class="p">]</span>
+
+    <span class="k">for</span> <span class="n">fac</span> <span class="ow">in</span> <span class="n">facs</span><span class="p">:</span>
+        <span class="n">tgt</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pdr</span><span class="o">.</span><span class="n">DataReader</span><span class="p">(</span><span class="n">fac</span><span class="p">,</span> <span class="s2">&quot;famafrench&quot;</span><span class="p">,</span> <span class="n">DSTART</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
+
+    <span class="c1"># BETA, ACC, VAR, IVAR require some manipulation to compute returns</span>
+    <span class="c1"># in the dual-sort method of Fama-French</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;BETA&quot;</span><span class="p">,</span> <span class="s2">&quot;AC&quot;</span><span class="p">,</span> <span class="s2">&quot;VAR&quot;</span><span class="p">,</span> <span class="s2">&quot;RESVAR&quot;</span><span class="p">]:</span>
+        <span class="n">ser</span> <span class="o">=</span> <span class="n">pdr</span><span class="o">.</span><span class="n">DataReader</span><span class="p">(</span>
+            <span class="s2">&quot;25_Portfolios_ME_&quot;</span> <span class="o">+</span> <span class="n">i</span> <span class="o">+</span> <span class="s2">&quot;_5x5&quot;</span><span class="p">,</span> <span class="s2">&quot;famafrench&quot;</span><span class="p">,</span> <span class="n">DSTART</span>
+        <span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">ser</span> <span class="o">=</span> <span class="n">ser</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">20</span><span class="p">]]</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="o">-</span> <span class="n">ser</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span>
+            <span class="p">:,</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">14</span><span class="p">,</span> <span class="mi">19</span><span class="p">,</span> <span class="mi">24</span><span class="p">]</span>
+        <span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">ser</span> <span class="o">=</span> <span class="n">ser</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+        <span class="n">tgt</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ser</span><span class="p">)</span>
+
+    <span class="c1"># E/P, CF/P, D/P (univariate sorts, quintile spreads)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;E-P&quot;</span><span class="p">,</span> <span class="s2">&quot;CF-P&quot;</span><span class="p">,</span> <span class="s2">&quot;D-P&quot;</span><span class="p">]:</span>
+        <span class="n">ser</span> <span class="o">=</span> <span class="n">pdr</span><span class="o">.</span><span class="n">DataReader</span><span class="p">(</span>
+            <span class="s2">&quot;Portfolios_Formed_on_&quot;</span> <span class="o">+</span> <span class="n">i</span><span class="p">,</span> <span class="s2">&quot;famafrench&quot;</span><span class="p">,</span> <span class="n">DSTART</span>
+        <span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">ser</span> <span class="o">=</span> <span class="n">ser</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="s2">&quot;Hi 20&quot;</span><span class="p">]</span> <span class="o">-</span> <span class="n">ser</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="s2">&quot;Lo 20&quot;</span><span class="p">]</span>
+        <span class="n">ser</span> <span class="o">=</span> <span class="n">ser</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+        <span class="n">tgt</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ser</span><span class="p">)</span>
+
+    <span class="n">tgt</span> <span class="o">=</span> <span class="p">[</span><span class="n">df</span><span class="o">.</span><span class="n">to_timestamp</span><span class="p">(</span><span class="n">how</span><span class="o">=</span><span class="s2">&quot;end&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">df</span> <span class="ow">in</span> <span class="n">tgt</span><span class="p">]</span>
+
+    <span class="c1"># BAB, QMJ, HMLD</span>
+    <span class="c1"># TODO: performance is poor here, runtime is eaten up by these 3</span>
+    <span class="n">links</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;BAB&quot;</span><span class="p">:</span> <span class="s2">&quot;http://bit.ly/2hWyaG8&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;QMJ&quot;</span><span class="p">:</span> <span class="s2">&quot;http://bit.ly/2hUBSgF&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;HMLD&quot;</span><span class="p">:</span> <span class="s2">&quot;http://bit.ly/2hdVb7G&quot;</span><span class="p">,</span>
+    <span class="p">}</span>
+    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">links</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">ser</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_excel</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="mi">18</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">)[</span><span class="s2">&quot;USA&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="mi">100</span>
+        <span class="n">ser</span> <span class="o">=</span> <span class="n">ser</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+        <span class="n">tgt</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ser</span><span class="p">)</span>
+
+    <span class="c1"># Lookback straddles</span>
+    <span class="n">link</span> <span class="o">=</span> <span class="s2">&quot;http://faculty.fuqua.duke.edu/~dah7/DataLibrary/TF-Fac.xls&quot;</span>
+    <span class="n">straddles</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_excel</span><span class="p">(</span><span class="n">link</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="mi">14</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">straddles</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DatetimeIndex</span><span class="p">(</span>
+        <span class="n">straddles</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;01&quot;</span>
+    <span class="p">)</span> <span class="o">+</span> <span class="n">offsets</span><span class="o">.</span><span class="n">MonthEnd</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">straddles</span> <span class="o">=</span> <span class="n">straddles</span> <span class="o">*</span> <span class="mf">100.0</span>
+    <span class="n">tgt</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">straddles</span><span class="p">)</span>
+
+    <span class="c1"># LIQ</span>
+    <span class="n">link</span> <span class="o">=</span> <span class="s2">&quot;http://bit.ly/2pn2oBK&quot;</span>
+    <span class="n">liq</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span>
+        <span class="n">link</span><span class="p">,</span>
+        <span class="n">skiprows</span><span class="o">=</span><span class="mi">14</span><span class="p">,</span>
+        <span class="n">delim_whitespace</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">header</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">usecols</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span>
+        <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+        <span class="n">names</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;date&quot;</span><span class="p">,</span> <span class="s2">&quot;LIQ&quot;</span><span class="p">],</span>
+    <span class="p">)</span>
+    <span class="n">liq</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DatetimeIndex</span><span class="p">(</span>
+        <span class="n">liq</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;01&quot;</span>
+    <span class="p">)</span> <span class="o">+</span> <span class="n">offsets</span><span class="o">.</span><span class="n">MonthEnd</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">liq</span> <span class="o">=</span> <span class="n">liq</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="o">-</span><span class="mi">99</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span> <span class="o">*</span> <span class="mf">100.0</span>
+    <span class="n">tgt</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">liq</span><span class="p">)</span>
+
+    <span class="c1"># USD, HY</span>
+    <span class="n">fred</span> <span class="o">=</span> <span class="n">pdr</span><span class="o">.</span><span class="n">DataReader</span><span class="p">([</span><span class="s2">&quot;DTWEXB&quot;</span><span class="p">,</span> <span class="s2">&quot;BAMLH0A0HYM2&quot;</span><span class="p">],</span> <span class="s2">&quot;fred&quot;</span><span class="p">,</span> <span class="n">DSTART</span><span class="p">)</span>
+    <span class="n">fred</span> <span class="o">=</span> <span class="n">fred</span><span class="o">.</span><span class="n">asfreq</span><span class="p">(</span><span class="s2">&quot;D&quot;</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;ffill&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="s2">&quot;ffill&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">asfreq</span><span class="p">(</span><span class="s2">&quot;M&quot;</span><span class="p">)</span>
+    <span class="n">fred</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="s2">&quot;DTWEXB&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">fred</span><span class="p">[</span><span class="s2">&quot;DTWEXB&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">pct_change</span><span class="p">()</span> <span class="o">*</span> <span class="mf">100.0</span>
+    <span class="n">fred</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="s2">&quot;BAMLH0A0HYM2&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">fred</span><span class="p">[</span><span class="s2">&quot;BAMLH0A0HYM2&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">diff</span><span class="p">()</span>
+    <span class="n">tgt</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">fred</span><span class="p">)</span>
+
+    <span class="c1"># PUT, BXM, RXM (CBOE options strategy indices)</span>
+    <span class="n">link1</span> <span class="o">=</span> <span class="s2">&quot;http://www.cboe.com/micro/put/put_86-06.xls&quot;</span>
+    <span class="n">link2</span> <span class="o">=</span> <span class="s2">&quot;http://www.cboe.com/publish/scheduledtask/mktdata/datahouse/putdailyprice.csv&quot;</span>  <span class="c1"># noqa</span>
+
+    <span class="n">put1</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_excel</span><span class="p">(</span>
+        <span class="n">link1</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">skiprows</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="kc">None</span>
+    <span class="p">)</span><span class="o">.</span><span class="n">rename_axis</span><span class="p">(</span><span class="s2">&quot;DATE&quot;</span><span class="p">)</span>
+    <span class="n">put2</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span>
+        <span class="n">link2</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">parse_dates</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">skiprows</span><span class="o">=</span><span class="mi">7</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="kc">None</span>
+    <span class="p">)</span><span class="o">.</span><span class="n">rename_axis</span><span class="p">(</span><span class="s2">&quot;DATE&quot;</span><span class="p">)</span>
+    <span class="n">put</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">((</span><span class="n">put1</span><span class="p">,</span> <span class="n">put2</span><span class="p">))</span>
+        <span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="mi">1</span><span class="p">:</span> <span class="s2">&quot;PUT&quot;</span><span class="p">})</span>
+        <span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span>
+        <span class="o">.</span><span class="n">asfreq</span><span class="p">(</span><span class="s2">&quot;D&quot;</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;ffill&quot;</span><span class="p">)</span>
+        <span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="s2">&quot;ffill&quot;</span><span class="p">)</span>
+        <span class="o">.</span><span class="n">asfreq</span><span class="p">(</span><span class="s2">&quot;M&quot;</span><span class="p">)</span>
+        <span class="o">.</span><span class="n">pct_change</span><span class="p">()</span>
+        <span class="o">*</span> <span class="mf">100.0</span>
+    <span class="p">)</span>
+    <span class="n">tgt</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">put</span><span class="p">)</span>
+
+    <span class="n">link1</span> <span class="o">=</span> <span class="s2">&quot;http://www.cboe.com/publish/scheduledtask/mktdata/datahouse/bxmarchive.csv&quot;</span>  <span class="c1"># noqa</span>
+    <span class="n">link2</span> <span class="o">=</span> <span class="s2">&quot;http://www.cboe.com/publish/scheduledtask/mktdata/datahouse/bxmcurrent.csv&quot;</span>  <span class="c1"># noqa</span>
+
+    <span class="n">bxm1</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span>
+        <span class="n">link1</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">parse_dates</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">skiprows</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="kc">None</span>
+    <span class="p">)</span><span class="o">.</span><span class="n">rename_axis</span><span class="p">(</span><span class="s2">&quot;DATE&quot;</span><span class="p">)</span>
+    <span class="n">bxm2</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span>
+        <span class="n">link2</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">parse_dates</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">skiprows</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="kc">None</span>
+    <span class="p">)</span><span class="o">.</span><span class="n">rename_axis</span><span class="p">(</span><span class="s2">&quot;DATE&quot;</span><span class="p">)</span>
+    <span class="n">bxm</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">((</span><span class="n">bxm1</span><span class="p">,</span> <span class="n">bxm2</span><span class="p">))</span>
+        <span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="mi">1</span><span class="p">:</span> <span class="s2">&quot;BXM&quot;</span><span class="p">})</span>
+        <span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span>
+        <span class="o">.</span><span class="n">asfreq</span><span class="p">(</span><span class="s2">&quot;D&quot;</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;ffill&quot;</span><span class="p">)</span>
+        <span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="s2">&quot;ffill&quot;</span><span class="p">)</span>
+        <span class="o">.</span><span class="n">asfreq</span><span class="p">(</span><span class="s2">&quot;M&quot;</span><span class="p">)</span>
+        <span class="o">.</span><span class="n">pct_change</span><span class="p">()</span>
+        <span class="o">*</span> <span class="mf">100.0</span>
+    <span class="p">)</span>
+    <span class="n">tgt</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">bxm</span><span class="p">)</span>
+
+    <span class="n">link</span> <span class="o">=</span> <span class="s2">&quot;http://www.cboe.com/publish/scheduledtask/mktdata/datahouse/rxm_historical.csv&quot;</span>  <span class="c1"># noqa</span>
+    <span class="n">rxm</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span>
+            <span class="n">link</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">parse_dates</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">skiprows</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="kc">None</span>
+        <span class="p">)</span>
+        <span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="mi">1</span><span class="p">:</span> <span class="s2">&quot;RXM&quot;</span><span class="p">})</span>
+        <span class="o">.</span><span class="n">rename_axis</span><span class="p">(</span><span class="s2">&quot;DATE&quot;</span><span class="p">)</span>
+        <span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span>
+        <span class="o">.</span><span class="n">asfreq</span><span class="p">(</span><span class="s2">&quot;D&quot;</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;ffill&quot;</span><span class="p">)</span>
+        <span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="s2">&quot;ffill&quot;</span><span class="p">)</span>
+        <span class="o">.</span><span class="n">asfreq</span><span class="p">(</span><span class="s2">&quot;M&quot;</span><span class="p">)</span>
+        <span class="o">.</span><span class="n">pct_change</span><span class="p">()</span>
+        <span class="o">*</span> <span class="mf">100.0</span>
+    <span class="p">)</span>
+    <span class="n">tgt</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">rxm</span><span class="p">)</span>
+
+    <span class="c1"># Clean up data retrieved above</span>
+    <span class="c1"># -----------------------------------------------------------------</span>
+
+    <span class="n">factors</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">tgt</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">newnames</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;Mkt-RF&quot;</span><span class="p">:</span> <span class="s2">&quot;MKT&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Mom   &quot;</span><span class="p">:</span> <span class="s2">&quot;UMD&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;ST_Rev&quot;</span><span class="p">:</span> <span class="s2">&quot;STR&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;LT_Rev&quot;</span><span class="p">:</span> <span class="s2">&quot;LTR&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;RESVAR&quot;</span><span class="p">:</span> <span class="s2">&quot;IVAR&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;AC&quot;</span><span class="p">:</span> <span class="s2">&quot;ACC&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;PTFSBD&quot;</span><span class="p">:</span> <span class="s2">&quot;BDLB&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;PTFSFX&quot;</span><span class="p">:</span> <span class="s2">&quot;FXLB&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;PTFSCOM&quot;</span><span class="p">:</span> <span class="s2">&quot;CMLB&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;PTFSIR&quot;</span><span class="p">:</span> <span class="s2">&quot;IRLB&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;PTFSSTK&quot;</span><span class="p">:</span> <span class="s2">&quot;STLB&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;DTWEXB&quot;</span><span class="p">:</span> <span class="s2">&quot;USD&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;BAMLH0A0HYM2&quot;</span><span class="p">:</span> <span class="s2">&quot;HY&quot;</span><span class="p">,</span>
+    <span class="p">}</span>
+    <span class="n">factors</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="n">newnames</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="c1"># Get last valid RF date; returns will be constrained to this date</span>
+    <span class="n">factors</span> <span class="o">=</span> <span class="n">factors</span><span class="p">[:</span> <span class="n">factors</span><span class="p">[</span><span class="s2">&quot;RF&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">last_valid_index</span><span class="p">()]</span>
+
+    <span class="c1"># Subtract RF for long-only factors</span>
+    <span class="n">subtract</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;HY&quot;</span><span class="p">,</span> <span class="s2">&quot;PUT&quot;</span><span class="p">,</span> <span class="s2">&quot;BXM&quot;</span><span class="p">,</span> <span class="s2">&quot;RXM&quot;</span><span class="p">]</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">subtract</span><span class="p">:</span>
+        <span class="n">factors</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">factors</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">factors</span><span class="p">[</span><span class="s2">&quot;RF&quot;</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">factors</span></div>
+
+
+<div class="viewcode-block" id="load_industries"><a class="viewcode-back" href="../03_datasets.html#datasets.load_industries">[docs]</a><span class="k">def</span> <span class="nf">load_industries</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Load industry portfolio returns from Ken French&#39;s website.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    industries : dictionary of Pandas DataFrames</span>
+<span class="sd">        Each key is a portfolio group.</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    &gt;&gt;&gt; from pyfinance import datasets</span>
+<span class="sd">    &gt;&gt;&gt; ind = datasets.load_industries()</span>
+
+<span class="sd">    # Monthly returns to 5 industry portfolios</span>
+<span class="sd">    &gt;&gt;&gt; ind[5].head()</span>
+<span class="sd">                Cnsmr  Manuf  HiTec  Hlth   Other</span>
+<span class="sd">    Date</span>
+<span class="sd">    1950-01-31   1.26   1.47   3.21   1.06   3.19</span>
+<span class="sd">    1950-02-28   1.91   1.29   2.06   1.92   1.02</span>
+<span class="sd">    1950-03-31   0.28   1.93   3.46  -2.90  -0.68</span>
+<span class="sd">    1950-04-30   3.22   5.21   3.58   5.52   1.50</span>
+<span class="sd">    1950-05-31   3.81   6.18   1.07   3.96   1.36</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">n</span> <span class="o">=</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">17</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">38</span><span class="p">,</span> <span class="mi">48</span><span class="p">]</span>
+    <span class="n">port</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2">_Industry_Portfolios&quot;</span> <span class="o">%</span> <span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">n</span><span class="p">)</span>
+    <span class="n">rets</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">port</span><span class="p">:</span>
+        <span class="n">ret</span> <span class="o">=</span> <span class="n">pdr</span><span class="o">.</span><span class="n">get_data_famafrench</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="n">DSTART</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">rets</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ret</span><span class="o">.</span><span class="n">to_timestamp</span><span class="p">(</span><span class="n">how</span><span class="o">=</span><span class="s2">&quot;end&quot;</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="kc">False</span><span class="p">))</span>
+    <span class="n">industries</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">rets</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">industries</span></div>
+
+
+<div class="viewcode-block" id="load_rates"><a class="viewcode-back" href="../03_datasets.html#datasets.load_rates">[docs]</a><span class="k">def</span> <span class="nf">load_rates</span><span class="p">(</span><span class="n">freq</span><span class="o">=</span><span class="s2">&quot;D&quot;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Load interest rates from https://fred.stlouisfed.org/.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    reload : bool, default True</span>
+<span class="sd">        If True, download the data from source rather than loading pickled data</span>
+<span class="sd">    freq : str {&#39;D&#39;, &#39;W&#39;, &#39;M&#39;}, default &#39;D&#39;</span>
+<span class="sd">        Frequency of time series; daily, weekly, or monthly</span>
+<span class="sd">    start : str or datetime, default &#39;1963&#39;, optional</span>
+<span class="sd">        Start date of time series</span>
+<span class="sd">    dropna : bool, default True</span>
+<span class="sd">        If True, drop NaN along rows in resulting DataFrame</span>
+<span class="sd">    how : str, default &#39;any&#39;</span>
+<span class="sd">        Passed to dropna()</span>
+
+<span class="sd">    Original source</span>
+<span class="sd">    ---------------</span>
+<span class="sd">    Board of Governors of the Federal Reserve System</span>
+<span class="sd">    H.15 Selected Interest Rates</span>
+<span class="sd">    https://www.federalreserve.gov/releases/h15/</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">months</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">6</span><span class="p">]</span>
+    <span class="n">years</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">30</span><span class="p">]</span>
+
+    <span class="c1"># Nested dictionaries of symbols from fred.stlouisfed.org</span>
+    <span class="n">nom</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;D&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;DGS</span><span class="si">%s</span><span class="s2">MO&quot;</span> <span class="o">%</span> <span class="n">m</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">months</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="s2">&quot;DGS</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">y</span> <span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="n">years</span><span class="p">],</span>
+        <span class="s2">&quot;W&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;WGS</span><span class="si">%s</span><span class="s2">MO&quot;</span> <span class="o">%</span> <span class="n">m</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">months</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="s2">&quot;WGS</span><span class="si">%s</span><span class="s2">YR&quot;</span> <span class="o">%</span> <span class="n">y</span> <span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="n">years</span><span class="p">],</span>
+        <span class="s2">&quot;M&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;GS</span><span class="si">%s</span><span class="s2">M&quot;</span> <span class="o">%</span> <span class="n">m</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">months</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="s2">&quot;GS</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">y</span> <span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="n">years</span><span class="p">],</span>
+    <span class="p">}</span>
+
+    <span class="n">tips</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;D&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;DFII</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">y</span> <span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="n">years</span><span class="p">[</span><span class="mi">3</span><span class="p">:</span><span class="mi">7</span><span class="p">]],</span>
+        <span class="s2">&quot;W&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;WFII</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">y</span> <span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="n">years</span><span class="p">[</span><span class="mi">3</span><span class="p">:</span><span class="mi">7</span><span class="p">]],</span>
+        <span class="s2">&quot;M&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;FII</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">y</span> <span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="n">years</span><span class="p">[</span><span class="mi">3</span><span class="p">:</span><span class="mi">7</span><span class="p">]],</span>
+    <span class="p">}</span>
+
+    <span class="n">fcp</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;D&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;DCPF1M&quot;</span><span class="p">,</span> <span class="s2">&quot;DCPF2M&quot;</span><span class="p">,</span> <span class="s2">&quot;DCPF3M&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;W&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;WCPF1M&quot;</span><span class="p">,</span> <span class="s2">&quot;WCPF2M&quot;</span><span class="p">,</span> <span class="s2">&quot;WCPF3M&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;M&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;CPF1M&quot;</span><span class="p">,</span> <span class="s2">&quot;CPF2M&quot;</span><span class="p">,</span> <span class="s2">&quot;CPF3M&quot;</span><span class="p">],</span>
+    <span class="p">}</span>
+
+    <span class="n">nfcp</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;D&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;DCPN30&quot;</span><span class="p">,</span> <span class="s2">&quot;DCPN2M&quot;</span><span class="p">,</span> <span class="s2">&quot;DCPN3M&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;W&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;WCPN1M&quot;</span><span class="p">,</span> <span class="s2">&quot;WCPN2M&quot;</span><span class="p">,</span> <span class="s2">&quot;WCPN3M&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;M&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;CPN1M&quot;</span><span class="p">,</span> <span class="s2">&quot;CPN2M&quot;</span><span class="p">,</span> <span class="s2">&quot;CPN3M&quot;</span><span class="p">],</span>
+    <span class="p">}</span>
+
+    <span class="n">short</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;D&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;DFF&quot;</span><span class="p">,</span> <span class="s2">&quot;DPRIME&quot;</span><span class="p">,</span> <span class="s2">&quot;DPCREDIT&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;W&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;FF&quot;</span><span class="p">,</span> <span class="s2">&quot;WPRIME&quot;</span><span class="p">,</span> <span class="s2">&quot;WPCREDIT&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;M&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;FEDFUNDS&quot;</span><span class="p">,</span> <span class="s2">&quot;MPRIME&quot;</span><span class="p">,</span> <span class="s2">&quot;MPCREDIT&quot;</span><span class="p">],</span>
+    <span class="p">}</span>
+
+    <span class="n">rates</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span>
+        <span class="n">itertools</span><span class="o">.</span><span class="n">chain</span><span class="o">.</span><span class="n">from_iterable</span><span class="p">(</span>
+            <span class="p">[</span><span class="n">d</span><span class="p">[</span><span class="n">freq</span><span class="p">]</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="p">[</span><span class="n">nom</span><span class="p">,</span> <span class="n">tips</span><span class="p">,</span> <span class="n">fcp</span><span class="p">,</span> <span class="n">nfcp</span><span class="p">,</span> <span class="n">short</span><span class="p">]]</span>
+        <span class="p">)</span>
+    <span class="p">)</span>
+    <span class="n">rates</span> <span class="o">=</span> <span class="n">pdr</span><span class="o">.</span><span class="n">DataReader</span><span class="p">(</span><span class="n">rates</span><span class="p">,</span> <span class="s2">&quot;fred&quot;</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="n">DSTART</span><span class="p">)</span>
+
+    <span class="n">l1</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="p">[</span><span class="s2">&quot;Nominal&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="mi">11</span>
+        <span class="o">+</span> <span class="p">[</span><span class="s2">&quot;TIPS&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="mi">4</span>
+        <span class="o">+</span> <span class="p">[</span><span class="s2">&quot;Fncl CP&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="mi">3</span>
+        <span class="o">+</span> <span class="p">[</span><span class="s2">&quot;Non-Fncl CP&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="mi">3</span>
+        <span class="o">+</span> <span class="p">[</span><span class="s2">&quot;Short Rates&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="mi">3</span>
+    <span class="p">)</span>
+
+    <span class="n">l2</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="p">[</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2">m&quot;</span> <span class="o">%</span> <span class="n">m</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">months</span><span class="p">]</span>
+        <span class="o">+</span> <span class="p">[</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2">y&quot;</span> <span class="o">%</span> <span class="n">y</span> <span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="n">years</span><span class="p">]</span>
+        <span class="o">+</span> <span class="p">[</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2">y&quot;</span> <span class="o">%</span> <span class="n">y</span> <span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="n">years</span><span class="p">[</span><span class="mi">3</span><span class="p">:</span><span class="mi">7</span><span class="p">]]</span>
+        <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="p">[</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2">m&quot;</span> <span class="o">%</span> <span class="n">m</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">)]</span>
+        <span class="o">+</span> <span class="p">[</span><span class="s2">&quot;Fed Funds&quot;</span><span class="p">,</span> <span class="s2">&quot;Prime Rate&quot;</span><span class="p">,</span> <span class="s2">&quot;Primary Credit&quot;</span><span class="p">]</span>
+    <span class="p">)</span>
+
+    <span class="n">rates</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">MultiIndex</span><span class="o">.</span><span class="n">from_arrays</span><span class="p">([</span><span class="n">l1</span><span class="p">,</span> <span class="n">l2</span><span class="p">])</span>
+
+    <span class="k">return</span> <span class="n">rates</span></div>
+
+
+<div class="viewcode-block" id="load_rf"><a class="viewcode-back" href="../03_datasets.html#datasets.load_rf">[docs]</a><span class="k">def</span> <span class="nf">load_rf</span><span class="p">(</span><span class="n">freq</span><span class="o">=</span><span class="s2">&quot;M&quot;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Build a risk-free rate return series using 3-month US T-bill yields.</span>
+
+<span class="sd">    The 3-Month Treasury Bill: Secondary Market Rate from the Federal Reserve</span>
+<span class="sd">    (a yield) is convert to a total return.  See &#39;Methodology&#39; for details.</span>
+
+<span class="sd">    The time series should closely mimic returns of the BofA Merrill Lynch US</span>
+<span class="sd">    Treasury Bill (3M) (Local Total Return) index.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    freq : str, sequence, or set</span>
+<span class="sd">        If a single-character string, return a single-column DataFrame with</span>
+<span class="sd">        index frequency corresponding to `freq`.  If a sequence or set, return</span>
+<span class="sd">        a dict of DataFrames with the keys corresponding to `freq`(s)</span>
+
+<span class="sd">    Methodology</span>
+<span class="sd">    -----------</span>
+<span class="sd">    The Federal Reserve publishes a daily chart of Selected Interest Rates</span>
+<span class="sd">    (release H.15; www.federalreserve.gov/releases/h15/).  As with a yield</span>
+<span class="sd">    curve, some yields are interpolated from recent issues because Treasury</span>
+<span class="sd">    auctions do not occur daily.</span>
+
+<span class="sd">    While the de-annualized ex-ante yield itself is a fairly good tracker of</span>
+<span class="sd">    the day&#39;s total return, it is not perfect and can exhibit non-neglible</span>
+<span class="sd">    error in periods of volatile short rates.  The purpose of this function</span>
+<span class="sd">    is to convert yields to total returns for 3-month T-bills.  It is a</span>
+<span class="sd">    straightforward process given that these are discount (zero-coupon)</span>
+<span class="sd">    securities.  It consists of buying a 3-month bond at the beginning of each</span>
+<span class="sd">    month, then amortizing that bond throughout the month to back into the</span>
+<span class="sd">    price of a &lt;3-month tenor bond.</span>
+
+<span class="sd">    The source data (pulled from fred.stlouisfed.org) is quoted on a discount</span>
+<span class="sd">    basis.  (See footnote 4 from release H.15.)  This is converted to a</span>
+<span class="sd">    bond-equivlanet yield (BEY) and then translated to a hypothetical daily</span>
+<span class="sd">    total return.</span>
+
+<span class="sd">    The process largely follows Morningstar&#39;s published Return Calculation of</span>
+<span class="sd">    U.S. Treasury Constant Maturity Indices, and is as follows:</span>
+<span class="sd">    - At the beginning of each month a bill is purchased at the prior month-end</span>
+<span class="sd">      price, and daily returns in the month reflect the change in daily</span>
+<span class="sd">      valuation of this bill</span>
+<span class="sd">    - If t is not a business day, its yield is the yield of the prior</span>
+<span class="sd">      business day.</span>
+<span class="sd">    - At each day during the month, the price of a 3-month bill purchased on</span>
+<span class="sd">      the final calendar day of the previous month is computed.</span>
+<span class="sd">    - Month-end pricing is unique.  At each month-end date, there are</span>
+<span class="sd">      effectively two bonds and two prices.  The first is the bond</span>
+<span class="sd">      hypothetically purchased on the final day of the prior month with 2m</span>
+<span class="sd">      remaining to maturity, and the second is a new-issue bond purchased that</span>
+<span class="sd">      day with 3m to maturity.  The former is used as the numerator to compute</span>
+<span class="sd">      that day&#39;s total return, while the latter is used as the denominator</span>
+<span class="sd">      to compute the next day&#39;s (1st day of next month) total return.</span>
+
+<span class="sd">    Description of the BofA Merrill Lynch US 3-Month Treasury Bill Index:</span>
+<span class="sd">    The BofA Merrill Lynch US 3-Month Treasury Bill Index is comprised of a</span>
+<span class="sd">    single issue purchased at the beginning of the month and held for a full</span>
+<span class="sd">    month. At the end of the month that issue is sold and rolled into a newly</span>
+<span class="sd">    selected issue. The     issue selected at each month-end rebalancing is the</span>
+<span class="sd">    outstanding Treasury Bill that matures closest to, but not beyond, three</span>
+<span class="sd">    months from the rebalancing date. To qualify for selection, an issue must</span>
+<span class="sd">    have settled on or before the month-end rebalancing date.</span>
+<span class="sd">        (Source: Bank of America Merrill Lynch)</span>
+
+<span class="sd">    See also</span>
+<span class="sd">    --------</span>
+<span class="sd">    FRED: 3-Month Treasury Bill: Secondary Market Rate (DTB3)</span>
+<span class="sd">      https://fred.stlouisfed.org/series/DTB3</span>
+<span class="sd">    McGraw-Hill/Irwin, Interest Rates, 2008.</span>
+<span class="sd">      https://people.ucsc.edu/~lbaum/econ80h/LS-Chap009.pdf</span>
+<span class="sd">    Morningstar, Return Calculation of U.S. Treasury Constant Maturity Indices,</span>
+<span class="sd">      September 2008.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">freqs</span> <span class="o">=</span> <span class="s2">&quot;DWMQA&quot;</span>
+    <span class="n">freq</span> <span class="o">=</span> <span class="n">freq</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">freq</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">freqs</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="s2">&quot;`freq` must be either a single element or subset&quot;</span>
+            <span class="s2">&quot; from </span><span class="si">%s</span><span class="s2">, case-insensitive&quot;</span> <span class="o">%</span> <span class="n">freqs</span>
+        <span class="p">)</span>
+
+    <span class="c1"># Load daily 3-Month Treasury Bill: Secondary Market Rate.</span>
+    <span class="c1"># Note that this is on discount basis and will be converted to BEY.</span>
+    <span class="c1"># Periodicity is daily.</span>
+    <span class="n">rates</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">pdr</span><span class="o">.</span><span class="n">DataReader</span><span class="p">(</span><span class="s2">&quot;DTB3&quot;</span><span class="p">,</span> <span class="s2">&quot;fred&quot;</span><span class="p">,</span> <span class="n">DSTART</span><span class="p">)</span>
+        <span class="o">.</span><span class="n">mul</span><span class="p">(</span><span class="mf">0.01</span><span class="p">)</span>
+        <span class="o">.</span><span class="n">asfreq</span><span class="p">(</span><span class="s2">&quot;D&quot;</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;ffill&quot;</span><span class="p">)</span>
+        <span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="s2">&quot;ffill&quot;</span><span class="p">)</span>
+        <span class="o">.</span><span class="n">squeeze</span><span class="p">()</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Algebra doesn&#39;t &#39;work&#39; on DateOffsets, don&#39;t simplify here!</span>
+    <span class="n">minus_one_month</span> <span class="o">=</span> <span class="n">offsets</span><span class="o">.</span><span class="n">MonthEnd</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">plus_three_months</span> <span class="o">=</span> <span class="n">offsets</span><span class="o">.</span><span class="n">MonthEnd</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+    <span class="n">trigger</span> <span class="o">=</span> <span class="n">rates</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">is_month_end</span>
+    <span class="n">dtm_old</span> <span class="o">=</span> <span class="n">rates</span><span class="o">.</span><span class="n">index</span> <span class="o">+</span> <span class="n">minus_one_month</span> <span class="o">+</span> <span class="n">plus_three_months</span> <span class="o">-</span> <span class="n">rates</span><span class="o">.</span><span class="n">index</span>
+    <span class="n">dtm_new</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">rates</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">trigger</span><span class="p">,</span> <span class="n">rates</span><span class="o">.</span><span class="n">index</span> <span class="o">+</span> <span class="n">minus_one_month</span><span class="p">)</span>
+        <span class="o">+</span> <span class="n">plus_three_months</span>
+        <span class="o">-</span> <span class="n">rates</span><span class="o">.</span><span class="n">index</span>
+    <span class="p">)</span>
+
+    <span class="c1"># This does 2 things in one step:</span>
+    <span class="c1"># (1) convert discount yield to BEY</span>
+    <span class="c1"># (2) get the price at that BEY and days to maturity</span>
+    <span class="c1"># The two equations are simplified</span>
+    <span class="c1"># See https://people.ucsc.edu/~lbaum/econ80h/LS-Chap009.pdf</span>
+    <span class="n">p_old</span> <span class="o">=</span> <span class="p">(</span><span class="mi">100</span> <span class="o">/</span> <span class="mi">360</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mi">360</span> <span class="o">-</span> <span class="n">rates</span> <span class="o">*</span> <span class="n">dtm_old</span><span class="o">.</span><span class="n">days</span><span class="p">)</span>
+    <span class="n">p_new</span> <span class="o">=</span> <span class="p">(</span><span class="mi">100</span> <span class="o">/</span> <span class="mi">360</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mi">360</span> <span class="o">-</span> <span class="n">rates</span> <span class="o">*</span> <span class="n">dtm_new</span><span class="o">.</span><span class="n">days</span><span class="p">)</span>
+
+    <span class="n">res</span> <span class="o">=</span> <span class="n">p_old</span><span class="o">.</span><span class="n">pct_change</span><span class="p">()</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">trigger</span><span class="p">,</span> <span class="n">p_new</span><span class="o">.</span><span class="n">pct_change</span><span class="p">())</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span>
+    <span class="c1"># TODO: For purpose of using in TSeries, we should drop upsampled</span>
+    <span class="c1">#       periods where we don&#39;t have the full period constituents.</span>
+    <span class="k">return</span> <span class="n">res</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="mf">1.0</span><span class="p">)</span><span class="o">.</span><span class="n">resample</span><span class="p">(</span><span class="n">freq</span><span class="p">)</span><span class="o">.</span><span class="n">prod</span><span class="p">()</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="mf">1.0</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="load_shiller"><a class="viewcode-back" href="../03_datasets.html#datasets.load_shiller">[docs]</a><span class="k">def</span> <span class="nf">load_shiller</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Load market &amp; macroeconomic data from Robert Shiller&#39;s website.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    iedata : pd.DataFrame</span>
+<span class="sd">        Time series of S&amp;P 500 and interest rate variables.</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    &gt;&gt;&gt; from pyfinance import datasets</span>
+<span class="sd">    &gt;&gt;&gt; shiller = datasets.load_shiller()</span>
+<span class="sd">    &gt;&gt;&gt; shiller.iloc[:7, :5]</span>
+<span class="sd">                sp50p  sp50d  sp50e      cpi  real_rate</span>
+<span class="sd">    date</span>
+<span class="sd">    1871-01-31   4.44   0.26    0.4  12.4641     5.3200</span>
+<span class="sd">    1871-02-28   4.50   0.26    0.4  12.8446     5.3233</span>
+<span class="sd">    1871-03-31   4.61   0.26    0.4  13.0350     5.3267</span>
+<span class="sd">    1871-04-30   4.74   0.26    0.4  12.5592     5.3300</span>
+<span class="sd">    1871-05-31   4.86   0.26    0.4  12.2738     5.3333</span>
+<span class="sd">    1871-06-30   4.82   0.26    0.4  12.0835     5.3367</span>
+<span class="sd">    1871-07-31   4.73   0.26    0.4  12.0835     5.3400</span>
+
+<span class="sd">    .. _ONLINE DATA ROBERT SHILLER:</span>
+<span class="sd">        http://www.econ.yale.edu/~shiller/data.htm</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">xls</span> <span class="o">=</span> <span class="s2">&quot;http://www.econ.yale.edu/~shiller/data/ie_data.xls&quot;</span>
+    <span class="n">cols</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="s2">&quot;date&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;sp50p&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;sp50d&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;sp50e&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;cpi&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;frac&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;real_rate&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;real_sp50p&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;real_sp50d&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;real_sp50e&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;cape&quot;</span><span class="p">,</span>
+    <span class="p">]</span>
+    <span class="n">iedata</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_excel</span><span class="p">(</span>
+        <span class="n">xls</span><span class="p">,</span> <span class="n">sheet_name</span><span class="o">=</span><span class="s2">&quot;Data&quot;</span><span class="p">,</span> <span class="n">skiprows</span><span class="o">=</span><span class="mi">7</span><span class="p">,</span> <span class="n">skip_footer</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">names</span><span class="o">=</span><span class="n">cols</span>
+    <span class="p">)</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s2">&quot;frac&quot;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">dt</span> <span class="o">=</span> <span class="n">iedata</span><span class="p">[</span><span class="s2">&quot;date&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;01&quot;</span>
+    <span class="n">iedata</span><span class="p">[</span><span class="s2">&quot;date&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">dt</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;%Y%m</span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="n">offsets</span><span class="o">.</span><span class="n">MonthEnd</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">iedata</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s2">&quot;date&quot;</span><span class="p">)</span></div>
+
+
+<span class="k">def</span> <span class="nf">load_retaildata</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Monthly retail trade data from census.gov.&quot;&quot;&quot;</span>
+    <span class="c1"># full = &#39;https://www.census.gov/retail/mrts/www/mrtssales92-present.xls&#39;</span>
+    <span class="c1"># indiv = &#39;https://www.census.gov/retail/marts/www/timeseries.html&#39;</span>
+
+    <span class="n">db</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;Auto, other Motor Vehicle&quot;</span><span class="p">:</span> <span class="s2">&quot;https://www.census.gov/retail/marts/www/adv441x0.txt&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Building Material and Garden Equipment and Supplies Dealers&quot;</span><span class="p">:</span> <span class="s2">&quot;https://www.census.gov/retail/marts/www/adv44400.txt&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Clothing and Clothing Accessories Stores&quot;</span><span class="p">:</span> <span class="s2">&quot;https://www.census.gov/retail/marts/www/adv44800.txt&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Dept. Stores (ex. leased depts)&quot;</span><span class="p">:</span> <span class="s2">&quot;https://www.census.gov/retail/marts/www/adv45210.txt&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Electronics and Appliance Stores&quot;</span><span class="p">:</span> <span class="s2">&quot;https://www.census.gov/retail/marts/www/adv44300.txt&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Food Services and Drinking Places&quot;</span><span class="p">:</span> <span class="s2">&quot;https://www.census.gov/retail/marts/www/adv72200.txt&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Food and Beverage Stores&quot;</span><span class="p">:</span> <span class="s2">&quot;https://www.census.gov/retail/marts/www/adv44500.txt&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Furniture and Home Furnishings Stores&quot;</span><span class="p">:</span> <span class="s2">&quot;https://www.census.gov/retail/marts/www/adv44200.txt&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Gasoline Stations&quot;</span><span class="p">:</span> <span class="s2">&quot;https://www.census.gov/retail/marts/www/adv44700.txt&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;General Merchandise Stores&quot;</span><span class="p">:</span> <span class="s2">&quot;https://www.census.gov/retail/marts/www/adv45200.txt&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Grocery Stores&quot;</span><span class="p">:</span> <span class="s2">&quot;https://www.census.gov/retail/marts/www/adv44510.txt&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Health and Personal Care Stores&quot;</span><span class="p">:</span> <span class="s2">&quot;https://www.census.gov/retail/marts/www/adv44600.txt&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Miscellaneous Store Retailers&quot;</span><span class="p">:</span> <span class="s2">&quot;https://www.census.gov/retail/marts/www/adv45300.txt&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Motor Vehicle and Parts Dealers&quot;</span><span class="p">:</span> <span class="s2">&quot;https://www.census.gov/retail/marts/www/adv44100.txt&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Nonstore Retailers&quot;</span><span class="p">:</span> <span class="s2">&quot;https://www.census.gov/retail/marts/www/adv45400.txt&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Retail and Food Services, total&quot;</span><span class="p">:</span> <span class="s2">&quot;https://www.census.gov/retail/marts/www/adv44x72.txt&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Retail, total&quot;</span><span class="p">:</span> <span class="s2">&quot;https://www.census.gov/retail/marts/www/adv44000.txt&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Sporting Goods, Hobby, Book, and Music Stores&quot;</span><span class="p">:</span> <span class="s2">&quot;https://www.census.gov/retail/marts/www/adv45100.txt&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Total (excl. Motor Vehicle)&quot;</span><span class="p">:</span> <span class="s2">&quot;https://www.census.gov/retail/marts/www/adv44y72.txt&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Retail (excl. Motor Vehicle and Parts Dealers)&quot;</span><span class="p">:</span> <span class="s2">&quot;https://www.census.gov/retail/marts/www/adv4400a.txt&quot;</span><span class="p">,</span>
+    <span class="p">}</span>
+
+    <span class="n">dct</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">db</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span>
+            <span class="n">value</span><span class="p">,</span>
+            <span class="n">skiprows</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+            <span class="n">skip_blank_lines</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">header</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;\s+&quot;</span><span class="p">,</span>
+            <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">cut</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">get_loc</span><span class="p">(</span><span class="s2">&quot;SEASONAL&quot;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+            <span class="n">cut</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">get_loc</span><span class="p">(</span><span class="s2">&quot;NO&quot;</span><span class="p">)</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:</span><span class="n">cut</span><span class="p">]</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">col</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_numeric</span><span class="p">(</span><span class="n">col</span><span class="p">,</span> <span class="n">downcast</span><span class="o">=</span><span class="s2">&quot;float&quot;</span><span class="p">))</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">stack</span><span class="p">()</span>
+        <span class="n">year</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">get_level_values</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">month</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">get_level_values</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">idx</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span>
+            <span class="p">{</span><span class="s2">&quot;year&quot;</span><span class="p">:</span> <span class="n">year</span><span class="p">,</span> <span class="s2">&quot;month&quot;</span><span class="p">:</span> <span class="n">month</span><span class="p">,</span> <span class="s2">&quot;day&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">}</span>
+        <span class="p">)</span> <span class="o">+</span> <span class="n">offsets</span><span class="o">.</span><span class="n">MonthEnd</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">data</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">idx</span>
+        <span class="n">data</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">key</span>
+        <span class="n">dct</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span>
+
+    <span class="n">sales</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">dct</span><span class="p">)</span>
+    <span class="n">sales</span> <span class="o">=</span> <span class="n">sales</span><span class="o">.</span><span class="n">reindex</span><span class="p">(</span>
+        <span class="n">pd</span><span class="o">.</span><span class="n">date_range</span><span class="p">(</span><span class="n">sales</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">sales</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">freq</span><span class="o">=</span><span class="s2">&quot;M&quot;</span><span class="p">)</span>
+    <span class="p">)</span>
+    <span class="c1"># TODO: account for any skipped months; could specify a DateOffset to</span>
+    <span class="c1"># `freq` param of `pandas.DataFrame.shift`</span>
+    <span class="n">yoy</span> <span class="o">=</span> <span class="n">sales</span><span class="o">.</span><span class="n">pct_change</span><span class="p">(</span><span class="n">periods</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">sales</span><span class="p">,</span> <span class="n">yoy</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, chenlin.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
